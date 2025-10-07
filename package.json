@@ -1,0 +1,43 @@
+{
+  "name": "redaktionen-api",
+  "version": "1.0.0",
+  "description": "GR Redaktionen API",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon src/index.ts"
+  },
+  "keywords": [
+    "framsyn",
+    "omvärldsspaning",
+    "omvärldsanalys",
+    "ai",
+    "agenter"
+  ],
+  "author": "innovationsarenan @ Göteborgsregionen",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.14",
+    "@fastify/cors": "^11.1.0",
+    "@fastify/formbody": "^8.0.2",
+    "@fastify/helmet": "^13.0.1",
+    "@supabase/supabase-js": "^2.55.0",
+    "@types/rss": "^0.0.32",
+    "ai": "^5.0.14",
+    "bullmq": "^5.61.0",
+    "cli-progress": "^3.12.0",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.2.1",
+    "fastify": "^5.5.0",
+    "nodemon": "^3.1.10",
+    "rss-parser": "^3.13.0",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
+    "@types/node": "^22.5.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
