@@ -37,10 +37,21 @@ export type Factor =
   | "legal";
 
 export type Signal = {
+  id?: number;
   title: string;
   summary: string;
   source: string;
   sourceUrl: string;
   date: string;
   factor: Factor;
+};
+
+export type Summary = {
+  title: string;
+  body: string;
+  signalId: number;
+  sourceUrl: string;
+  factor: string;
+  date: string;
+  scope: string;
 };

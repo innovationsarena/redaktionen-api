@@ -41,34 +41,38 @@ export const fetchFeeds = async (
 
   try {
     for await (const source of sources) {
-      const feed = await parser.parseURL(source.url);
+      try {
+        const feed = await parser.parseURL(source.url);
 
-      const parcialFeedItems = feed.items.map((item: any) => {
-        const rssItem: RSSItem = {
-          ...item,
-          isoDate: getIsoDate(item),
-          content: item.content
-            ? item.content
-            : "No content provided in RSS item.",
-          creator: source.source,
-        };
+        const parcialFeedItems = feed.items.map((item: any) => {
+          const rssItem: RSSItem = {
+            ...item,
+            isoDate: getIsoDate(item),
+            content: item.content
+              ? item.content
+              : "No content provided in RSS item.",
+            creator: source.source,
+          };
 
-        return rssItem;
-      });
+          return rssItem;
+        });
 
-      // Sort list
-      parcialFeedItems.sort(function (a, b) {
-        return a.isoDate > b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
-      });
+        // Sort list
+        parcialFeedItems.sort(function (a, b) {
+          return a.isoDate > b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
+        });
 
-      // Limit each feed
-      const limitedList = parcialFeedItems.slice(0, limit);
+        // Limit each feed
+        const limitedList = parcialFeedItems.slice(0, limit);
 
-      feedItems = [...feedItems, ...limitedList];
+        feedItems = [...feedItems, ...limitedList];
 
-      // Update progress bar
-      progress++;
-      progressBar.update(progress);
+        // Update progress bar
+        progress++;
+        progressBar.update(progress);
+      } catch (err) {
+        // Silent fail
+      }
     }
 
     progressBar.stop();
