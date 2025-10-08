@@ -11,7 +11,7 @@ export const correspondentWorkflow = async (): Promise<void> => {
 export const runCorrespondentWorkflow = async (): Promise<void> => {
   const Signals = await signals.list();
   for await (const signal of Signals) {
-    await correspondentQueue.add("correspondent.start", signal);
+    await correspondentQueue.add("correspondent.summerize", signal);
   }
   return;
 };

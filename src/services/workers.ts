@@ -35,7 +35,7 @@ export const correspondentQueue = new Queue(CORRESPONDENT_QUEUE_NAME);
 new Worker(
   CORRESPONDENT_QUEUE_NAME,
   async (job) => {
-    if (job.name === "correspondent.start") {
+    if (job.name === "correspondent.summerize") {
       const summary = await correspondent(job.data as Signal);
 
       if (summary) {
@@ -58,7 +58,6 @@ new Worker(
   ARTDIRECTOR_QUEUE_NAME,
   async (job) => {
     if (job.name === "artdirector.image") {
-      console.log("AD job recieved.");
       await artDirector(job.data as Summary);
     }
   },

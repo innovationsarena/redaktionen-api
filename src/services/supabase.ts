@@ -77,6 +77,24 @@ export const signals = {
 };
 
 export const summaries = {
+  list: async (): Promise<Summary[]> => {
+    const { data, error }: PostgrestResponse<Summary> = await supabase
+      .from(process.env.SUMMARIES_TABLE as string)
+      .select("*");
+
+    if (error) throw new Error(error.message);
+    return data;
+  },
+  get: async (summaryId: number): Promise<Summary> => {
+    const { data, error }: PostgrestSingleResponse<Summary> = await supabase
+      .from(process.env.SUMMARIES_TABLE as string)
+      .select("*")
+      .eq("id", summaryId)
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  },
   write: async (summary: Summary): Promise<Summary> => {
     const { data, error }: PostgrestSingleResponse<Summary> = await supabase
       .from(process.env.SUMMARIES_TABLE as string)
