@@ -3,9 +3,15 @@ import fastify from "fastify";
 import formbody from "@fastify/formbody";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
+import swagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
+import { readFileSync } from "fs";
+import { join } from "path";
+import yaml from "yaml";
 
 import { workflowRouter } from "./routes";
 import { signalsRouter } from "./routes/signals.route";
+import { summariesRouter } from "./routes/summaries.route";
 
 const PORT = Number(process.env.PORT) || 3000;
 
@@ -17,7 +23,40 @@ const server = fastify({
 
 server.register(formbody);
 server.register(cors);
-server.register(helmet);
+server.register(helmet, {
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+});
+
+// Load OpenAPI spec from YAML file
+const apiSpecPath = join(__dirname, "docs", "apispec.yml");
+const apiSpecContent = readFileSync(apiSpecPath, "utf8");
+const apiSpec = yaml.parse(apiSpecContent);
+
+// Register Swagger
+server.register(swagger, {
+  mode: "static",
+  specification: {
+    document: apiSpec,
+  },
+});
+
+// Register Swagger UI
+server.register(swaggerUi, {
+  routePrefix: "/",
+  uiConfig: {
+    docExpansion: "list",
+    deepLinking: true,
+  },
+  staticCSP: true,
+  transformStaticCSP: (header) => header,
+});
 
 server.setErrorHandler((error, _request, reply) => {
   server.log.error(error);
@@ -28,18 +67,15 @@ server.setErrorHandler((error, _request, reply) => {
   }
 });
 
-server.get(`/`, (request, reply) => {
-  reply.status(200).send({ message: "Hello from Redaktionen API!" });
-});
-
 // Routes
 server.register(workflowRouter);
 server.register(signalsRouter);
+server.register(summariesRouter);
 
 server.listen({
   port: PORT,
   host: "0.0.0.0",
   listenTextResolver: (address) => {
-    return `Simulator API server is listening at ${address}`;
+    return `Redaktionen API server is listening at ${address}`;
   },
 });

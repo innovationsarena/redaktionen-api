@@ -6,9 +6,6 @@ export const workflowRouter = (fastify: FastifyInstance) => {
   fastify.post(
     "/workflows",
     {
-      config: {
-        description: "Run PESTEL workflow.",
-      },
       preValidation: [validateKey],
     },
     createWorkflow as unknown as RouteHandlerMethod

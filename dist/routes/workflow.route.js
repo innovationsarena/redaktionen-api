@@ -1,14 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.workflowRouter = void 0;
+const core_1 = require("../core");
 const controllers_1 = require("../controllers");
 const workflowRouter = (fastify) => {
-    fastify.get("/workflows", {
-        config: {
-            description: "Creates a new workflow.",
-        },
-        preValidation: [],
-        preHandler: [],
+    fastify.post("/workflows", {
+        preValidation: [core_1.validateKey],
     }, controllers_1.createWorkflow);
 };
 exports.workflowRouter = workflowRouter;

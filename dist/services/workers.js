@@ -26,7 +26,7 @@ new bullmq_1.Worker(exports.TIPSTER_QUEUE_NAME, async (job) => {
 exports.CORRESPONDENT_QUEUE_NAME = "correspondentQueue";
 exports.correspondentQueue = new bullmq_1.Queue(exports.CORRESPONDENT_QUEUE_NAME);
 new bullmq_1.Worker(exports.CORRESPONDENT_QUEUE_NAME, async (job) => {
-    if (job.name === "correspondent.start") {
+    if (job.name === "correspondent.summerize") {
         const summary = await (0, agents_1.correspondent)(job.data);
         if (summary) {
             const s = await supabase_1.summaries.write(summary);
@@ -42,7 +42,6 @@ exports.ARTDIRECTOR_QUEUE_NAME = "artDirectorQueue";
 exports.artDirectorQueue = new bullmq_1.Queue(exports.ARTDIRECTOR_QUEUE_NAME);
 new bullmq_1.Worker(exports.ARTDIRECTOR_QUEUE_NAME, async (job) => {
     if (job.name === "artdirector.image") {
-        console.log("AD job recieved.");
         await (0, agents_1.artDirector)(job.data);
     }
 }, {

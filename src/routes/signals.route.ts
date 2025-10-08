@@ -6,11 +6,7 @@ export const signalsRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/signals",
     {
-      config: {
-        description: "List signals.",
-      },
-      preValidation: [],
-      preHandler: [],
+      preValidation: [validateKey],
     },
     listSignals as unknown as RouteHandlerMethod
   );

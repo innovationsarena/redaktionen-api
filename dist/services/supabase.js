@@ -64,6 +64,24 @@ exports.signals = {
     },
 };
 exports.summaries = {
+    list: async () => {
+        const { data, error } = await exports.supabase
+            .from(process.env.SUMMARIES_TABLE)
+            .select("*");
+        if (error)
+            throw new Error(error.message);
+        return data;
+    },
+    get: async (summaryId) => {
+        const { data, error } = await exports.supabase
+            .from(process.env.SUMMARIES_TABLE)
+            .select("*")
+            .eq("id", summaryId)
+            .single();
+        if (error)
+            throw new Error(error.message);
+        return data;
+    },
     write: async (summary) => {
         const { data, error } = await exports.supabase
             .from(process.env.SUMMARIES_TABLE)

@@ -13,7 +13,7 @@ exports.correspondentWorkflow = correspondentWorkflow;
 const runCorrespondentWorkflow = async () => {
     const Signals = await services_1.signals.list();
     for await (const signal of Signals) {
-        await services_1.correspondentQueue.add("correspondent.start", signal);
+        await services_1.correspondentQueue.add("correspondent.summerize", signal);
     }
     return;
 };
