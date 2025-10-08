@@ -7,6 +7,7 @@ const tipsterUrls: TipsterItem[] = [
     factor: "political",
     sources: [
       { source: "SVT", url: "https://www.svt.se/rss.xml" },
+      /*
       {
         source: "Dagens samhälle",
         url: "https://www.dagenssamhalle.se/rss.xml",
@@ -20,6 +21,7 @@ const tipsterUrls: TipsterItem[] = [
         source: "SKR",
         url: "https://skr.se/4.7a383bf01715da022e3fffa/12.1f376ad3177c89481f750329.portlet?state=rss&sv.contenttype=text/xml;charset=UTF-8",
       },
+      */
     ],
   },
   {
@@ -29,6 +31,7 @@ const tipsterUrls: TipsterItem[] = [
         source: "Europaparlamentet",
         url: "https://www.europarl.europa.eu/rss/topic/907/en.xml",
       },
+      /*
       {
         source: "Naked Capitalism",
         url: "https://www.nakedcapitalism.com/feed",
@@ -58,13 +61,16 @@ const tipsterUrls: TipsterItem[] = [
         url: "https://news.google.com/rss/search?q=site:svensktnaringsliv.se&hl=sv&gl=SE&ceid=SE:sv",
       },
       { source: "SVT", url: "https://www.svt.se/nyheter/ekonomi/rss.xml" },
+       */
     ],
   },
   {
     factor: "social",
     sources: [
+      /*
       { source: "Reddit", url: "https://www.reddit.com/r/sweden/.rss" },
       { source: "Feber", url: "https://feber.se/samhalle/rss" },
+       
       {
         source: "Aftonbladet",
         url: "https://rss.aftonbladet.se/rss2/small/pages/sections/kultur/",
@@ -87,6 +93,7 @@ const tipsterUrls: TipsterItem[] = [
         source: "Europaparlamentet",
         url: "https://www.europarl.europa.eu/rss/topic/911/en.xml",
       },
+      */
       {
         source: "Europaparlamentet",
         url: "https://www.europarl.europa.eu/rss/topic/906/en.xml",
@@ -97,6 +104,7 @@ const tipsterUrls: TipsterItem[] = [
     factor: "technological",
     sources: [
       { source: "Feber", url: "https://feber.se/teknik/rss" },
+      /*
       { source: "TechCrunch", url: "https://techcrunch.com/feed/" },
       { source: "Wired", url: "https://www.wired.com/feed/rss" },
       { source: "Engadget", url: "https://www.engadget.com/rss.xml" },
@@ -108,16 +116,19 @@ const tipsterUrls: TipsterItem[] = [
         source: "Scientific American",
         url: "http://rss.sciam.com/basic-science",
       },
+      */
     ],
   },
   {
     factor: "environmental",
     sources: [
-      { source: "Grist", url: "https://grist.org/feed/" },
       {
         source: "Regeringen",
         url: "https://www.regeringen.se/Filter/RssFeed?filterType=Taxonomy&filterByType=FilterablePageBase&preFilteredCategories=1284%2C1285%2C1286%2C1287%2C1288%2C1290%2C1291%2C1292%2C1293%2C1294%2C1295%2C1296%2C1297%2C2425&rootPageReference=0&filteredContentCategories=2097&filteredPoliticalLevelCategories=&filteredPoliticalAreaCategories=1252&filteredPublisherCategories=",
       },
+
+      /*
+      { source: "Grist", url: "https://grist.org/feed/" },
       {
         source: "Greenpeace",
         url: "https://www.greenpeace.org/international/feed/",
@@ -146,6 +157,7 @@ const tipsterUrls: TipsterItem[] = [
         source: "Europaparlamentet",
         url: "https://www.europarl.europa.eu/rss/topic/904/en.xml",
       },
+      */
     ],
   },
   {
@@ -155,6 +167,7 @@ const tipsterUrls: TipsterItem[] = [
         source: "Reuters",
         url: "https://news.google.com/rss/search?q=site%3Areuters.com/legal&hl=en-US&gl=US&ceid=US%3Aen",
       },
+      /*
       {
         source: "Sveriges domstolar",
         url: "https://www.domstol.se/feed/56/?searchPageId=2693&scope=news",
@@ -167,6 +180,7 @@ const tipsterUrls: TipsterItem[] = [
         source: "Europaparlamentet",
         url: "https://www.europarl.europa.eu/rss/topic/902/en.xml",
       },
+      */
     ],
   },
 ];

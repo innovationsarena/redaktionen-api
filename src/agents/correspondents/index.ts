@@ -1,5 +1,5 @@
 import { generateObject } from "ai";
-import { Signal, Summary, summarySchema } from "../../core";
+import { Signal, Summary, summaryInputSchema } from "../../core";
 import { openai } from "@ai-sdk/openai";
 
 export const correspondent = async (
@@ -7,12 +7,11 @@ export const correspondent = async (
   filter?: string
 ): Promise<Summary | void> => {
   console.log(
-    `${signal.factor} correspondent on the case summarizing ${signal.sourceUrl}.`
+    `${signal.factor} correspondent on the case summarizing >>> ${signal.sourceUrl} <<<.`
   );
 
   const resp = await fetch(signal.sourceUrl);
   const rawHTML = await resp.text();
-  console.log(rawHTML ? "hittat html" : "ingen html hittad");
 
   const system = `
   You are given a HTML code. I want to you collect the information on it and write a summaried article with title and body text in swedish. The summary should be short and clear without loosing any vital information. ${
@@ -22,13 +21,14 @@ export const correspondent = async (
     const { object } = await generateObject({
       model: openai(process.env.CORRESPONDENT_DEFAULT_MODEL as string),
       system,
-      prompt: rawHTML,
-      schema: summarySchema,
+      prompt: rawHTML.substring(0, 300000),
+      schema: summaryInputSchema,
     });
 
     const summary = {
       ...object,
       signalId: signal?.id as number,
+      posterUrl: null,
       date: signal.date,
       factor: signal.factor,
       sourceUrl: signal.sourceUrl,

@@ -1,6 +1,6 @@
 import { tipster } from "../agents";
 import { Signal } from "../core";
-import { emptySignals } from "../services";
+import { emptySignals, emptySummaries } from "../services";
 import { runCorrespondentWorkflow } from "./correspondent.workflow";
 
 export const pestelWorkflow = async (limit: number): Promise<Signal[]> => {
@@ -31,6 +31,7 @@ export const pestelWorkflow = async (limit: number): Promise<Signal[]> => {
   console.log(`>>> Total ${allSignals.length} signals fetched. <<<`);
   console.log(`---------------------------------------`);
 
+  await emptySummaries();
   await runCorrespondentWorkflow();
 
   return allSignals;

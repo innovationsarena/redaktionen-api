@@ -47,8 +47,10 @@ export type Signal = {
 };
 
 export type Summary = {
+  id?: number;
   title: string;
   body: string;
+  posterUrl: string | null; // Url to poster image
   signalId: number;
   sourceUrl: string;
   factor: string;

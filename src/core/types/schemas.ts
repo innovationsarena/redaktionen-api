@@ -11,7 +11,7 @@ export const signalSchema = z.object({
   scope: z.enum(["global", "eu", "sweden"]).optional(),
 });
 
-export const summarySchema = z.object({
+export const summaryInputSchema = z.object({
   title: z.string(),
   body: z.string(),
   scope: z.enum(["global", "eu", "sweden"]),

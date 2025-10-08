@@ -32,6 +32,7 @@
     "fastify": "^5.5.0",
     "nodemon": "^3.1.10",
     "rss-parser": "^3.13.0",
+    "sharp": "^0.34.4",
     "zod": "^4.0.17"
   },
   "devDependencies": {

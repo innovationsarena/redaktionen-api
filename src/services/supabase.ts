@@ -21,6 +21,17 @@ export const emptySignals = async () => {
   return;
 };
 
+export const emptySummaries = async () => {
+  const { data, error } = await supabase
+    .from(process.env.SUMMARIES_TABLE as string)
+    .delete()
+    .neq("id", 0);
+
+  if (error) throw new Error(error.message);
+
+  return;
+};
+
 export const signals = {
   list: async (factor?: string): Promise<Signal[]> => {
     if (factor) {
@@ -47,6 +58,7 @@ export const signals = {
     const { data, error }: PostgrestSingleResponse<Signal> = await supabase
       .from(process.env.SIGNALS_TABLE as string)
       .insert(signal)
+      .select()
       .single();
 
     if (error) throw new Error(error.message);
@@ -69,6 +81,19 @@ export const summaries = {
     const { data, error }: PostgrestSingleResponse<Summary> = await supabase
       .from(process.env.SUMMARIES_TABLE as string)
       .insert(summary)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  },
+
+  update: async (summary: Summary): Promise<Summary> => {
+    const { data, error }: PostgrestSingleResponse<Summary> = await supabase
+      .from(process.env.SUMMARIES_TABLE as string)
+      .update(summary)
+      .eq("id", summary.id)
+      .select()
       .single();
 
     if (error) throw new Error(error.message);
