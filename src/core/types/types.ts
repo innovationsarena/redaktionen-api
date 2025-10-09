@@ -11,9 +11,15 @@ export type RSSItem = {
 };
 
 export type Source = {
+  id?: number;
+  organizationId?: string;
   source: string;
+  type: SourceType;
   url: string;
+  factor: Factor;
 };
+
+export type SourceType = "rss" | "url";
 
 export type TipsterItem = {
   factor: Factor;

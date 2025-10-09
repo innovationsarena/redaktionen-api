@@ -1,8 +1,8 @@
 import { Queue, Worker } from "bullmq";
-import { pestelWorkflow } from "../workflows/pestel.workflow";
-import { correspondent, artDirector } from "../agents";
-import { Signal, Summary } from "../core";
-import { summaries } from "./supabase";
+import { pestelWorkflow } from "../../workflows/pestel.workflow";
+import { correspondent, artDirector } from "../../agents";
+import { Signal, Summary } from "../../core";
+import { summaries } from "../supabase";
 
 const connection = {
   host: process.env.REDIS_HOST,

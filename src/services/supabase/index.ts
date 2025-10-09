@@ -3,7 +3,7 @@ import {
   PostgrestSingleResponse,
   SupabaseClient,
 } from "@supabase/supabase-js";
-import { Signal, Summary } from "../core";
+import { Signal, Source, Summary } from "../../core";
 
 export const supabase = new SupabaseClient(
   process.env.SUPABASE_URL as string,
@@ -53,7 +53,16 @@ export const signals = {
       return data;
     }
   },
+  get: async (signalId: number): Promise<Signal> => {
+    const { data, error }: PostgrestSingleResponse<Signal> = await supabase
+      .from(process.env.SIGNALS_TABLE as string)
+      .select("*")
+      .eq("id", signalId)
+      .single();
 
+    if (error) throw new Error(error.message);
+    return data;
+  },
   write: async (signal: Signal): Promise<Signal> => {
     const { data, error }: PostgrestSingleResponse<Signal> = await supabase
       .from(process.env.SIGNALS_TABLE as string)
@@ -111,6 +120,84 @@ export const summaries = {
       .from(process.env.SUMMARIES_TABLE as string)
       .update(summary)
       .eq("id", summary.id)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  },
+};
+
+export const sources = {
+  list: async (organizationId?: string, factor?: string): Promise<Source[]> => {
+    let items: Source[] = [];
+
+    if (organizationId) {
+      const { data, error }: PostgrestResponse<Source> = await supabase
+        .from(process.env.SOURCES_TABLE as string)
+        .select("*")
+        .eq("organizationId", organizationId);
+
+      if (data) {
+        items = [...data];
+      }
+      if (error) throw new Error(error.message);
+    }
+
+    if (factor) {
+      const { data, error }: PostgrestResponse<Source> = await supabase
+        .from(process.env.SOURCES_TABLE as string)
+        .select("*")
+        .eq("factor", factor);
+
+      if (data) {
+        items = [...data];
+      }
+
+      if (error) throw new Error(error.message);
+    }
+
+    if (organizationId && factor) {
+      const { data, error }: PostgrestResponse<Source> = await supabase
+        .from(process.env.SOURCES_TABLE as string)
+        .select("*")
+        .eq("organizationId", organizationId)
+        .eq("factor", factor);
+
+      if (data) {
+        items = [...data];
+      }
+      if (error) throw new Error(error.message);
+    }
+
+    return items;
+  },
+  get: async (sourceId: number): Promise<Source> => {
+    const { data, error }: PostgrestSingleResponse<Source> = await supabase
+      .from(process.env.SOURCES_TABLE as string)
+      .select("*")
+      .eq("id", sourceId)
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  },
+  write: async (source: Source): Promise<Source> => {
+    const { data, error }: PostgrestSingleResponse<Source> = await supabase
+      .from(process.env.SOURCES_TABLE as string)
+      .insert(source)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  },
+
+  update: async (source: Source): Promise<Source> => {
+    const { data, error }: PostgrestSingleResponse<Source> = await supabase
+      .from(process.env.SOURCES_TABLE as string)
+      .update(source)
+      .eq("id", source.id)
       .select()
       .single();
 

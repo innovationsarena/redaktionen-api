@@ -9,12 +9,21 @@ export const listSignals = asyncHandler(
   ): Promise<FastifyReply> => {
     const { factor } = request.query;
 
-    const f = factor ? factor : undefined;
+    const Signals = await signals.list(factor);
 
-    const items = await signals.list(f);
+    return reply.status(200).send(Signals);
+  }
+);
 
-    return reply.status(200).send({
-      signals: items,
-    });
+export const getSignal = asyncHandler(
+  async (
+    request: FastifyRequest<{ Params: { signalId: number } }>,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const { signalId } = request.params;
+
+    const signal = await signals.get(signalId);
+
+    return reply.status(200).send(signal);
   }
 );

@@ -1,5 +1,5 @@
 import { generateObject } from "ai";
-import { Signal, Summary, summaryInputSchema } from "../../core";
+import { Signal, Summary, summaryInputSchema } from "../core";
 import { openai } from "@ai-sdk/openai";
 
 export const correspondent = async (

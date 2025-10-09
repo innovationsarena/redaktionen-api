@@ -15,16 +15,16 @@ export const pestelWorkflow = async (limit: number): Promise<Signal[]> => {
   const economicSignals = await tipster("economic", LIMIT);
   const socialSignals = await tipster("social", LIMIT);
   const technologicalSignals = await tipster("technological", LIMIT);
-  const legalSignals = await tipster("legal", LIMIT);
   const environmentalSignals = await tipster("environmental", LIMIT);
+  const legalSignals = await tipster("legal", LIMIT);
 
   const allSignals = [
     ...politicalSignals,
     ...economicSignals,
     ...socialSignals,
     ...technologicalSignals,
-    ...legalSignals,
     ...environmentalSignals,
+    ...legalSignals,
   ];
 
   console.log(`---------------------------------------`);

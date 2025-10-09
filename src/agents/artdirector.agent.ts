@@ -2,9 +2,9 @@ import {
   generateObject,
   experimental_generateImage as generateImage,
 } from "ai";
-import { Summary } from "../../core";
+import { Summary } from "../core";
 import { openai } from "@ai-sdk/openai";
-import { summaries, supabase } from "../../services";
+import { summaries, supabase } from "../services";
 import z from "zod";
 import sharp from "sharp";
 
@@ -20,11 +20,10 @@ export const artDirector = async (
 
 Prompt requirements:
 - Style: Photorealistic, vibrant pastel palette.
-- Background: Solid grey #eeeeee.
-- Subject: 2-3 symbolic objects representing {summary_keywords}, arranged centrally, slightly floating with subtle shadows.
+- Subject: symbolic objects or situations representing the given summary arranged in a creative way
 - People: No human faces or identifiable people.
 - No logos, no on-image text.
-- Lighting/composition: Soft natural lighting, high detail, shallow depth of field, cinematic composition, ample negative space at top-center for a headline.
+- Lighting/composition: Soft natural lighting, high detail, shallow depth of field, cinematic composition.
 - Orientation: Horizontal poster (16:9 aspect ratio).
 
 Output: 
