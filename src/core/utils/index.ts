@@ -1,9 +1,11 @@
 export * from "./errorHandler";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { RSSItem, Signal, Source } from "../types";
+import { Organization, RSSItem, Signal, Source } from "../types";
 import Parser from "rss-parser";
 import { SingleBar } from "cli-progress";
 import { formatISO } from "date-fns/formatISO";
+import { createHmac } from "crypto";
+import { organizations } from "../../services";
 
 export const validateKey = async (
   request: FastifyRequest,
@@ -123,3 +125,16 @@ function extractISODateFromURL(url: string): string | null {
   const isoString = new Date(Date.UTC(+year, +month - 1, +day)).toISOString();
   return isoString;
 }
+
+export const createPublicKey = async (
+  organization: Organization
+): Promise<Organization> => {
+  // Hash sha-256 the private key with hashSecret
+  const hmac = createHmac("sha256", process.env.HASH_SECRET as string);
+  hmac.update(organization.private_key);
+  const hash = hmac.digest("hex");
+
+  await organizations.update({ ...organization, public_key: `gr-${hash}` });
+
+  return { ...organization, public_key: `gr-${hash}` };
+};

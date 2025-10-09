@@ -1,5 +1,5 @@
 import { generateObject } from "ai";
-import { Signal, Summary, summaryInputSchema } from "../core";
+import { Signal, Summary, SummaryInputSchema } from "../core";
 import { openai } from "@ai-sdk/openai";
 
 export const correspondent = async (
@@ -22,7 +22,7 @@ export const correspondent = async (
       model: openai(process.env.CORRESPONDENT_DEFAULT_MODEL as string),
       system,
       prompt: rawHTML.substring(0, 300000),
-      schema: summaryInputSchema,
+      schema: SummaryInputSchema,
     });
 
     const summary = {
