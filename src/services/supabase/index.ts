@@ -79,7 +79,6 @@ export const signals = {
     if (error) throw new Error(error.message);
     return data;
   },
-
   batchWrite: async (signals: Signal[]): Promise<Signal[]> => {
     const { data, error }: PostgrestResponse<Signal> = await supabase
       .from(process.env.SIGNALS_TABLE as string)
@@ -165,7 +164,6 @@ export const organizations = {
     if (error) throw new Error(error.message);
     return data;
   },
-
   update: async (organization: Organization): Promise<Organization> => {
     const { data, error }: PostgrestSingleResponse<Organization> =
       await supabase
@@ -244,7 +242,15 @@ export const sources = {
     if (error) throw new Error(error.message);
     return data;
   },
+  batchWrite: async (sources: Source[]): Promise<Source[]> => {
+    const { data, error }: PostgrestResponse<Source> = await supabase
+      .from(process.env.SIGNALS_TABLE as string)
+      .insert([...sources])
+      .select();
 
+    if (error) throw new Error(error.message);
+    return data;
+  },
   update: async (source: Source): Promise<Source> => {
     const { data, error }: PostgrestSingleResponse<Source> = await supabase
       .from(process.env.SOURCES_TABLE as string)

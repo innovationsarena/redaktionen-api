@@ -22,8 +22,8 @@ const sources: Source[] = [
     type: "rss",
   },
   {
-    source: "Feber",
-    url: "https://feber.se/teknik/rss",
+    source: "TechCrunch",
+    url: "https://techcrunch.com/feed/",
     factor: "technological",
     type: "rss",
   },

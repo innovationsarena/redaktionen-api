@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { asyncHandler } from "../core";
-import { signals, sources } from "../services";
+import { sources } from "../services";
 
 export const listSources = asyncHandler(
   async (
@@ -12,7 +12,7 @@ export const listSources = asyncHandler(
     const { organizationId, factor } = request.query;
 
     if (!organizationId)
-      return reply.status(400).send("Organization Id not found");
+      return reply.status(400).send("Organization Id not found.");
 
     const Sources = await sources.list(organizationId, factor);
 

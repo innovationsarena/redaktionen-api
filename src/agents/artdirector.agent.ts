@@ -15,8 +15,8 @@ export const artDirector = async (
   console.log(
     `Art director creating poster image to ${summary.title} summary.`
   );
-
-  const system = `You are an image-generation assistant. For each user input , extract 2-3 concise symbolic keywords and produce a single short photorealistic poster prompt. Output only the final prompt (one line), replacing {summary_keywords} with the chosen keywords; do not add explanations.
+  console.log(summary);
+  const system = `You are an image-generation assistant. For each user input , extract 2-3 concise symbolic keywords and produce a single short photorealistic poster prompt. Output only the final prompt (one line), do not add explanations.
 
 Prompt requirements:
 - Style: Photorealistic, vibrant pastel palette.
@@ -36,9 +36,7 @@ The output should be a complete prompt that will be directly prompted to an imag
 
   try {
     // Art prompt
-    const {
-      object: { imagePrompt },
-    } = await generateObject({
+    const { object } = await generateObject({
       model: openai(
         (process.env.ARTDIRECTOR_DEFAULT_MODEL as string) || "gpt-5-mini"
       ),
@@ -47,12 +45,14 @@ The output should be a complete prompt that will be directly prompted to an imag
       schema: z.object({ imagePrompt: z.string() }),
     });
 
+    console.log(object);
+
     // Create Image
     const { image } = await generateImage({
       model: openai.image(
         (process.env.DEFAULT_IMAGE_MODEL as string) || "gpt-image-1-mini"
       ),
-      prompt: imagePrompt,
+      prompt: object.imagePrompt,
     });
 
     // Store Image

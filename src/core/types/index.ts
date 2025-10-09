@@ -78,7 +78,7 @@ export type Summary = z.infer<typeof SummarySchema>;
 export const SummaryInputSchema = z.object({
   title: z.string(),
   body: z.string(),
-  scope: z.string(),
+  scope: z.enum(["global", "eu", "sweden"]),
 });
 export type SummaryInput = z.infer<typeof SummaryInputSchema>;
 
