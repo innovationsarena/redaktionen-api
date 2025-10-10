@@ -15,7 +15,7 @@ export const artDirector = async (
   console.log(
     `Art director creating poster image to ${summary.title} summary.`
   );
-  console.log(summary);
+
   const system = `You are an image-generation assistant. For each user input , extract 2-3 concise symbolic keywords and produce a single short photorealistic poster prompt. Output only the final prompt (one line), do not add explanations.
 
 Prompt requirements:
@@ -44,8 +44,6 @@ The output should be a complete prompt that will be directly prompted to an imag
       prompt,
       schema: z.object({ imagePrompt: z.string() }),
     });
-
-    console.log(object);
 
     // Create Image
     const { image } = await generateImage({

@@ -13,6 +13,13 @@ export const FactorSchema = z.enum([
 ]);
 export type Factor = z.infer<typeof FactorSchema>;
 
+export const StatsSchema = z.object({
+  tokens: z.number(),
+  signals: z.number(),
+  summaries: z.number(),
+});
+export type Stats = z.infer<typeof StatsSchema>;
+
 export const RSSItemSchema = z.object({
   title: z.string(),
   link: z.string(),
@@ -98,3 +105,13 @@ export const OrganizationInputSchema = z.object({
   owner: z.string(),
 });
 export type OrganizationInput = z.infer<typeof OrganizationInputSchema>;
+
+export const WorkflowInputSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  organizationId: z.string(),
+  factors: z.array(FactorSchema),
+  forsight: z.boolean(),
+  stats: StatsSchema,
+});
+export type WorkflowInput = z.infer<typeof WorkflowInputSchema>;
