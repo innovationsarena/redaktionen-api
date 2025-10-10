@@ -1,8 +1,9 @@
-import { Queue, Worker } from "bullmq";
+import { Job, Queue, Worker } from "bullmq";
 import { pestelWorkflow } from "../../workflows/pestel.workflow";
-import { correspondent, artDirector } from "../../agents";
-import { Signal, Summary } from "../../core";
-import { Summaries } from "../supabase";
+import { correspondent, artDirector, summaryEditor } from "../../agents";
+import { Signals, Summaries } from "../supabase";
+import { editorWorkflow } from "../../workflows/editor.workflow";
+import { WorkflowInput } from "../../core";
 
 const connection = {
   host: process.env.REDIS_HOST,
@@ -42,7 +43,10 @@ new Worker(
 
       if (summary) {
         const s = await Summaries.write(summary);
-        await artDirectorQueue.add("artdirector.image", s);
+        await artDirectorQueue.add("artdirector.image", {
+          summary: s,
+          context,
+        });
       }
 
       if (context.forsight) {
@@ -62,9 +66,12 @@ export const artDirectorQueue = new Queue(ARTDIRECTOR_QUEUE_NAME);
 
 new Worker(
   ARTDIRECTOR_QUEUE_NAME,
-  async (job) => {
+  async (job: Job) => {
     if (job.name === "artdirector.image") {
-      await artDirector(job.data as Summary, "summary");
+      const { summary, context } = job.data;
+
+      await artDirector(summary, "summary");
+      await checkAndTriggerEditor(context);
     }
   },
   {
@@ -72,3 +79,34 @@ new Worker(
     concurrency: 10,
   }
 );
+
+// EDITOR QUEUE
+export const EDITOR_QUEUE_NAME = "editorQueue";
+export const editorQueue = new Queue(EDITOR_QUEUE_NAME);
+
+new Worker(
+  EDITOR_QUEUE_NAME,
+  async (job) => {
+    const { summaries, context } = job.data;
+    if (job.name === "editor.summary") {
+      await editorWorkflow(summaries, context);
+    }
+  },
+  {
+    connection,
+    concurrency: 10,
+  }
+);
+
+// Helper function to check if both queues are empty
+export async function checkAndTriggerEditor(context: WorkflowInput) {
+  const signals = await Signals.list();
+  const summaries = await Summaries.list();
+  const filteredSummaries = summaries.filter((s) => s.posterUrl !== null);
+
+  console.log(`Summary ${filteredSummaries.length}/${signals.length} done.`);
+
+  if (signals.length === filteredSummaries.length) {
+    await editorQueue.add("editor.summary", { summaries, context });
+  }
+}

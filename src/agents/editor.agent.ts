@@ -1,8 +1,10 @@
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
-import { ReportInputSchema, Summary } from "../core";
+import { ReportInput, ReportInputSchema, Summary } from "../core";
 
-export const summaryEditor = async (summaries: Summary[]) => {
+export const summaryEditor = async (
+  summaries: Summary[]
+): Promise<ReportInput> => {
   const system = `
   # Editorial synthesis prompt for multi-source news summaries
 
@@ -43,9 +45,9 @@ export const summaryEditor = async (summaries: Summary[]) => {
 - As concise as possible while preserving essentials.
 
 **Deliverable**
-- Provide the final report in the given output format above.
+- Provide the final report in the given output schema written in swedish.
   `;
-  const prompt = `List of summaries: ${summaries}`;
+  const prompt = `List of summaries: ${JSON.stringify(summaries)}`;
 
   const { object } = await generateObject({
     model: openai(process.env.EDITOR_DEFAULT_MODEL as string),

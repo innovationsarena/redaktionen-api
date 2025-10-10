@@ -6,8 +6,11 @@ export const editorWorkflow = async (
   summaries: Summary[],
   context: WorkflowInput
 ): Promise<void> => {
+  console.log("Summary editor is generating a summary...");
+
   const reportContent = await summaryEditor(summaries);
   const s = await Sources.list();
+
   const report: Report = {
     ...reportContent,
     type: "summary",
@@ -17,7 +20,6 @@ export const editorWorkflow = async (
     factors: context.factors,
   };
 
-  const writtenReport = await Reports.write(report);
-
-  console.log(writtenReport);
+  await Reports.write(report);
+  return;
 };

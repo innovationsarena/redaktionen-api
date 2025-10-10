@@ -1,6 +1,6 @@
 import { Factor, fetchFeeds, parseFeed, Source, TipsterItem } from "../core";
 import { SingleBar, Presets } from "cli-progress";
-import { Signals } from "../services";
+import { Signals, Sources } from "../services";
 
 const sources: Source[] = [
   {
@@ -292,9 +292,13 @@ export const tipster = async (factor: Factor, limit: number = 5) => {
 
   const tipsterProgress = new SingleBar({}, Presets.shades_classic);
 
+  /*
   const items: Source[] | undefined = sources.filter(
     (item) => item.factor === factor
   );
+  */
+
+  const items: Source[] | undefined = await Sources.list(factor);
 
   if (items) {
     const feedItems = await fetchFeeds(items, limit, tipsterProgress);

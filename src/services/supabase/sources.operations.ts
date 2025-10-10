@@ -6,20 +6,8 @@ import { Source } from "../../core";
 import { supabase } from ".";
 
 export const Sources = {
-  list: async (organizationId?: string, factor?: string): Promise<Source[]> => {
+  list: async (factor?: string): Promise<Source[]> => {
     let items: Source[] = [];
-
-    if (organizationId) {
-      const { data, error }: PostgrestResponse<Source> = await supabase
-        .from(process.env.SOURCES_TABLE as string)
-        .select("*")
-        .eq("organizationId", organizationId);
-
-      if (data) {
-        items = [...data];
-      }
-      if (error) throw new Error(error.message);
-    }
 
     if (factor) {
       const { data, error }: PostgrestResponse<Source> = await supabase
@@ -32,19 +20,12 @@ export const Sources = {
       }
 
       if (error) throw new Error(error.message);
-    }
-
-    if (organizationId && factor) {
+    } else {
       const { data, error }: PostgrestResponse<Source> = await supabase
         .from(process.env.SOURCES_TABLE as string)
-        .select("*")
-        .eq("organizationId", organizationId)
-        .eq("factor", factor);
+        .select("*");
 
-      if (data) {
-        items = [...data];
-      }
-      if (error) throw new Error(error.message);
+      items = data || [];
     }
 
     return items;
@@ -71,7 +52,7 @@ export const Sources = {
   },
   batchWrite: async (sources: Source[]): Promise<Source[]> => {
     const { data, error }: PostgrestResponse<Source> = await supabase
-      .from(process.env.SIGNALS_TABLE as string)
+      .from(process.env.SOURCES_TABLE as string)
       .insert([...sources])
       .select();
 
