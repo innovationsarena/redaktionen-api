@@ -1,7 +1,7 @@
 Informatörer = RSS puffar > ÖPPNA artiklar
 Korrar = Läser artiklar och sammanfattar
 Redaktör = sammanställer rapporter ( kompakt & mer gedigen)
-Researcher =
+Researcher = sammanställer och fördjupar på PESTEL nivå
 
 Framsynsgänget > sammanfattningarna > kikar med sina perspektiv > skriver scenarion
 
@@ -9,7 +9,6 @@ Framsynsgänget > sammanfattningarna > kikar med sina perspektiv > skriver scena
 
 ```mermaid
 flowchart LR
-    flowchart LR
     A[<h3>Tipster</h3><p>Politic</p>]
     B[<h3>Tipster</h3><p>Economic</p>]
     C[<h3>Tipster</h3><p>Social</p>]
