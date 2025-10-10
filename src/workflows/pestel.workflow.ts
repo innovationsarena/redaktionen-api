@@ -3,10 +3,12 @@ import { Signal, WorkflowInput } from "../core";
 import { emptySignals, emptySummaries } from "../services";
 import { correspondentWorkflow } from "./correspondent.workflow";
 
-export const pestelWorkflow = async (ctx: WorkflowInput): Promise<Signal[]> => {
+export const pestelWorkflow = async (
+  context: WorkflowInput
+): Promise<Signal[]> => {
   // Run Tipsters
 
-  const { factors, tipLimit: LIMIT } = ctx;
+  const { factors, tipLimit: LIMIT } = context;
 
   // Empty tipster jar
   await emptySignals();
@@ -22,7 +24,7 @@ export const pestelWorkflow = async (ctx: WorkflowInput): Promise<Signal[]> => {
   console.log(`---------------------------------------`);
 
   await emptySummaries();
-  await correspondentWorkflow();
+  await correspondentWorkflow(context);
 
   return allSignals;
 };

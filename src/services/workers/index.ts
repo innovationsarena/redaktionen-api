@@ -36,11 +36,17 @@ new Worker(
   CORRESPONDENT_QUEUE_NAME,
   async (job) => {
     if (job.name === "correspondent.summerize") {
-      const summary = await correspondent(job.data as Signal);
+      const { signal, context } = job.data;
+
+      const summary = await correspondent(signal);
 
       if (summary) {
         const s = await summaries.write(summary);
         await artDirectorQueue.add("artdirector.image", s);
+      }
+
+      if (context.forsight) {
+        console.log("Sending to forsight team.");
       }
     }
   },
