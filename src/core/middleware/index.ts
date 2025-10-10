@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { organizations } from "../../services";
+import { Organizations } from "../../services";
 
 export const validateKey = async (
   request: FastifyRequest,
@@ -36,7 +36,7 @@ export const validateApiKey = async (
     throw new Error("API key not found.");
   }
 
-  const organization = await organizations.getByApiKey(API_KEY);
+  const organization = await Organizations.getByApiKey(API_KEY);
 
   const valid = process.env.API_KEY === API_KEY;
 

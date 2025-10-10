@@ -4,7 +4,7 @@ import {
 } from "ai";
 import { Summary, Report } from "../core";
 import { openai } from "@ai-sdk/openai";
-import { summaries, supabase } from "../services";
+import { Summaries, supabase } from "../services";
 import z from "zod";
 import sharp from "sharp";
 
@@ -59,7 +59,7 @@ export const artDirector = async (
 
     if (type === "summary") {
       // Update summary with public URL
-      await summaries.update({ ...(content as Summary), posterUrl: url });
+      await Summaries.update({ ...(content as Summary), posterUrl: url });
     }
 
     if (type === "report") {

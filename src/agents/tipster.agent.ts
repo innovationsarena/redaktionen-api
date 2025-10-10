@@ -1,6 +1,6 @@
 import { Factor, fetchFeeds, parseFeed, Source, TipsterItem } from "../core";
 import { SingleBar, Presets } from "cli-progress";
-import { signals } from "../services";
+import { Signals } from "../services";
 
 const sources: Source[] = [
   {
@@ -303,7 +303,7 @@ export const tipster = async (factor: Factor, limit: number = 5) => {
     const parsedFeed = parseFeed(feedItems, factor);
 
     console.log(`Writing signals...`);
-    await signals.batchWrite(parsedFeed);
+    await Signals.batchWrite(parsedFeed);
 
     return parsedFeed;
   }
