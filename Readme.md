@@ -53,9 +53,9 @@ flowchart LR
     K -- summary --> M
     L -- summary --> M
 
-    M -- summary --> Y
-    V -- report --> Y
-    U -- report --> Y
+    M <-- summary --> Y
+    V <-- report --> Y
+    U <-- report --> Y
 
     G -- summary --> X
     H -- summary --> X
