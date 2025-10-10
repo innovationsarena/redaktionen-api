@@ -24,6 +24,8 @@ flowchart LR
     L(<h3>Correspondent</h3><p>Legal</p>)
 
     M{<h3>Summary Editor</h3>}
+    X{<h3>Researcher Team</h3>}
+    Y{<h3>Art department</h3>}
 
     N{<h3>Forsight Team</h3>}
     O{<h3>The Utopian</h3>}
@@ -36,7 +38,6 @@ flowchart LR
     U{<h3>Forsight Editor</h3>}
 
     V{<h3>Scenario Team</h3>}
-    X{<h3>Researcher Team</h3>}
 
     A -- signal --> G
     B -- signal --> H
@@ -51,6 +52,10 @@ flowchart LR
     J -- summary --> M
     K -- summary --> M
     L -- summary --> M
+
+    M -- summary --> Y
+    V -- report --> Y
+    U -- report --> Y
 
     G -- summary --> X
     H -- summary --> X

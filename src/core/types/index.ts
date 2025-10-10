@@ -115,3 +115,11 @@ export const WorkflowInputSchema = z.object({
   tipLimit: z.number(),
 });
 export type WorkflowInput = z.infer<typeof WorkflowInputSchema>;
+
+export const ReportSchema = z.object({
+  title: z.string(),
+  body: z.string(),
+  factors: z.array(FactorSchema).optional(),
+  sources: z.array(SourceSchema),
+});
+export type Report = z.infer<typeof ReportSchema>;
