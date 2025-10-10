@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { asyncHandler } from "../core";
-import { sources } from "../services";
+import { Sources } from "../services";
 
 export const listSources = asyncHandler(
   async (
@@ -14,9 +14,9 @@ export const listSources = asyncHandler(
     if (!organizationId)
       return reply.status(400).send("Organization Id not found.");
 
-    const Sources = await sources.list(organizationId, factor);
+    const sources = await Sources.list(organizationId, factor);
 
-    return reply.status(200).send(Sources);
+    return reply.status(200).send(sources);
   }
 );
 
@@ -27,7 +27,7 @@ export const getSource = asyncHandler(
   ): Promise<FastifyReply> => {
     const { sourceId } = request.params;
 
-    const source = await sources.get(sourceId);
+    const source = await Sources.get(sourceId);
 
     return reply.status(200).send(source);
   }

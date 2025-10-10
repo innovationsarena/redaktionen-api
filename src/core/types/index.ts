@@ -13,6 +13,16 @@ export const FactorSchema = z.enum([
 ]);
 export type Factor = z.infer<typeof FactorSchema>;
 
+export const PerspectiveSchema = z.enum([
+  "utopia",
+  "dystopia",
+  "reform",
+  "system",
+  "speculative",
+  "historic",
+]);
+export type Perspective = z.infer<typeof PerspectiveSchema>;
+
 export const StatsSchema = z.object({
   tokens: z.number(),
   signals: z.number(),
@@ -117,9 +127,22 @@ export const WorkflowInputSchema = z.object({
 export type WorkflowInput = z.infer<typeof WorkflowInputSchema>;
 
 export const ReportSchema = z.object({
+  id: z.string().optional(),
   title: z.string(),
+  lede: z.string(),
   body: z.string(),
+  author: z.string(),
+  posterUrl: z.string().nullable(),
+  type: z.enum(["summary", "forsight"]),
   factors: z.array(FactorSchema).optional(),
+  perspective: PerspectiveSchema.optional(),
   sources: z.array(SourceSchema),
 });
 export type Report = z.infer<typeof ReportSchema>;
+
+export const ReportInputSchema = z.object({
+  title: z.string(),
+  lede: z.string(),
+  body: z.string(),
+});
+export type ReportInput = z.infer<typeof ReportInputSchema>;

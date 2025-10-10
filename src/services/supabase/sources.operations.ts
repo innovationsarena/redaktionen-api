@@ -5,7 +5,7 @@ import {
 import { Source } from "../../core";
 import { supabase } from ".";
 
-export const sources = {
+export const Sources = {
   list: async (organizationId?: string, factor?: string): Promise<Source[]> => {
     let items: Source[] = [];
 

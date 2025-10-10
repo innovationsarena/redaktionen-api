@@ -5,7 +5,7 @@ import {
 import { Signal } from "../../core";
 import { supabase } from ".";
 
-export const signals = {
+export const Signals = {
   list: async (factor?: string): Promise<Signal[]> => {
     if (factor) {
       const { data, error }: PostgrestResponse<Signal> = await supabase

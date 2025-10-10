@@ -2,37 +2,38 @@ import {
   generateObject,
   experimental_generateImage as generateImage,
 } from "ai";
-import { Summary } from "../core";
+import { Summary, Report } from "../core";
 import { openai } from "@ai-sdk/openai";
 import { summaries, supabase } from "../services";
 import z from "zod";
 import sharp from "sharp";
 
 export const artDirector = async (
-  summary: Summary,
-  style?: string
+  content: Summary | Report,
+  type: "summary" | "report"
 ): Promise<void> => {
   console.log(
-    `Art director creating poster image to ${summary.title} summary.`
+    `Art director creating poster image to '${content.title}' ${type}.`
   );
 
-  const system = `You are an image-generation assistant. For each user input , extract 2-3 concise symbolic keywords and produce a single short photorealistic poster prompt. Output only the final prompt (one line), do not add explanations.
+  const system = `
+    You are an image-generation assistant. For each user input , extract 2-3 concise symbolic keywords and produce a single short photorealistic poster prompt. Output only the final prompt (one line), do not add explanations.
 
-Prompt requirements:
-- Style: Photorealistic, vibrant pastel palette.
-- Subject: symbolic objects or situations representing the given summary arranged in a creative way
-- People: No human faces or identifiable people.
-- No logos, no on-image text.
-- Lighting/composition: Soft natural lighting, high detail, shallow depth of field, cinematic composition.
-- Orientation: Horizontal poster (16:9 aspect ratio).
+    Prompt requirements:
+    - Style: Photorealistic, vibrant pastel palette.
+    - Subject: symbolic objects or situations representing the given summary arranged in a creative way
+    - People: No human faces or identifiable people.
+    - No logos, no on-image text.
+    - Lighting/composition: Soft natural lighting, high detail, shallow depth of field, cinematic composition.
+    - Orientation: Horizontal poster (16:9 aspect ratio).
 
-Output: 
-The output should be a complete prompt that will be directly prompted to an image model.
+    Output: 
+    The output should be a complete prompt that will be directly prompted to an image model.
 `;
 
   const prompt = `Create a poster image that represents this article: 
-  title: ${summary.title}
-  body: ${summary.body}`;
+  title: ${content.title}
+  body: ${content.body}`;
 
   try {
     // Art prompt
@@ -56,8 +57,14 @@ The output should be a complete prompt that will be directly prompted to an imag
     // Store Image
     const url = await createImageFromBase64(image.base64);
 
-    // Update summary with public URL
-    await summaries.update({ ...summary, posterUrl: url });
+    if (type === "summary") {
+      // Update summary with public URL
+      await summaries.update({ ...(content as Summary), posterUrl: url });
+    }
+
+    if (type === "report") {
+      // Update report with public URL
+    }
 
     return;
   } catch (error) {

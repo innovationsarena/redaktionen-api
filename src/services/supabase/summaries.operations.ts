@@ -3,20 +3,14 @@ import {
   PostgrestSingleResponse,
   SupabaseClient,
 } from "@supabase/supabase-js";
-import {
-  Organization,
-  OrganizationInput,
-  Signal,
-  Source,
-  Summary,
-} from "../../core";
+import { Summary } from "../../core";
 
 export const supabase = new SupabaseClient(
   process.env.SUPABASE_URL as string,
   process.env.SUPABASE_KEY as string
 );
 
-export const summaries = {
+export const Summaries = {
   list: async (): Promise<Summary[]> => {
     const { data, error }: PostgrestResponse<Summary> = await supabase
       .from(process.env.SUMMARIES_TABLE as string)

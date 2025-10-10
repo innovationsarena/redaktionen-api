@@ -5,7 +5,7 @@ import {
 } from "@supabase/supabase-js";
 import { supabase } from ".";
 
-export const organizations = {
+export const Organizations = {
   list: async (): Promise<Organization[]> => {
     const { data, error }: PostgrestResponse<Organization> = await supabase
       .from(process.env.ORGANIZATIONS_TABLE as string)

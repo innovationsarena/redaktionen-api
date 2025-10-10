@@ -2,7 +2,7 @@ import { Queue, Worker } from "bullmq";
 import { pestelWorkflow } from "../../workflows/pestel.workflow";
 import { correspondent, artDirector } from "../../agents";
 import { Signal, Summary } from "../../core";
-import { summaries } from "../supabase";
+import { Summaries } from "../supabase";
 
 const connection = {
   host: process.env.REDIS_HOST,
@@ -41,7 +41,7 @@ new Worker(
       const summary = await correspondent(signal);
 
       if (summary) {
-        const s = await summaries.write(summary);
+        const s = await Summaries.write(summary);
         await artDirectorQueue.add("artdirector.image", s);
       }
 
@@ -64,7 +64,7 @@ new Worker(
   ARTDIRECTOR_QUEUE_NAME,
   async (job) => {
     if (job.name === "artdirector.image") {
-      await artDirector(job.data as Summary);
+      await artDirector(job.data as Summary, "summary");
     }
   },
   {

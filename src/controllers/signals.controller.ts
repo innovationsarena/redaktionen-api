@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { asyncHandler } from "../core";
-import { signals } from "../services";
+import { Signals } from "../services";
 
 export const listSignals = asyncHandler(
   async (
@@ -9,9 +9,9 @@ export const listSignals = asyncHandler(
   ): Promise<FastifyReply> => {
     const { factor } = request.query;
 
-    const Signals = await signals.list(factor);
+    const signals = await Signals.list(factor);
 
-    return reply.status(200).send(Signals);
+    return reply.status(200).send(signals);
   }
 );
 
@@ -22,7 +22,7 @@ export const getSignal = asyncHandler(
   ): Promise<FastifyReply> => {
     const { signalId } = request.params;
 
-    const signal = await signals.get(signalId);
+    const signal = await Signals.get(signalId);
 
     return reply.status(200).send(signal);
   }

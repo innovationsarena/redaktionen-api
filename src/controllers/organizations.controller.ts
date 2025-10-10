@@ -1,11 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import {
-  asyncHandler,
-  createPublicKey,
-  Organization,
-  OrganizationInput,
-} from "../core";
-import { organizations, summaries } from "../services";
+import { asyncHandler, createPublicKey, OrganizationInput } from "../core";
+import { Organizations } from "../services";
 
 export const createOrganizationController = asyncHandler(
   async (
@@ -16,7 +11,7 @@ export const createOrganizationController = asyncHandler(
       ...request.body,
     };
 
-    const org = await organizations.write(organization);
+    const org = await Organizations.write(organization);
     const updatedOrg = await createPublicKey(org);
 
     return reply.status(200).send({
@@ -33,7 +28,7 @@ export const getOrganizationController = asyncHandler(
     request: FastifyRequest<{ Params: { organizationId: string } }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
-    const organization = await organizations.get(request.params.organizationId);
+    const organization = await Organizations.get(request.params.organizationId);
 
     return reply.status(200).send({
       id: organization.id,

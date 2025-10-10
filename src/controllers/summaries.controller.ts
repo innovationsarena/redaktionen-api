@@ -1,13 +1,13 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { asyncHandler } from "../core";
-import { summaries } from "../services";
+import { Summaries } from "../services";
 
 export const listSummariesController = asyncHandler(
   async (
     request: FastifyRequest,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
-    const Summaries = await summaries.list();
+    const summaries = await Summaries.list();
 
     return reply.status(200).send(Summaries);
   }
@@ -18,7 +18,7 @@ export const getSummaryController = asyncHandler(
     request: FastifyRequest<{ Params: { summary: number } }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
-    const summary = await summaries.get(request.params.summary);
+    const summary = await Summaries.get(request.params.summary);
 
     return reply.status(200).send(summary);
   }

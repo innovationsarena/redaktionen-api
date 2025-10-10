@@ -4,7 +4,7 @@ import Parser from "rss-parser";
 import { SingleBar } from "cli-progress";
 import { formatISO } from "date-fns/formatISO";
 import { createHmac } from "crypto";
-import { organizations } from "../../services";
+import { Organizations } from "../../services";
 
 export const fetchFeeds = async (
   sources: Source[],
@@ -112,7 +112,7 @@ export const createPublicKey = async (
   hmac.update(organization.private_key);
   const hash = hmac.digest("hex");
 
-  await organizations.update({ ...organization, public_key: `gr-${hash}` });
+  await Organizations.update({ ...organization, public_key: `gr-${hash}` });
 
   return { ...organization, public_key: `gr-${hash}` };
 };
