@@ -25,6 +25,16 @@ export const organizations = {
     if (error) throw new Error(error.message);
     return data;
   },
+  getByApiKey: async (apiKey: string): Promise<Organization> => {
+    const { data, error }: PostgrestSingleResponse<Organization> =
+      await supabase
+        .from(process.env.ORGANIZATIONS_TABLE as string)
+        .select("*")
+        .eq("public_key", apiKey)
+        .single();
+    if (error) throw new Error(error.message);
+    return data;
+  },
   write: async (organization: OrganizationInput): Promise<Organization> => {
     const { data, error }: PostgrestSingleResponse<Organization> =
       await supabase

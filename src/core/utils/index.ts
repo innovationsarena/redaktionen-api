@@ -1,32 +1,10 @@
 export * from "./errorHandler";
-import type { FastifyReply, FastifyRequest } from "fastify";
 import { Organization, RSSItem, Signal, Source } from "../types";
 import Parser from "rss-parser";
 import { SingleBar } from "cli-progress";
 import { formatISO } from "date-fns/formatISO";
 import { createHmac } from "crypto";
 import { organizations } from "../../services";
-
-export const validateKey = async (
-  request: FastifyRequest,
-  reply: FastifyReply
-) => {
-  if (!request.headers["authorization"]) {
-    throw new Error("API key not found.");
-  }
-
-  const API_KEY = request.headers["authorization"].split(" ")[1];
-
-  if (!API_KEY) {
-    throw new Error("API key not found.");
-  }
-
-  const valid = process.env.API_KEY === API_KEY;
-
-  if (valid) {
-    return;
-  } else throw new Error("API key not valid.");
-};
 
 export const fetchFeeds = async (
   sources: Source[],
