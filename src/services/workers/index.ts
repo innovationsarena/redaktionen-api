@@ -19,7 +19,7 @@ new Worker(
   TIPSTER_QUEUE_NAME,
   async (job) => {
     if (job.name === "tipster.start") {
-      await pestelWorkflow(job.data.limit);
+      await pestelWorkflow(job.data);
     }
   },
   {

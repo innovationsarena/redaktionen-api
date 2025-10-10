@@ -1,38 +1,28 @@
 import { tipster } from "../agents";
-import { Signal } from "../core";
+import { Signal, WorkflowInput } from "../core";
 import { emptySignals, emptySummaries } from "../services";
-import { runCorrespondentWorkflow } from "./correspondent.workflow";
+import { correspondentWorkflow } from "./correspondent.workflow";
 
-export const pestelWorkflow = async (limit: number): Promise<Signal[]> => {
+export const pestelWorkflow = async (ctx: WorkflowInput): Promise<Signal[]> => {
   // Run Tipsters
 
-  const LIMIT = limit;
+  const { factors, tipLimit: LIMIT } = ctx;
 
   // Empty tipster jar
   await emptySignals();
 
-  const politicalSignals = await tipster("political", LIMIT);
-  const economicSignals = await tipster("economic", LIMIT);
-  const socialSignals = await tipster("social", LIMIT);
-  const technologicalSignals = await tipster("technological", LIMIT);
-  const environmentalSignals = await tipster("environmental", LIMIT);
-  const legalSignals = await tipster("legal", LIMIT);
+  let allSignals: Signal[] = [];
 
-  const allSignals = [
-    ...politicalSignals,
-    ...economicSignals,
-    ...socialSignals,
-    ...technologicalSignals,
-    ...environmentalSignals,
-    ...legalSignals,
-  ];
+  for await (const factor of factors) {
+    allSignals = [...allSignals, ...(await tipster(factor, LIMIT))];
+  }
 
   console.log(`---------------------------------------`);
   console.log(`>>> Total ${allSignals.length} signals fetched. <<<`);
   console.log(`---------------------------------------`);
 
   await emptySummaries();
-  await runCorrespondentWorkflow();
+  await correspondentWorkflow();
 
   return allSignals;
 };

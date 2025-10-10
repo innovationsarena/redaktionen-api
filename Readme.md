@@ -5,13 +5,81 @@ Researcher =
 
 Framsynsgänget > sammanfattningarna > kikar med sina perspektiv > skriver scenarion
 
-## Prompts
+## Workflow
 
-Self reflection
-Reflect on your present point of view. How do you go about today to stay updated on what may or will come? For this part, we suggest to either draw a mind map or similar and visualize your scanning behavior (sources, habits, levels of scanning etc) or write a diary for a few days and take notes of your daily input. This may include desk top scanning in media of all kinds, following certain organizations etc and networking in close and wider circles. Write a reflection based on your current behavior. You can for example consider issues like:
-Does my scanning cover a broad variety of domains?
-Do my external signals come from both Swedish and foreign sources and channels? This is important for creating a head start.
-Do my sources cover different levels, from local to global? It gives a good understanding of both our immediate world and the more peripheral and international. For example, what is happening in the EU that affects you/your business/organization?
-Is it mostly confirmatory information that fits our worldview or do I also have sources that contain more challenging information?
-What can be said about the breadth and depth of channels and sources - research / academia, the EU, industry organizations etc. – Is there any lack of some perspective?
-Is my worldview algorithm-controlled? Can you imagine a filter bubble here or do you ensure that algorithmic controlled content is also supplemented with something else?
+```mermaid
+flowchart LR
+    flowchart LR
+    A[<h3>Tipster</h3><p>Politic</p>]
+    B[<h3>Tipster</h3><p>Economic</p>]
+    C[<h3>Tipster</h3><p>Social</p>]
+    D[<h3>Tipster</h3><p>Tech</p>]
+    E[<h3>Tipster</h3><p>Enviroment</p>]
+    F[<h3>Tipster</h3><p>Legal</p>]
+
+    G(<h3>Correspondent</h3><p>Politic</p>)
+    H(<h3>Correspondent</h3><p>Economic</p>)
+    I(<h3>Correspondent</h3><p>Social</p>)
+    J(<h3>Correspondent</h3><p>Tech</p>)
+    K(<h3>Correspondent</h3><p>Enviroment</p>)
+    L(<h3>Correspondent</h3><p>Legal</p>)
+
+    M{<h3>Summary Editor</h3>}
+
+    N{<h3>Forsight Team</h3>}
+    O{<h3>The Utopian</h3>}
+    P{<h3>The Dystopian</h3>}
+    Q{<h3>The Reformist</h3>}
+    R{<h3>The Systems Thinker</h3>}
+    S{<h3>The Speculator</h3>}
+    T{<h3>The Historian</h3>}
+
+    U{<h3>Forsight Editor</h3>}
+
+    V{<h3>Scenario Team</h3>}
+    X{<h3>Researcher Team</h3>}
+
+    A -- signal --> G
+    B -- signal --> H
+    C -- signal --> I
+    D -- signal --> J
+    E -- signal --> K
+    F -- signal --> L
+
+    G -- summary --> M
+    H -- summary --> M
+    I -- summary --> M
+    J -- summary --> M
+    K -- summary --> M
+    L -- summary --> M
+
+    G -- summary --> X
+    H -- summary --> X
+    I -- summary --> X
+    J -- summary --> X
+    K -- summary --> X
+    L -- summary --> X
+
+    G -- summary --> N
+    H -- summary --> N
+    I -- summary --> N
+    J -- summary --> N
+    K -- summary --> N
+    L -- summary --> N
+
+    N -- summary --> O
+    N -- summary --> P
+    N -- summary --> Q
+    N -- summary --> R
+    N -- summary --> S
+    N -- summary --> T
+
+    O -- fortsight raport --> U
+    P -- fortsight raport --> U
+    Q -- fortsight raport --> U
+    R -- fortsight raport --> U
+    S -- fortsight raport --> U
+    T -- fortsight raport --> U
+
+    U -- forsight raport summary --> V
+```

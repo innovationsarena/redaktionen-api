@@ -1,18 +1,16 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { asyncHandler } from "../core";
+import { asyncHandler, WorkflowInput } from "../core";
 import { tipsterQueue } from "../services";
 
 export const createWorkflow = asyncHandler(
   async (
-    request: FastifyRequest<{ Querystring: { limit?: string } }>,
+    request: FastifyRequest<{ Body: WorkflowInput }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
-    const { limit } = request.query;
-
-    tipsterQueue.add("tipster.start", { limit: 1 });
+    tipsterQueue.add("tipster.start", request.body);
 
     return reply.status(200).send({
-      message: "Workflow started.",
+      message: `Workflow '${request.body.name}' started.`,
     });
   }
 );

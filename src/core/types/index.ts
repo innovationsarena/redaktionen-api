@@ -109,9 +109,9 @@ export type OrganizationInput = z.infer<typeof OrganizationInputSchema>;
 export const WorkflowInputSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  organizationId: z.string(),
   factors: z.array(FactorSchema),
   forsight: z.boolean(),
-  stats: StatsSchema,
+  analysts: z.boolean(),
+  tipLimit: z.number(),
 });
 export type WorkflowInput = z.infer<typeof WorkflowInputSchema>;
