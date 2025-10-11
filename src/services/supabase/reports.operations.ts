@@ -39,6 +39,7 @@ export const Reports = {
     const { data, error }: PostgrestSingleResponse<Report> = await supabase
       .from(process.env.REPORTS_TABLE as string)
       .update(report)
+      .eq("id", report.id)
       .select()
       .single();
 

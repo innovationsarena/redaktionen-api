@@ -4,7 +4,7 @@ import {
 } from "ai";
 import { Summary, Report } from "../core";
 import { openai } from "@ai-sdk/openai";
-import { Summaries, supabase } from "../services";
+import { Reports, Summaries, supabase } from "../services";
 import z from "zod";
 import sharp from "sharp";
 
@@ -64,6 +64,7 @@ export const artDirector = async (
 
     if (type === "report") {
       // Update report with public URL
+      await Reports.update({ ...(content as Report), posterUrl: url });
     }
 
     return;

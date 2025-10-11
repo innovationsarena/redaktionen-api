@@ -43,7 +43,7 @@ new Worker(
 
       if (summary) {
         const s = await Summaries.write(summary);
-        await artDirectorQueue.add("artdirector.image", {
+        await artDirectorQueue.add("artdirector.image.summary", {
           summary: s,
           context,
         });
@@ -67,11 +67,14 @@ export const artDirectorQueue = new Queue(ARTDIRECTOR_QUEUE_NAME);
 new Worker(
   ARTDIRECTOR_QUEUE_NAME,
   async (job: Job) => {
-    if (job.name === "artdirector.image") {
+    if (job.name === "artdirector.image.summary") {
       const { summary, context } = job.data;
-
       await artDirector(summary, "summary");
       await checkAndTriggerEditor(context);
+    }
+    if (job.name === "artdirector.image.report") {
+      const { report } = job.data;
+      await artDirector(report, "report");
     }
   },
   {
