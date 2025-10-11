@@ -9,7 +9,7 @@ export const listSummariesController = asyncHandler(
   ): Promise<FastifyReply> => {
     const summaries = await Summaries.list();
 
-    return reply.status(200).send(Summaries);
+    return reply.status(200).send(summaries);
   }
 );
 

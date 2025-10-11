@@ -45,7 +45,7 @@ export type RSSItem = z.infer<typeof RSSItemSchema>;
 
 export const SourceSchema = z.object({
   id: z.number().optional(),
-  organizationId: z.string().optional(),
+  agencyId: z.string().optional(),
   source: z.string(),
   type: SourceTypeSchema,
   url: z.string(),
@@ -99,7 +99,7 @@ export const SummaryInputSchema = z.object({
 });
 export type SummaryInput = z.infer<typeof SummaryInputSchema>;
 
-export const OrganizationSchema = z.object({
+export const AgencySchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
@@ -107,14 +107,15 @@ export const OrganizationSchema = z.object({
   private_key: z.string(),
   public_key: z.string().optional(),
 });
-export type Organization = z.infer<typeof OrganizationSchema>;
+export type Agency = z.infer<typeof AgencySchema>;
 
-export const OrganizationInputSchema = z.object({
+export const AgencyInputSchema = z.object({
+  id: z.string().optional(),
   name: z.string(),
   description: z.string().optional(),
   owner: z.string(),
 });
-export type OrganizationInput = z.infer<typeof OrganizationInputSchema>;
+export type AgencyInput = z.infer<typeof AgencyInputSchema>;
 
 export const WorkflowInputSchema = z.object({
   name: z.string(),

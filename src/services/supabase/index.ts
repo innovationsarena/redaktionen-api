@@ -6,7 +6,7 @@ export const supabase = new SupabaseClient(
 );
 
 // Operations
-export * from "./organizations.operations";
+export * from "./agencies.operations";
 export * from "./summaries.operations";
 export * from "./sources.operations";
 export * from "./signals.operations";

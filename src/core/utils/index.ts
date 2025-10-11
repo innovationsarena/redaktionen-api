@@ -1,10 +1,10 @@
 export * from "./errorHandler";
-import { Organization, RSSItem, Signal, Source } from "../types";
+import { Agency, RSSItem, Signal, Source } from "../types";
 import Parser from "rss-parser";
 import { SingleBar } from "cli-progress";
 import { formatISO } from "date-fns/formatISO";
 import { createHmac } from "crypto";
-import { Organizations } from "../../services";
+import { Agencies } from "../../services";
 
 export const fetchFeeds = async (
   sources: Source[],
@@ -104,15 +104,22 @@ function extractISODateFromURL(url: string): string | null {
   return isoString;
 }
 
-export const createPublicKey = async (
-  organization: Organization
-): Promise<Organization> => {
+export const createPublicKey = async (agency: Agency): Promise<Agency> => {
   // Hash sha-256 the private key with hashSecret
   const hmac = createHmac("sha256", process.env.HASH_SECRET as string);
-  hmac.update(organization.private_key);
+  hmac.update(agency.private_key);
   const hash = hmac.digest("hex");
 
-  await Organizations.update({ ...organization, public_key: `gr-${hash}` });
+  await Agencies.update({ ...agency, public_key: `gr-${hash}` });
 
-  return { ...organization, public_key: `gr-${hash}` };
+  return { ...agency, public_key: `gr-${hash}` };
+};
+
+export const id = (len: number = 8) => {
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvxyz";
+  let shortUuid = "";
+  for (let i = 0; i < len; i++) {
+    shortUuid += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return shortUuid;
 };

@@ -12,7 +12,7 @@ import yaml from "yaml";
 import { workflowRouter } from "./routes";
 import { signalsRouter } from "./routes/signals.route";
 import { summariesRouter } from "./routes/summaries.route";
-import { organizationsRouter } from "./routes/organizations.route";
+import { agenciesRouter } from "./routes/agencies.route";
 
 const PORT = Number(process.env.PORT) || 3000;
 
@@ -69,7 +69,7 @@ server.setErrorHandler((error, _request, reply) => {
 });
 
 // Routes
-server.register(organizationsRouter);
+server.register(agenciesRouter);
 server.register(summariesRouter);
 server.register(workflowRouter);
 server.register(signalsRouter);
