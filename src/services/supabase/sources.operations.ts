@@ -26,6 +26,8 @@ export const Sources = {
         .select("*");
 
       items = data || [];
+
+      if (error) throw new Error(error.message);
     }
 
     return items;

@@ -5,16 +5,13 @@ import { Sources } from "../services";
 export const listSources = asyncHandler(
   async (
     request: FastifyRequest<{
-      Querystring: { organizationId?: string; factor?: string };
+      Querystring: { factor?: string };
     }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
-    const { organizationId, factor } = request.query;
+    const { factor } = request.query;
 
-    if (!organizationId)
-      return reply.status(400).send("Organization Id not found.");
-
-    const sources = await Sources.list(organizationId, factor);
+    const sources = await Sources.list(factor);
 
     return reply.status(200).send(sources);
   }
