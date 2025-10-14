@@ -1,8 +1,7 @@
 import { ConnectionOptions, Job, Queue, Worker } from "bullmq";
-import { pestelWorkflow } from "../../workflows/pestel.workflow";
 import { correspondent, artDirector, summaryEditor } from "../../agents";
+import { editorWorkflow, pestelWorkflow } from "../../workflows";
 import { Signals, Summaries } from "../supabase";
-import { editorWorkflow } from "../../workflows/editor.workflow";
 import { WorkflowInput } from "../../core";
 
 const connection: ConnectionOptions = {
