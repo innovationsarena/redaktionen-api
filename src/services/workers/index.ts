@@ -1,14 +1,12 @@
-import { Job, Queue, Worker } from "bullmq";
+import { ConnectionOptions, Job, Queue, Worker } from "bullmq";
 import { pestelWorkflow } from "../../workflows/pestel.workflow";
 import { correspondent, artDirector, summaryEditor } from "../../agents";
 import { Signals, Summaries } from "../supabase";
 import { editorWorkflow } from "../../workflows/editor.workflow";
 import { WorkflowInput } from "../../core";
 
-const connection = {
-  host: process.env.REDIS_HOST,
-  username: process.env.REDIS_USERNAME,
-  password: process.env.REDIS_PASSWORD,
+const connection: ConnectionOptions = {
+  url: process.env.REDIS_HOST,
 };
 // WORKERS
 

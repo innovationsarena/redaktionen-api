@@ -22,6 +22,8 @@ tags:
     description: Raw news signals from RSS feeds
   - name: Summaries
     description: AI-generated summaries with poster images
+  - name: Webhooks
+    description: Webhook endpoints for external integrations
 
 components:
   securitySchemes:
@@ -168,6 +170,13 @@ components:
           type: string
           description: Error message
           example: "This is a clear error message"
+
+    WebhookResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Webhook triggered."
 
 paths:
   /:
@@ -324,6 +333,43 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "404":
           description: Summary not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /webhooks/{id}:
+    post:
+      tags:
+        - Webhooks
+      summary: Handle webhook
+      description: Receives and processes webhook events from external services
+      operationId: handleWebhook
+      parameters:
+        - name: id
+          in: path
+          description: Webhook identifier
+          required: true
+          schema:
+            type: string
+            example: "abc123"
+      requestBody:
+        description: Webhook payload (accepts any JSON)
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "200":
+          description: Webhook processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookResponse"
+        "400":
+          description: Bad request
           content:
             application/json:
               schema:

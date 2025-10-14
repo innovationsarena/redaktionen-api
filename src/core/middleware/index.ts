@@ -22,6 +22,26 @@ export const validateKey = async (
   } else throw new Error("API key not valid.");
 };
 
+export const validateWebhook = async (
+  request: FastifyRequest<{ Querystring: { key: string } }>,
+  reply: FastifyReply
+) => {
+  const { key } = request.query;
+
+  if (!key) {
+    throw new Error("Webhook key not found.");
+  }
+
+  const agency = await Agencies.getByApiKey(key);
+  if (!agency) return reply.status(400).send("no no no");
+  const valid = agency ? true : false;
+  // Lookup key
+
+  if (valid) {
+    return;
+  } else throw new Error("API key not valid.");
+};
+
 export const validateApiKey = async (
   request: FastifyRequest,
   reply: FastifyReply

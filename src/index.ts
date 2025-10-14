@@ -13,6 +13,7 @@ import { workflowRouter } from "./routes";
 import { signalsRouter } from "./routes/signals.route";
 import { summariesRouter } from "./routes/summaries.route";
 import { agenciesRouter } from "./routes/agencies.route";
+import { webhooksRouter } from "./routes/webhooks.route";
 
 const PORT = Number(process.env.PORT) || 3000;
 
@@ -69,9 +70,10 @@ server.setErrorHandler((error, _request, reply) => {
 });
 
 // Routes
-server.register(agenciesRouter);
 server.register(summariesRouter);
+server.register(agenciesRouter);
 server.register(workflowRouter);
+server.register(webhooksRouter);
 server.register(signalsRouter);
 
 server.listen({
