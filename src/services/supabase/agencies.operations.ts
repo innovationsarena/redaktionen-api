@@ -28,7 +28,7 @@ export const Agencies = {
     const { data, error }: PostgrestSingleResponse<Agency> = await supabase
       .from(process.env.AGENCIES_TABLE as string)
       .select("*")
-      .eq("public_key", apiKey)
+      .eq("private_key", apiKey)
       .single();
 
     if (error) throw new Error(error.message);
