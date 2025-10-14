@@ -6,8 +6,11 @@ import { editorWorkflow } from "../../workflows/editor.workflow";
 import { WorkflowInput } from "../../core";
 
 const connection: ConnectionOptions = {
-  url: process.env.REDIS_HOST,
+  host: process.env.REDIS_HOST,
+  username: process.env.REDIS_USERNAME,
+  password: process.env.REDIS_PASSWORD,
 };
+
 // WORKERS
 
 // TIPSTER
