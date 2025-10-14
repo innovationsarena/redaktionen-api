@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Agencies } from "../../services";
-import { publicKeyisValid } from "../utils";
+import { isValid } from "../utils";
 
 export const validateKey = async (
   request: FastifyRequest,
@@ -33,7 +32,7 @@ export const validateWebhook = async (
     return reply.send(400).send("Webhook key not found.");
   }
 
-  const valid = await publicKeyisValid(key);
+  const valid = await isValid(key);
   if (valid) {
     return;
   } else {
@@ -51,7 +50,7 @@ export const validateApiKey = async (
 
   const API_KEY = request.headers["authorization"].split(" ")[1];
 
-  const valid = await publicKeyisValid(API_KEY);
+  const valid = await isValid(API_KEY);
 
   if (valid) {
     return;

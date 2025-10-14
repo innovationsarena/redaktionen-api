@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { asyncHandler, createPublicKey, AgencyInput, id } from "../core";
+import { asyncHandler, AgencyInput, id, Agency, createHash } from "../core";
 import { Agencies } from "../services";
 
 export const createAgencyController = asyncHandler(
@@ -7,18 +7,19 @@ export const createAgencyController = asyncHandler(
     request: FastifyRequest<{ Body: AgencyInput }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
-    const agency = {
+    const apiKey = `gr-${id(4)}`;
+    const hashedApiKey = await createHash(apiKey);
+
+    const agency: Agency = {
       ...request.body,
+      id: request.body.id ? request.body.id : id(4),
+      private_key: hashedApiKey,
     };
 
-    const org = await Agencies.write(agency);
-    const updatedOrg = await createPublicKey(org);
+    await Agencies.write(agency);
 
     return reply.status(200).send({
-      id: agency.id ? agency.id : id(4),
-      name: updatedOrg.name,
-      description: updatedOrg.description,
-      apiKey: updatedOrg.public_key,
+      apiKey,
     });
   }
 );
@@ -34,7 +35,6 @@ export const getAgencyController = asyncHandler(
       id: agency.id,
       name: agency.name,
       description: agency.description,
-      apiKey: agency.public_key,
     });
   }
 );

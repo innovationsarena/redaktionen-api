@@ -104,27 +104,17 @@ function extractISODateFromURL(url: string): string | null {
   return isoString;
 }
 
-export const createPublicKey = async (agency: Agency): Promise<Agency> => {
-  // Hash sha-256 the private key with hashSecret
+export const createHash = async (key: string): Promise<string> => {
   const hmac = createHmac("sha256", process.env.HASH_SECRET as string);
-  hmac.update(agency.private_key);
+  hmac.update(key);
   const hash = hmac.digest("hex");
-
-  await Agencies.update({ ...agency, public_key: `gr-${hash}` });
-
-  return { ...agency, public_key: `gr-${hash}` };
+  return hash;
 };
 
-export const publicKeyisValid = async (key: string): Promise<boolean> => {
-  const agency = await Agencies.getByApiKey(key);
-  if (!agency) throw new Error("API key not valid.");
-
-  // Hash sha-256 the private key with hashSecret
-  const hmac = createHmac("sha256", process.env.HASH_SECRET as string);
-  hmac.update(agency.private_key);
-  const hash = hmac.digest("hex");
-
-  return `gr-${hash}` === key;
+export const isValid = async (key: string): Promise<boolean> => {
+  const hashedKey = await createHash(key);
+  const agency = await Agencies.getByApiKey(hashedKey);
+  return agency ? true : false;
 };
 
 export const id = (len: number = 8) => {
