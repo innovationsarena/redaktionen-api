@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const SourceTypeSchema = z.enum(["rss", "url"]);
+export const SourceTypeSchema = z.enum(["rss", "newsletter"]);
 export type SourceType = z.infer<typeof SourceTypeSchema>;
 
 export const FactorSchema = z.enum([
