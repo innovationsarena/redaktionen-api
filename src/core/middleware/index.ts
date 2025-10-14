@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { Agencies } from "../../services";
+import { publicKeyisValid } from "../utils";
 
 export const validateKey = async (
   request: FastifyRequest,
@@ -29,17 +30,15 @@ export const validateWebhook = async (
   const { key } = request.query;
 
   if (!key) {
-    throw new Error("Webhook key not found.");
+    return reply.send(400).send("Webhook key not found.");
   }
 
-  const agency = await Agencies.getByApiKey(key);
-  if (!agency) return reply.status(400).send("no no no");
-  const valid = agency ? true : false;
-  // Lookup key
-
+  const valid = await publicKeyisValid(key);
   if (valid) {
     return;
-  } else throw new Error("API key not valid.");
+  } else {
+    return reply.send(401).send("API key not valid.");
+  }
 };
 
 export const validateApiKey = async (
@@ -47,20 +46,16 @@ export const validateApiKey = async (
   reply: FastifyReply
 ) => {
   if (!request.headers["authorization"]) {
-    throw new Error("API key not found.");
+    return reply.send(400).send("API key not found.");
   }
 
   const API_KEY = request.headers["authorization"].split(" ")[1];
 
-  if (!API_KEY) {
-    throw new Error("API key not found.");
-  }
-
-  const agency = await Agencies.getByApiKey(API_KEY);
-
-  const valid = process.env.API_KEY === API_KEY;
+  const valid = await publicKeyisValid(API_KEY);
 
   if (valid) {
     return;
-  } else throw new Error("API key not valid.");
+  } else {
+    return reply.send(401).send("API key not valid.");
+  }
 };

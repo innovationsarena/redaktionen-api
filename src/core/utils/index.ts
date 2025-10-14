@@ -115,6 +115,18 @@ export const createPublicKey = async (agency: Agency): Promise<Agency> => {
   return { ...agency, public_key: `gr-${hash}` };
 };
 
+export const publicKeyisValid = async (key: string): Promise<boolean> => {
+  const agency = await Agencies.getByApiKey(key);
+  if (!agency) throw new Error("API key not valid.");
+
+  // Hash sha-256 the private key with hashSecret
+  const hmac = createHmac("sha256", process.env.HASH_SECRET as string);
+  hmac.update(agency.private_key);
+  const hash = hmac.digest("hex");
+
+  return `gr-${hash}` === key;
+};
+
 export const id = (len: number = 8) => {
   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvxyz";
   let shortUuid = "";
