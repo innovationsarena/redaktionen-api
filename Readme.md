@@ -1,9 +1,6 @@
-Informatörer = RSS puffar > ÖPPNA artiklar
-Korrar = Läser artiklar och sammanfattar
-Redaktör = sammanställer rapporter ( kompakt & mer gedigen)
-Researcher = sammanställer och fördjupar på PESTEL nivå
+# Redaktionen API
 
-Framsynsgänget > sammanfattningarna > kikar med sina perspektiv > skriver scenarion
+**Redaktionen är ett API-experiment av Göteborgs regionens innovationsarena. Här försöker vi nyttja AI för att omvärldsspana, bearbeta och tillgängligöra information relevant för vår verksamhet.**
 
 ## Workflow
 
