@@ -1,0 +1,44 @@
+name: Deploy GR Redaktionen API.
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}
+
+permissions:
+  contents: read # for checkout
+
+env:
+  NODE_OPTIONS: "--max_old_space_size=4096"
+
+jobs:
+  #  check_branch:
+  #    runs-on: ubuntu-24.04
+  #    steps:
+  #      - name: Check branch
+  #        if: github.base_ref == 'main' && github.head_ref != 'dev'
+  #        run: |
+  #          echo "ERROR: You can only merge to main from dev."
+  #          exit 1
+  release:
+    runs-on: ubuntu-24.04
+    #    needs: check_branch
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+      - run: npm install
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
