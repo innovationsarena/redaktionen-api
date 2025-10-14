@@ -2,6 +2,9 @@
 
 **Redaktionen är ett API-experiment av Göteborgs regionens innovationsarena. Här försöker vi nyttja AI för att omvärldsspana, bearbeta och tillgängligöra information relevant för vår verksamhet.**
 
+> [!CAUTION]
+> Detta projekt ska inte uppfattas som en färdig produkt eller lösning. Ni är välkomna att kopiera koden och testa själva, men vi ansvarar inte för eventuella konsekvenser och har begränsade möjligheter att erbjuda support.
+
 ## Workflow
 
 ```mermaid
