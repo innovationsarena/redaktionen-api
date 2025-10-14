@@ -118,7 +118,7 @@ export const isValid = async (
 ): Promise<boolean> => {
   const hashedKey = await createHash(key);
   const { data: agency, error } = await Agencies.getByApiKey(hashedKey);
-  if (error) return reply.status(parseInt(error.code)).send(error.message);
+  if (error) return reply.status(400).send(error.message);
   return agency ? true : false;
 };
 
