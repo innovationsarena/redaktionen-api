@@ -32,7 +32,7 @@ export const validateWebhook = async (
     return reply.send(400).send("Webhook key not found.");
   }
 
-  const valid = await isValid(key);
+  const valid = await isValid(key, reply);
   if (valid) {
     return;
   } else {
@@ -50,7 +50,7 @@ export const validateApiKey = async (
 
   const API_KEY = request.headers["authorization"].split(" ")[1];
 
-  const valid = await isValid(API_KEY);
+  const valid = await isValid(API_KEY, reply);
 
   if (valid) {
     return;

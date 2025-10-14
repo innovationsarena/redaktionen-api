@@ -5,6 +5,7 @@ import { SingleBar } from "cli-progress";
 import { formatISO } from "date-fns/formatISO";
 import { createHmac } from "crypto";
 import { Agencies } from "../../services";
+import { FastifyReply } from "fastify";
 
 export const fetchFeeds = async (
   sources: Source[],
@@ -111,9 +112,13 @@ export const createHash = async (key: string): Promise<string> => {
   return hash;
 };
 
-export const isValid = async (key: string): Promise<boolean> => {
+export const isValid = async (
+  key: string,
+  reply: FastifyReply
+): Promise<boolean> => {
   const hashedKey = await createHash(key);
-  const agency = await Agencies.getByApiKey(hashedKey);
+  const { data: agency, error } = await Agencies.getByApiKey(hashedKey);
+  if (error) return reply.status(parseInt(error.code)).send(error.message);
   return agency ? true : false;
 };
 
