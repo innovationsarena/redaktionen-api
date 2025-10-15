@@ -1,6 +1,6 @@
-import { ConnectionOptions, Job, Queue, Worker } from "bullmq";
-import { correspondent, artDirector, summaryEditor } from "../../agents";
 import { editorWorkflow, pestelWorkflow } from "../../workflows";
+import { ConnectionOptions, Job, Queue, Worker } from "bullmq";
+import { correspondent, artDirector } from "../../agents";
 import { Signals, Summaries } from "../supabase";
 import { WorkflowInput } from "../../core";
 
@@ -16,7 +16,7 @@ const concurrency = 10;
 
 // TIPSTER
 export const TIPSTER_QUEUE_NAME = "tipsterQueue";
-export const tipsterQueue = new Queue(TIPSTER_QUEUE_NAME);
+export const tipsterQueue = new Queue(TIPSTER_QUEUE_NAME, { connection });
 
 new Worker(
   TIPSTER_QUEUE_NAME,
@@ -33,7 +33,9 @@ new Worker(
 
 // CORRESPONDENT
 export const CORRESPONDENT_QUEUE_NAME = "correspondentQueue";
-export const correspondentQueue = new Queue(CORRESPONDENT_QUEUE_NAME);
+export const correspondentQueue = new Queue(CORRESPONDENT_QUEUE_NAME, {
+  connection,
+});
 
 new Worker(
   CORRESPONDENT_QUEUE_NAME,
@@ -64,7 +66,9 @@ new Worker(
 
 // ART DIRECTOR
 export const ARTDIRECTOR_QUEUE_NAME = "artDirectorQueue";
-export const artDirectorQueue = new Queue(ARTDIRECTOR_QUEUE_NAME);
+export const artDirectorQueue = new Queue(ARTDIRECTOR_QUEUE_NAME, {
+  connection,
+});
 
 new Worker(
   ARTDIRECTOR_QUEUE_NAME,
@@ -87,7 +91,7 @@ new Worker(
 
 // EDITOR QUEUE
 export const EDITOR_QUEUE_NAME = "editorQueue";
-export const editorQueue = new Queue(EDITOR_QUEUE_NAME);
+export const editorQueue = new Queue(EDITOR_QUEUE_NAME, { connection });
 
 new Worker(
   EDITOR_QUEUE_NAME,
