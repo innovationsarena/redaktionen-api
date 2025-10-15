@@ -10,6 +10,8 @@ const connection: ConnectionOptions = {
   password: process.env.REDIS_PASSWORD,
 };
 
+const concurrency = 10;
+
 // WORKERS
 
 // TIPSTER
@@ -25,7 +27,7 @@ new Worker(
   },
   {
     connection,
-    concurrency: 10,
+    concurrency,
   }
 );
 
@@ -56,7 +58,7 @@ new Worker(
   },
   {
     connection,
-    concurrency: 10,
+    concurrency,
   }
 );
 
@@ -79,7 +81,7 @@ new Worker(
   },
   {
     connection,
-    concurrency: 10,
+    concurrency,
   }
 );
 
@@ -97,17 +99,15 @@ new Worker(
   },
   {
     connection,
-    concurrency: 10,
+    concurrency,
   }
 );
 
-// Helper function to check if both queues are empty
+// Helper function to check if both queues are empty before calling editor
 export async function checkAndTriggerEditor(context: WorkflowInput) {
   const signals = await Signals.list();
   const summaries = await Summaries.list();
   const filteredSummaries = summaries.filter((s) => s.posterUrl !== null);
-
-  console.log(`Summary ${filteredSummaries.length}/${signals.length} done.`);
 
   if (signals.length === filteredSummaries.length) {
     await editorQueue.add("editor.summary", { summaries, context });

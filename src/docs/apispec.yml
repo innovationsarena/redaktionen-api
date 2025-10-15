@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Redaktionen API
   description: |
-    AI-powered news aggregation and analysis system that performs PESTEL (Political, Economic, Social, Technological, Environmental, Legal) analysis on RSS feeds.
+    AI-powered news aggregation and analysis system that performs PESTEL (Political, Economic, Social, Technological, Environmental, Legal) analysis on input signals.
 
     Developed by Innovationsarenan @ Göteborgsregionen.
   version: 1.0.0
@@ -10,8 +10,6 @@ info:
     name: Innovationsarenan @ Göteborgsregionen
 
 servers:
-  - url: http://localhost:3000
-    description: Local development server
   - url: https://redaktionen.innovationsarenan.dev/api
     description: Production server
 
@@ -19,7 +17,7 @@ tags:
   - name: Workflows
     description: Workflow orchestration for PESTEL analysis
   - name: Signals
-    description: Raw news signals from RSS feeds
+    description: Raw news signals from RSS feeds or newsletters inbound mails
   - name: Summaries
     description: AI-generated summaries with poster images
   - name: Webhooks
