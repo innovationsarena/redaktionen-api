@@ -76,7 +76,7 @@ export const artDirector = async (
     });
 
     // Store Image
-    const url = await createImageFromBase64(image.base64);
+    const url = await createImageFromBase64(image.base64, type);
 
     if (type === "summary") {
       // Update summary with public URL
@@ -99,12 +99,21 @@ export const artDirector = async (
   }
 };
 
-async function createImageFromBase64(base64: string): Promise<string> {
+async function createImageFromBase64(
+  base64: string,
+  type: string
+): Promise<string> {
   const imgBuffer = Buffer.from(base64, "base64");
+
+  let size = 1024;
+
+  if (type === "agent") {
+    size = 512;
+  }
 
   // Convert to JPG with sharp
   const jpgBuffer = await sharp(imgBuffer)
-    .resize(1024, null)
+    .resize(size, null)
     .toFormat("jpg", { quality: 60 })
     .toBuffer();
 
