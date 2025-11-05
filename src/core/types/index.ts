@@ -33,6 +33,16 @@ export const AgentTypeSchema = z.enum([
 ]);
 export type AgentType = z.infer<typeof AgentTypeSchema>;
 
+export const SourceSchema = z.object({
+  id: z.number().optional(),
+  agencyId: z.string().optional(),
+  source: z.string(),
+  type: SourceTypeSchema,
+  url: z.string(),
+  factor: FactorSchema,
+});
+export type Source = z.infer<typeof SourceSchema>;
+
 export const AgentSchema = z.object({
   id: z.string(),
   type: AgentTypeSchema,
@@ -40,6 +50,7 @@ export const AgentSchema = z.object({
   description: z.string(),
   avatarUrl: z.string().nullable(),
   agencyId: z.string().optional(),
+  sources: z.array(SourceSchema),
   llm: z
     .object({
       provider: z.string(),
@@ -91,16 +102,6 @@ export const RSSItemSchema = z.object({
   isoDate: z.string(),
 });
 export type RSSItem = z.infer<typeof RSSItemSchema>;
-
-export const SourceSchema = z.object({
-  id: z.number().optional(),
-  agencyId: z.string().optional(),
-  source: z.string(),
-  type: SourceTypeSchema,
-  url: z.string(),
-  factor: FactorSchema,
-});
-export type Source = z.infer<typeof SourceSchema>;
 
 export const TipsterItemSchema = z.object({
   factor: FactorSchema,
