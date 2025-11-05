@@ -326,12 +326,49 @@ components:
       items:
         $ref: "#/components/schemas/Summary"
 
+    WorkflowInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Workflow name
+          example: "PESTEL Analysis January 2025"
+        description:
+          type: string
+          description: Optional workflow description
+          example: "Monthly PESTEL analysis for environmental and economic factors"
+        factors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Factor"
+          description: PESTEL factors to analyze
+          example: ["environmental", "economic"]
+        forsight:
+          type: boolean
+          description: Enable foresight team
+          example: true
+        analysts:
+          type: boolean
+          description: Enable analyst agents
+          example: true
+        tipLimit:
+          type: integer
+          description: Maximum number of RSS items to process per source
+          minimum: 1
+          example: 5
+      required:
+        - name
+        - factors
+        - forsight
+        - analysts
+        - tipLimit
+
     WorkflowResponse:
       type: object
       properties:
         message:
           type: string
-          example: "Workflow started."
+          example: "Workflow 'PESTEL Analysis January 2025' started."
 
     HealthResponse:
       type: object
@@ -378,22 +415,26 @@ paths:
       summary: Start PESTEL workflow
       description: |
         Triggers the PESTEL workflow which:
-        1. Runs all tipster agents to fetch RSS feeds for each PESTEL factor
-        2. Empties existing signals and summaries
-        3. Triggers the correspondent workflow to process signals
+        1. Runs tipster agents to fetch RSS feeds for specified PESTEL factors
+        2. Processes signals based on configuration
+        3. Optionally enables foresight analysis and analyst agents
       operationId: createWorkflow
       security:
         - BearerAuth: []
-      parameters:
-        - name: limit
-          in: query
-          description: Maximum number of RSS items to process per source
-          required: false
-          schema:
-            type: integer
-            default: 1
-            minimum: 1
-            example: 5
+      requestBody:
+        description: Workflow configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkflowInput"
+            example:
+              name: "PESTEL Analysis January 2025"
+              description: "Monthly PESTEL analysis focusing on environmental and economic factors"
+              factors: ["environmental", "economic", "technological"]
+              forsight: true
+              analysts: true
+              tipLimit: 5
       responses:
         "200":
           description: Workflow started successfully
