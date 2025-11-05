@@ -17,6 +17,7 @@ import {
   summariesRouter,
   webhooksRouter,
   workflowRouter,
+  reportsRouter,
 } from "./routes";
 
 const PORT = Number(process.env.PORT) || 3000;
@@ -80,6 +81,7 @@ server.register(workflowRouter);
 server.register(webhooksRouter);
 server.register(signalsRouter);
 server.register(sourcesRouter);
+server.register(reportsRouter);
 server.register(agentsRouter);
 
 server.listen({

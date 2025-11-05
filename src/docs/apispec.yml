@@ -22,6 +22,8 @@ tags:
     description: Raw news signals from RSS feeds or newsletters inbound mails
   - name: Sources
     description: RSS and newsletter sources for news aggregation
+  - name: Reports
+    description: AI-generated reports including summaries, foresight analysis, and PESTEL analysis
   - name: Summaries
     description: AI-generated summaries with poster images
   - name: Webhooks
@@ -57,6 +59,14 @@ components:
         - speculative
         - historic
       description: Analytical perspective for content generation
+
+    ReportType:
+      type: string
+      enum:
+        - summary
+        - foresight
+        - analysis
+      description: Type of report
 
     AgentType:
       type: string
@@ -329,6 +339,60 @@ components:
         - date
         - scope
 
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          example: "rpt-abc12345"
+        title:
+          type: string
+          description: Report title
+          example: "Environmental Trends Q1 2025"
+        lede:
+          type: string
+          description: Report lead/summary paragraph
+          example: "A comprehensive analysis of environmental policy changes..."
+        body:
+          type: string
+          description: Full report body content
+          example: "This quarter has seen significant developments..."
+        author:
+          type: string
+          description: Author or agent that generated the report
+          example: "Environmental Correspondent"
+        posterUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL to the report's poster image
+          example: "https://storage.supabase.co/images/report-123.jpg"
+        type:
+          $ref: "#/components/schemas/ReportType"
+        factors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Factor"
+          description: PESTEL factors covered in the report
+          example: ["environmental", "political"]
+        perspective:
+          allOf:
+            - $ref: "#/components/schemas/Perspective"
+          description: Analytical perspective of the report
+        sources:
+          type: array
+          items:
+            $ref: "#/components/schemas/Source"
+          description: Sources used in the report
+      required:
+        - title
+        - lede
+        - body
+        - author
+        - type
+        - sources
+
     SignalsResponse:
       type: object
       properties:
@@ -346,6 +410,11 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Source"
+
+    ReportsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Report"
 
     SummariesResponse:
       type: array
@@ -877,6 +946,70 @@ paths:
                 $ref: "#/components/schemas/AuthResponse"
         "404":
           description: Source not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /reports:
+    get:
+      tags:
+        - Reports
+      summary: List reports
+      description: Retrieves all reports from the database, optionally filtered by report type
+      operationId: listReports
+      parameters:
+        - name: type
+          in: query
+          description: Filter reports by type
+          required: false
+          schema:
+            $ref: "#/components/schemas/ReportType"
+          example: foresight
+      responses:
+        "200":
+          description: List of reports retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportsResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /reports/{reportId}:
+    get:
+      tags:
+        - Reports
+      summary: Get report by ID
+      description: Retrieves a single report by its ID
+      operationId: getReport
+      parameters:
+        - name: reportId
+          in: path
+          description: Report ID
+          required: true
+          schema:
+            type: integer
+            example: 42
+      responses:
+        "200":
+          description: Report retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Report not found
           content:
             application/json:
               schema:

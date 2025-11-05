@@ -5,3 +5,4 @@ export * from "./signals.route";
 export * from "./sources.route";
 export * from "./summaries.route";
 export * from "./webhooks.route";
+export * from "./reports.route";

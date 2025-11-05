@@ -6,16 +6,31 @@ import { Report } from "../../core";
 import { supabase } from ".";
 
 export const Reports = {
-  list: async (): Promise<Report[]> => {
-    const { data, error }: PostgrestResponse<Report> = await supabase
-      .from(process.env.REPORTS_TABLE as string)
-      .select("*");
+  list: async (type?: string): Promise<Report[]> => {
+    let reports: Report[] = [];
 
-    if (error) throw new Error(error.message);
+    if (type) {
+      const { data: filteredData, error }: PostgrestResponse<Report> =
+        await supabase
+          .from(process.env.REPORTS_TABLE as string)
+          .select("*")
+          .eq("type", type);
 
-    return data;
+      if (error) throw new Error(error.message);
+
+      reports = [...filteredData];
+    } else {
+      const { data, error }: PostgrestResponse<Report> = await supabase
+        .from(process.env.REPORTS_TABLE as string)
+        .select("*");
+
+      if (error) throw new Error(error.message);
+      reports = [...data];
+    }
+
+    return reports;
   },
-  get: async (reportId: string): Promise<Report> => {
+  get: async (reportId: number): Promise<Report> => {
     const { data, error }: PostgrestSingleResponse<Report> = await supabase
       .from(process.env.REPORTS_TABLE as string)
       .select("*")

@@ -191,7 +191,7 @@ export const ReportSchema = z.object({
   body: z.string(),
   author: z.string(),
   posterUrl: z.string().nullable(),
-  type: z.enum(["summary", "foresight"]),
+  type: z.enum(["summary", "foresight", "analysis"]),
   factors: z.array(FactorSchema).optional(),
   perspective: PerspectiveSchema.optional(),
   sources: z.array(SourceSchema),
