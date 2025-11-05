@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { asyncHandler, AgentInput, Agent, id } from "../core";
-import { Agents, artDirectorQueue } from "../services";
+import { Agents, artDirectorQueue, Sources } from "../services";
 
 export const createAgentController = asyncHandler(
   async (
@@ -29,8 +29,9 @@ export const getAgentController = asyncHandler(
     reply: FastifyReply
   ): Promise<FastifyReply> => {
     const agent = await Agents.get(request.params.agentId);
+    const sources = await Sources.list();
 
-    return reply.status(200).send(agent);
+    return reply.status(200).send({ ...agent, sources });
   }
 );
 
