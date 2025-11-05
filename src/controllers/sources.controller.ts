@@ -29,3 +29,16 @@ export const getSource = asyncHandler(
     return reply.status(200).send(source);
   }
 );
+
+export const deleteSource = asyncHandler(
+  async (
+    request: FastifyRequest<{ Params: { sourceId: number } }>,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const { sourceId } = request.params;
+
+    const source = await Sources.delete(sourceId);
+
+    return reply.status(200).send(source);
+  }
+);

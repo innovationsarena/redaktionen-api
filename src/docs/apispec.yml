@@ -16,6 +16,8 @@ servers:
 tags:
   - name: Workflows
     description: Workflow orchestration for PESTEL analysis
+  - name: Agents
+    description: AI agents for news analysis and content generation
   - name: Signals
     description: Raw news signals from RSS feeds or newsletters inbound mails
   - name: Sources
@@ -44,6 +46,134 @@ components:
         - environmental
         - legal
       description: PESTEL factor category
+
+    Perspective:
+      type: string
+      enum:
+        - utopia
+        - dystopia
+        - reform
+        - system
+        - speculative
+        - historic
+      description: Analytical perspective for content generation
+
+    AgentType:
+      type: string
+      enum:
+        - tipster
+        - correspondent
+        - artdirector
+        - analysts
+        - editor
+        - forsighter
+      description: Type of AI agent
+
+    LLMConfig:
+      type: object
+      properties:
+        provider:
+          type: string
+          description: LLM provider name
+          example: "openai"
+        model:
+          type: string
+          description: Model identifier
+          example: "gpt-4"
+      required:
+        - provider
+        - model
+
+    Agent:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          example: "abc12345"
+        type:
+          $ref: "#/components/schemas/AgentType"
+        name:
+          type: string
+          description: Agent name
+          example: "Environmental Analyst"
+        description:
+          type: string
+          description: Agent description
+          example: "Analyzes environmental news and trends"
+        avatarUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL to the agent's avatar image
+          example: "https://storage.supabase.co/images/avatar-123.jpg"
+        agencyId:
+          type: string
+          description: Associated agency ID
+          example: "agency-123"
+        llm:
+          allOf:
+            - $ref: "#/components/schemas/LLMConfig"
+          nullable: true
+          description: LLM configuration for this agent
+        angle:
+          oneOf:
+            - $ref: "#/components/schemas/Factor"
+            - $ref: "#/components/schemas/Perspective"
+          description: Factor or Perspective depending on Agent type
+        prompt:
+          type: string
+          nullable: true
+          description: System prompt for the agent
+          example: "You are an environmental analyst..."
+      required:
+        - id
+        - type
+        - name
+        - description
+        - angle
+
+    AgentInput:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Optional identifier (will be generated if not provided)
+          example: "abc12345"
+        type:
+          $ref: "#/components/schemas/AgentType"
+        name:
+          type: string
+          description: Agent name
+          example: "Environmental Analyst"
+        description:
+          type: string
+          description: Agent description
+          example: "Analyzes environmental news and trends"
+        agencyId:
+          type: string
+          description: Associated agency ID
+          example: "agency-123"
+        llm:
+          allOf:
+            - $ref: "#/components/schemas/LLMConfig"
+          nullable: true
+          description: LLM configuration for this agent
+        angle:
+          oneOf:
+            - $ref: "#/components/schemas/Factor"
+            - $ref: "#/components/schemas/Perspective"
+          description: Factor or Perspective depending on Agent type
+        prompt:
+          type: string
+          nullable: true
+          description: System prompt for the agent
+          example: "You are an environmental analyst..."
+      required:
+        - type
+        - name
+        - description
+        - angle
 
     SourceType:
       type: string
@@ -181,6 +311,11 @@ components:
           items:
             $ref: "#/components/schemas/Signal"
 
+    AgentsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Agent"
+
     SourcesResponse:
       type: array
       items:
@@ -279,6 +414,220 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /agents:
+    get:
+      tags:
+        - Agents
+      summary: List agents
+      description: Retrieves all AI agents from the database
+      operationId: listAgents
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: List of agents retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentsResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    post:
+      tags:
+        - Agents
+      summary: Create agent
+      description: |
+        Creates a new AI agent for news analysis and content generation.
+        The agent's avatar will be automatically generated asynchronously.
+      operationId: createAgent
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Agent configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentInput"
+            example:
+              type: "correspondent"
+              name: "Environmental Correspondent"
+              description: "Analyzes environmental news and generates summaries"
+              agencyId: "agency-123"
+              llm:
+                provider: "openai"
+                model: "gpt-4"
+              angle: "environmental"
+              prompt: "You are an environmental news analyst..."
+      responses:
+        "200":
+          description: Agent created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /agents/{agentId}:
+    get:
+      tags:
+        - Agents
+      summary: Get agent by ID
+      description: Retrieves a single agent by its ID
+      operationId: getAgent
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: agentId
+          in: path
+          description: Agent ID
+          required: true
+          schema:
+            type: string
+            example: "abc12345"
+      responses:
+        "200":
+          description: Agent retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Agent not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    patch:
+      tags:
+        - Agents
+      summary: Update agent
+      description: Updates an existing agent's configuration
+      operationId: updateAgent
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: agentId
+          in: path
+          description: Agent ID
+          required: true
+          schema:
+            type: string
+            example: "abc12345"
+      requestBody:
+        description: Agent fields to update (partial update supported)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentInput"
+            example:
+              name: "Updated Environmental Correspondent"
+              description: "Updated description"
+              prompt: "Updated system prompt..."
+      responses:
+        "200":
+          description: Agent updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Agent not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    delete:
+      tags:
+        - Agents
+      summary: Delete agent
+      description: Deletes an agent by its ID
+      operationId: deleteAgent
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: agentId
+          in: path
+          description: Agent ID
+          required: true
+          schema:
+            type: string
+            example: "abc12345"
+      responses:
+        "200":
+          description: Agent deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Agent not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /signals:
     get:
       tags:
@@ -367,6 +716,48 @@ paths:
       responses:
         "200":
           description: Source retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Source"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Source not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    delete:
+      tags:
+        - Sources
+      summary: Delete source
+      description: Deletes a news source by its ID
+      operationId: deleteSource
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: sourceId
+          in: path
+          description: Source ID
+          required: true
+          schema:
+            type: integer
+            example: 42
+      responses:
+        "200":
+          description: Source deleted successfully
           content:
             application/json:
               schema:

@@ -72,4 +72,15 @@ export const Sources = {
     if (error) throw new Error(error.message);
     return data;
   },
+  delete: async (sourceId: number): Promise<Source> => {
+    const { data, error }: PostgrestSingleResponse<Source> = await supabase
+      .from(process.env.SOURCES_TABLE as string)
+      .delete()
+      .eq("id", sourceId)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  },
 };

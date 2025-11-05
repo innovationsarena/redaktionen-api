@@ -82,6 +82,10 @@ new Worker(
       const { report } = job.data;
       await artDirector(report, "report");
     }
+    if (job.name === "artdirector.image.avatar") {
+      const { agent } = job.data;
+      await artDirector(agent, "agent");
+    }
   },
   {
     connection,

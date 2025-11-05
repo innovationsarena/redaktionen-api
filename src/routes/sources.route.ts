@@ -1,6 +1,6 @@
 import { FastifyInstance, RouteHandlerMethod } from "fastify";
-import { getSignal, listSignals } from "../controllers";
 import { validateKey } from "../core";
+import { deleteSource, getSource, listSources } from "../controllers";
 
 export const sourcesRouter = (fastify: FastifyInstance) => {
   fastify.get(
@@ -8,13 +8,20 @@ export const sourcesRouter = (fastify: FastifyInstance) => {
     {
       preValidation: [validateKey],
     },
-    listSignals as unknown as RouteHandlerMethod
+    listSources as unknown as RouteHandlerMethod
   );
   fastify.get(
     "/sources/:sourceId",
     {
       preValidation: [validateKey],
     },
-    getSignal as unknown as RouteHandlerMethod
+    getSource as unknown as RouteHandlerMethod
+  );
+  fastify.delete(
+    "/sources/:sourceId",
+    {
+      preValidation: [validateKey],
+    },
+    deleteSource as unknown as RouteHandlerMethod
   );
 };

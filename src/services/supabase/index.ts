@@ -11,3 +11,4 @@ export * from "./summaries.operations";
 export * from "./sources.operations";
 export * from "./signals.operations";
 export * from "./reports.operations";
+export * from "./agents.operations";

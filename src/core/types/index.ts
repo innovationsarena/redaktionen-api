@@ -23,6 +23,55 @@ export const PerspectiveSchema = z.enum([
 ]);
 export type Perspective = z.infer<typeof PerspectiveSchema>;
 
+export const AgentTypeSchema = z.enum([
+  "tipster",
+  "correspondent",
+  "artdirector",
+  "analysts",
+  "editor",
+  "forsighter",
+]);
+export type AgentType = z.infer<typeof AgentTypeSchema>;
+
+export const AgentSchema = z.object({
+  id: z.string(),
+  type: AgentTypeSchema,
+  name: z.string(),
+  description: z.string(),
+  avatarUrl: z.string().nullable(),
+  agencyId: z.string().optional(),
+  llm: z
+    .object({
+      provider: z.string(),
+      model: z.string(),
+    })
+    .nullable(),
+  angle: z
+    .union([PerspectiveSchema, FactorSchema])
+    .describe("Factor or Perspective depending on Agent type."),
+  prompt: z.string().nullable(),
+});
+export type Agent = z.infer<typeof AgentSchema>;
+
+export const AgentInputSchema = z.object({
+  id: z.string().optional(),
+  type: AgentTypeSchema,
+  name: z.string(),
+  description: z.string(),
+  agencyId: z.string().optional(),
+  llm: z
+    .object({
+      provider: z.string(),
+      model: z.string(),
+    })
+    .nullable(),
+  angle: z
+    .union([PerspectiveSchema, FactorSchema])
+    .describe("Factor or Perspective depending on Agent type."),
+  prompt: z.string().nullable(),
+});
+export type AgentInput = z.infer<typeof AgentInputSchema>;
+
 export const StatsSchema = z.object({
   tokens: z.number(),
   signals: z.number(),

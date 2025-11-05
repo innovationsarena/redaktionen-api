@@ -1,39 +1,60 @@
+import { Agents, Reports, Summaries, supabase } from "../services";
+import { Summary, Report, Agent } from "../core";
+import { openai } from "@ai-sdk/openai";
+import sharp from "sharp";
+import z from "zod";
 import {
   generateObject,
   experimental_generateImage as generateImage,
 } from "ai";
-import { Summary, Report } from "../core";
-import { openai } from "@ai-sdk/openai";
-import { Reports, Summaries, supabase } from "../services";
-import z from "zod";
-import sharp from "sharp";
 
 export const artDirector = async (
-  content: Summary | Report,
-  type: "summary" | "report"
+  content: any, // Summary | Report | Agent
+  type: "summary" | "report" | "agent"
 ): Promise<void> => {
-  console.log(
-    `Art director creating poster image to '${content.title}' ${type}.`
-  );
+  let system = `
+  You are an image-generation assistant. For each user input , extract 2-3 concise symbolic keywords and produce a single short photorealistic poster prompt. Output only the final prompt (one line), do not add explanations.
 
-  const system = `
-    You are an image-generation assistant. For each user input , extract 2-3 concise symbolic keywords and produce a single short photorealistic poster prompt. Output only the final prompt (one line), do not add explanations.
+  ## Prompt requirements
+  - Style: Photorealistic, vibrant pastel palette.
+  - Subject: symbolic objects or situations representing the given summary arranged in a creative way
+  - People: No human faces or identifiable people.
+  - No logos, no on-image text.
+  - Lighting/composition: Soft natural lighting, high detail, shallow depth of field, cinematic composition.
+  - Orientation: Horizontal poster (16:9 aspect ratio).
 
-    Prompt requirements:
-    - Style: Photorealistic, vibrant pastel palette.
-    - Subject: symbolic objects or situations representing the given summary arranged in a creative way
-    - People: No human faces or identifiable people.
-    - No logos, no on-image text.
-    - Lighting/composition: Soft natural lighting, high detail, shallow depth of field, cinematic composition.
-    - Orientation: Horizontal poster (16:9 aspect ratio).
-
-    Output: 
-    The output should be a complete prompt that will be directly prompted to an image model.
+  ## Output
+  The output should be a complete prompt that will be directly prompted to an image model.
 `;
 
-  const prompt = `Create a poster image that represents this article: 
-  title: ${content.title}
-  body: ${content.body}`;
+  let prompt = `Create an image.`;
+
+  if (type === "summary") {
+    prompt = `Create a poster image that represents this article: 
+      title: ${content.title}
+      body: ${content.body}`;
+  }
+
+  if (type === "report") {
+    prompt = `Create a poster image that represents this article: 
+      title: ${content.title}
+      body: ${content.body}`;
+  }
+  if (type === "agent") {
+    system = `
+      You are an image-generation assistant. 
+
+      ## Instructions
+      - hotorealistic professional headshot of the given description
+      - close-up on head, direct eye contact, confident and approachable, the face should be in the middle of the picture
+      - tidy grooming, attire appropriate for given description
+      - soft studio lighting, shallow depth of field, neutral background
+      - natural colors, high detail, 1:1 portrait, no text
+    `;
+    prompt = `Create a portrait image that represents this description: ${content.description}`;
+  }
+
+  console.log(`Art director creating poster image type: ${type}.`);
 
   try {
     // Art prompt
@@ -65,6 +86,11 @@ export const artDirector = async (
     if (type === "report") {
       // Update report with public URL
       await Reports.update({ ...(content as Report), posterUrl: url });
+    }
+
+    if (type === "agent") {
+      // Update report with public URL
+      await Agents.update({ ...(content as Agent), avatarUrl: url });
     }
 
     return;
