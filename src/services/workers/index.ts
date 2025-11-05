@@ -53,8 +53,8 @@ new Worker(
         });
       }
 
-      if (context.forsight) {
-        console.log("Sending to forsight team.");
+      if (context.foresight) {
+        console.log("Sending to foresight team.");
       }
     }
   },

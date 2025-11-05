@@ -29,7 +29,7 @@ export const AgentTypeSchema = z.enum([
   "artdirector",
   "analysts",
   "editor",
-  "forsighter",
+  "foresighter",
 ]);
 export type AgentType = z.infer<typeof AgentTypeSchema>;
 
@@ -169,7 +169,7 @@ export const WorkflowInputSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   factors: z.array(FactorSchema),
-  forsight: z.boolean(),
+  foresight: z.boolean(),
   analysts: z.boolean(),
   tipLimit: z.number(),
 });
@@ -182,7 +182,7 @@ export const ReportSchema = z.object({
   body: z.string(),
   author: z.string(),
   posterUrl: z.string().nullable(),
-  type: z.enum(["summary", "forsight"]),
+  type: z.enum(["summary", "foresight"]),
   factors: z.array(FactorSchema).optional(),
   perspective: PerspectiveSchema.optional(),
   sources: z.array(SourceSchema),

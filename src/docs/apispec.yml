@@ -66,7 +66,7 @@ components:
         - artdirector
         - analysts
         - editor
-        - forsighter
+        - foresighter
       description: Type of AI agent
 
     LLMConfig:
@@ -343,7 +343,7 @@ components:
             $ref: "#/components/schemas/Factor"
           description: PESTEL factors to analyze
           example: ["environmental", "economic"]
-        forsight:
+        foresight:
           type: boolean
           description: Enable foresight team
           example: true
@@ -359,7 +359,7 @@ components:
       required:
         - name
         - factors
-        - forsight
+        - foresight
         - analysts
         - tipLimit
 
@@ -440,7 +440,7 @@ paths:
               name: "PESTEL Analysis January 2025"
               description: "Monthly PESTEL analysis focusing on environmental and economic factors"
               factors: ["environmental", "economic", "technological"]
-              forsight: true
+              foresight: true
               analysts: true
               tipLimit: 5
       responses:

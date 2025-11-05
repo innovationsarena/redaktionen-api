@@ -27,7 +27,7 @@ flowchart LR
     X{<h3>Researcher Team</h3>}
     Y{<h3>Art department</h3>}
 
-    N{<h3>Forsight Team</h3>}
+    N{<h3>Foresight Team</h3>}
     O{<h3>The Utopian</h3>}
     P{<h3>The Dystopian</h3>}
     Q{<h3>The Reformist</h3>}
@@ -35,7 +35,7 @@ flowchart LR
     S{<h3>The Speculator</h3>}
     T{<h3>The Historian</h3>}
 
-    U{<h3>Forsight Editor</h3>}
+    U{<h3>Foresight Editor</h3>}
 
     V{<h3>Scenario Team</h3>}
 
@@ -85,5 +85,5 @@ flowchart LR
     S -- fortsight raport --> U
     T -- fortsight raport --> U
 
-    U -- forsight raport summary --> V
+    U -- Foresight raport summary --> V
 ```
