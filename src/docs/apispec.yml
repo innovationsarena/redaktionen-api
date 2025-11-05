@@ -468,8 +468,16 @@ paths:
       tags:
         - Agents
       summary: List agents
-      description: Retrieves all AI agents from the database
+      description: Retrieves all AI agents from the database, optionally filtered by agent type
       operationId: listAgents
+      parameters:
+        - name: type
+          in: query
+          description: Filter agents by type
+          required: false
+          schema:
+            $ref: "#/components/schemas/AgentType"
+          example: correspondent
       responses:
         "200":
           description: List of agents retrieved successfully
