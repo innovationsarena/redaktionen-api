@@ -1022,6 +1022,14 @@ paths:
       summary: List summaries
       description: Retrieves all AI-generated summaries with poster images from the database
       operationId: listSummaries
+      parameters:
+        - name: type
+          in: query
+          description: Filter summaries by factor
+          required: false
+          schema:
+            $ref: "#/components/schemas/Factor"
+          example: political
       responses:
         "200":
           description: List of summaries retrieved successfully
