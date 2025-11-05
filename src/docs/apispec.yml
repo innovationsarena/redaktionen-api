@@ -18,6 +18,8 @@ tags:
     description: Workflow orchestration for PESTEL analysis
   - name: Signals
     description: Raw news signals from RSS feeds or newsletters inbound mails
+  - name: Sources
+    description: RSS and newsletter sources for news aggregation
   - name: Summaries
     description: AI-generated summaries with poster images
   - name: Webhooks
@@ -42,6 +44,43 @@ components:
         - environmental
         - legal
       description: PESTEL factor category
+
+    SourceType:
+      type: string
+      enum:
+        - rss
+        - newsletter
+      description: Type of news source
+
+    Source:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier
+          example: 1
+        agencyId:
+          type: string
+          description: Associated agency ID
+          example: "agency-123"
+        source:
+          type: string
+          description: Name of the source
+          example: "BBC News"
+        type:
+          $ref: "#/components/schemas/SourceType"
+        url:
+          type: string
+          format: uri
+          description: URL to the RSS feed or newsletter
+          example: "https://feeds.bbci.co.uk/news/rss.xml"
+        factor:
+          $ref: "#/components/schemas/Factor"
+      required:
+        - source
+        - type
+        - url
+        - factor
 
     Signal:
       type: object
@@ -141,6 +180,11 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Signal"
+
+    SourcesResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Source"
 
     SummariesResponse:
       type: array
@@ -242,6 +286,8 @@ paths:
       summary: List signals
       description: Retrieves all news signals from the database, optionally filtered by PESTEL factor
       operationId: listSignals
+      security:
+        - BearerAuth: []
       parameters:
         - name: factor
           in: query
@@ -259,6 +305,86 @@ paths:
                 $ref: "#/components/schemas/SignalsResponse"
         "400":
           description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /sources:
+    get:
+      tags:
+        - Sources
+      summary: List sources
+      description: Retrieves all news sources (RSS feeds and newsletters) from the database, optionally filtered by PESTEL factor
+      operationId: listSources
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: factor
+          in: query
+          description: Filter sources by PESTEL factor
+          required: false
+          schema:
+            $ref: "#/components/schemas/Factor"
+          example: environmental
+      responses:
+        "200":
+          description: List of sources retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourcesResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /sources/{sourceId}:
+    get:
+      tags:
+        - Sources
+      summary: Get source by ID
+      description: Retrieves a single news source by its ID
+      operationId: getSource
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: sourceId
+          in: path
+          description: Source ID
+          required: true
+          schema:
+            type: integer
+            example: 42
+      responses:
+        "200":
+          description: Source retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Source"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Source not found
           content:
             application/json:
               schema:
