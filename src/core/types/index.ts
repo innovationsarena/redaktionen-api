@@ -50,7 +50,6 @@ export const AgentSchema = z.object({
   description: z.string(),
   avatarUrl: z.string().nullable(),
   agencyId: z.string().optional(),
-  sources: z.array(SourceSchema).optional(),
   llm: z
     .object({
       provider: z.string(),

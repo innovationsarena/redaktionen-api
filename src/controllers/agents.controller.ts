@@ -29,9 +29,8 @@ export const getAgentController = asyncHandler(
     reply: FastifyReply
   ): Promise<FastifyReply> => {
     const agent = await Agents.get(request.params.agentId);
-    const sources = await Sources.list();
 
-    return reply.status(200).send({ ...agent, sources });
+    return reply.status(200).send(agent);
   }
 );
 

@@ -101,11 +101,6 @@ components:
           type: string
           description: Agent description
           example: "Analyzes environmental news and trends"
-        sources:
-          type: array
-          description: List of sources'''''''
-          items:
-            $ref: "#/components/schemas/Source"
         avatarUrl:
           type: string
           format: uri
