@@ -9,12 +9,15 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import yaml from "yaml";
 
-import { workflowRouter } from "./routes";
-import { signalsRouter } from "./routes/signals.route";
-import { summariesRouter } from "./routes/summaries.route";
-import { agenciesRouter } from "./routes/agencies.route";
-import { webhooksRouter } from "./routes/webhooks.route";
-import { agentsRouter } from "./routes/agents.route";
+import {
+  agenciesRouter,
+  agentsRouter,
+  signalsRouter,
+  sourcesRouter,
+  summariesRouter,
+  webhooksRouter,
+  workflowRouter,
+} from "./routes";
 
 const PORT = Number(process.env.PORT) || 3000;
 
@@ -76,6 +79,7 @@ server.register(agenciesRouter);
 server.register(workflowRouter);
 server.register(webhooksRouter);
 server.register(signalsRouter);
+server.register(sourcesRouter);
 server.register(agentsRouter);
 
 server.listen({
