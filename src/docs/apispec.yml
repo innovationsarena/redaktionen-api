@@ -212,6 +212,32 @@ components:
         - url
         - factor
 
+    SourceInput:
+      type: object
+      properties:
+        agencyId:
+          type: string
+          description: Optional associated agency ID
+          example: "agency-123"
+        source:
+          type: string
+          description: Name of the source
+          example: "BBC News"
+        type:
+          $ref: "#/components/schemas/SourceType"
+        url:
+          type: string
+          format: uri
+          description: URL to the RSS feed or newsletter
+          example: "https://feeds.bbci.co.uk/news/rss.xml"
+        factor:
+          $ref: "#/components/schemas/Factor"
+      required:
+        - source
+        - type
+        - url
+        - factor
+
     Signal:
       type: object
       properties:
@@ -737,6 +763,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+
+    post:
+      tags:
+        - Sources
+      summary: Create source
+      description: Creates a new news source (RSS feed or newsletter)
+      operationId: createSource
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Source configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SourceInput"
+            example:
+              source: "BBC News"
+              type: "rss"
+              url: "https://feeds.bbci.co.uk/news/rss.xml"
+              factor: "environmental"
+              agencyId: "agency-123"
+      responses:
+        "200":
+          description: Source created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Source"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "401":
           description: Unauthorized - Invalid or missing API key
           content:
@@ -772,12 +833,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized - Invalid or missing API key
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthResponse"
         "404":
           description: Source not found
           content:

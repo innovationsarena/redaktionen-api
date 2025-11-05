@@ -1,6 +1,11 @@
 import { FastifyInstance, RouteHandlerMethod } from "fastify";
 import { validateKey } from "../core";
-import { deleteSource, getSource, listSources } from "../controllers";
+import {
+  deleteSource,
+  getSource,
+  listSources,
+  createSource,
+} from "../controllers";
 
 export const sourcesRouter = (fastify: FastifyInstance) => {
   fastify.get(
@@ -9,6 +14,13 @@ export const sourcesRouter = (fastify: FastifyInstance) => {
       preValidation: [],
     },
     listSources as unknown as RouteHandlerMethod
+  );
+  fastify.post(
+    "/sources",
+    {
+      preValidation: [validateKey],
+    },
+    createSource as unknown as RouteHandlerMethod
   );
   fastify.get(
     "/sources/:sourceId",

@@ -43,6 +43,15 @@ export const SourceSchema = z.object({
 });
 export type Source = z.infer<typeof SourceSchema>;
 
+export const SourceInputSchema = z.object({
+  agencyId: z.string().optional(),
+  source: z.string(),
+  type: SourceTypeSchema,
+  url: z.string(),
+  factor: FactorSchema,
+});
+export type SourceInput = z.infer<typeof SourceInputSchema>;
+
 export const AgentSchema = z.object({
   id: z.string(),
   type: AgentTypeSchema,
