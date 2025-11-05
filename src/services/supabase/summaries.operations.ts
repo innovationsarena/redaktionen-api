@@ -11,13 +11,29 @@ export const supabase = new SupabaseClient(
 );
 
 export const Summaries = {
-  list: async (): Promise<Summary[]> => {
-    const { data, error }: PostgrestResponse<Summary> = await supabase
-      .from(process.env.SUMMARIES_TABLE as string)
-      .select("*");
+  list: async (factor?: string): Promise<Summary[]> => {
+    let summaries: Summary[] = [];
 
-    if (error) throw new Error(error.message);
-    return data;
+    if (factor) {
+      const { data: filteredData, error }: PostgrestResponse<Summary> =
+        await supabase
+          .from(process.env.SUMMARIES_TABLE as string)
+          .select("*")
+          .eq("factor", factor);
+
+      if (error) throw new Error(error.message);
+      summaries = [...filteredData];
+    } else {
+      const { data, error }: PostgrestResponse<Summary> = await supabase
+        .from(process.env.SUMMARIES_TABLE as string)
+        .select("*");
+
+      if (error) throw new Error(error.message);
+
+      summaries = [...data];
+    }
+
+    return summaries;
   },
   get: async (summaryId: number): Promise<Summary> => {
     const { data, error }: PostgrestSingleResponse<Summary> = await supabase
