@@ -385,6 +385,14 @@ components:
           description: Error message
           example: "This is a clear error message"
 
+    AuthResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "You are not authorized to interact with this resource"
+
     WebhookResponse:
       type: object
       properties:
@@ -453,7 +461,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
 
   /agents:
     get:
@@ -482,8 +490,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: "#/components/schemas/AuthResponse"
     post:
       tags:
         - Agents
@@ -529,7 +536,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
 
   /agents/{agentId}:
     get:
@@ -566,7 +573,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
         "404":
           description: Agent not found
           content:
@@ -619,7 +626,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
         "404":
           description: Agent not found
           content:
@@ -661,7 +668,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
         "404":
           description: Agent not found
           content:
@@ -735,7 +742,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
 
   /sources/{sourceId}:
     get:
@@ -772,7 +779,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
         "404":
           description: Source not found
           content:
@@ -814,7 +821,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
         "404":
           description: Source not found
           content:
@@ -849,7 +856,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
 
   /summaries/{summary}:
     get:
@@ -886,7 +893,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/AuthResponse"
         "404":
           description: Summary not found
           content:
