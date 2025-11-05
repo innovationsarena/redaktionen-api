@@ -6,14 +6,14 @@ export const sourcesRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/sources",
     {
-      preValidation: [validateKey],
+      preValidation: [],
     },
     listSources as unknown as RouteHandlerMethod
   );
   fastify.get(
     "/sources/:sourceId",
     {
-      preValidation: [validateKey],
+      preValidation: [],
     },
     getSource as unknown as RouteHandlerMethod
   );

@@ -470,8 +470,6 @@ paths:
       summary: List agents
       description: Retrieves all AI agents from the database
       operationId: listAgents
-      security:
-        - BearerAuth: []
       responses:
         "200":
           description: List of agents retrieved successfully
@@ -545,8 +543,6 @@ paths:
       summary: Get agent by ID
       description: Retrieves a single agent by its ID
       operationId: getAgent
-      security:
-        - BearerAuth: []
       parameters:
         - name: agentId
           in: path
@@ -683,8 +679,6 @@ paths:
       summary: List signals
       description: Retrieves all news signals from the database, optionally filtered by PESTEL factor
       operationId: listSignals
-      security:
-        - BearerAuth: []
       parameters:
         - name: factor
           in: query
@@ -714,8 +708,6 @@ paths:
       summary: List sources
       description: Retrieves all news sources (RSS feeds and newsletters) from the database, optionally filtered by PESTEL factor
       operationId: listSources
-      security:
-        - BearerAuth: []
       parameters:
         - name: factor
           in: query
@@ -751,8 +743,6 @@ paths:
       summary: Get source by ID
       description: Retrieves a single news source by its ID
       operationId: getSource
-      security:
-        - BearerAuth: []
       parameters:
         - name: sourceId
           in: path
@@ -836,8 +826,6 @@ paths:
       summary: List summaries
       description: Retrieves all AI-generated summaries with poster images from the database
       operationId: listSummaries
-      security:
-        - BearerAuth: []
       responses:
         "200":
           description: List of summaries retrieved successfully
@@ -865,8 +853,6 @@ paths:
       summary: Get summary by ID
       description: Retrieves a single summary by its ID
       operationId: getSummary
-      security:
-        - BearerAuth: []
       parameters:
         - name: summary
           in: path

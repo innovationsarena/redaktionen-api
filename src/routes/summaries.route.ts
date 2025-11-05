@@ -6,7 +6,7 @@ export const summariesRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/summaries",
     {
-      preValidation: [validateKey],
+      preValidation: [],
     },
     listSummariesController as unknown as RouteHandlerMethod
   );

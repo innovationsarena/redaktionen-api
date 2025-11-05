@@ -6,14 +6,14 @@ export const signalsRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/signals",
     {
-      preValidation: [validateKey],
+      preValidation: [],
     },
     listSignals as unknown as RouteHandlerMethod
   );
   fastify.get(
     "/signals/:signalId",
     {
-      preValidation: [validateKey],
+      preValidation: [],
     },
     getSignal as unknown as RouteHandlerMethod
   );
