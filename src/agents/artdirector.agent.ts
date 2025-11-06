@@ -67,12 +67,15 @@ export const artDirector = async (
       schema: z.object({ imagePrompt: z.string() }),
     });
 
+    const size: number[] = type === "agent" ? [512, 512] : [1024, 640];
+
     // Create Image
     const { image } = await generateImage({
       model: openai.image(
         (process.env.DEFAULT_IMAGE_MODEL as string) || "gpt-image-1-mini"
       ),
       prompt: object.imagePrompt,
+      size: `${size[0]}x${size[1]}`,
     });
 
     // Store Image
