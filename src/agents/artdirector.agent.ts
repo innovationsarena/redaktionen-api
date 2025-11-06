@@ -67,7 +67,7 @@ export const artDirector = async (
       schema: z.object({ imagePrompt: z.string() }),
     });
 
-    const size: number[] = type === "agent" ? [512, 512] : [1024, 640];
+    const size: number[] = type === "agent" ? [1024, 1024] : [1536, 1024];
 
     // Create Image
     const { image } = await generateImage({
