@@ -46,7 +46,7 @@ export const artDirector = async (
 
       ## Instructions
       - hotorealistic professional headshot of the given description
-      - close-up on head, direct eye contact, confident and approachable, the face should be in the middle of the picture
+      - close-up on head, direct eye contact, confident and approachable, the eyes must be in complete vertical middle of the image
       - tidy grooming, attire appropriate for given description
       - soft studio lighting, shallow depth of field, neutral background
       - natural colors, high detail, 1:1 portrait, no text
