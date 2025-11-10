@@ -45,7 +45,7 @@ export const artDirector = async (
       You are an image-generation assistant. 
 
       ## Instructions
-      - hotorealistic professional headshot of the given description
+      - photorealistic professional headshot of the given description
       - close-up on head, direct eye contact, confident and approachable, the eyes must be in complete vertical middle of the image
       - tidy grooming, attire appropriate for given description
       - soft studio lighting, shallow depth of field, neutral background
