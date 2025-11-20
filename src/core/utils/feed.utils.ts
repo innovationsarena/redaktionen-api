@@ -83,7 +83,7 @@ export const parseFeed = (feedItems: RSSItem[], factor: any): Signal[] => {
   feedItems.forEach((item) => {
     signals.push({
       title: item.title,
-      summary: item.content,
+      summary: cleanString(item.content),
       source: item.creator,
       sourceUrl: item.link ? item.link : "no-url-provided",
       date: item.isoDate,
@@ -93,3 +93,33 @@ export const parseFeed = (feedItems: RSSItem[], factor: any): Signal[] => {
 
   return signals;
 };
+
+export function cleanString(input: string): string {
+  if (!input) return "";
+
+  // 1. Remove script/style/iframe tags completely
+  let cleaned = input.replace(
+    /<(script|style|iframe)[^>]*>[\s\S]*?<\/\1>/gi,
+    ""
+  );
+
+  // 2. Remove all remaining HTML tags
+  cleaned = cleaned.replace(/<\/?[^>]+>/g, " ");
+
+  // 3. Decode HTML entities (basic version)
+  cleaned = cleaned
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&auml;/g, "ä")
+    .replace(/&ouml;/g, "ö")
+    .replace(/&aring;/g, "å");
+
+  // 4. Normalize whitespace
+  cleaned = cleaned.replace(/\s+/g, " ").trim();
+
+  return cleaned;
+}
