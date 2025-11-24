@@ -194,7 +194,7 @@ export const ReportSchema = z.object({
   type: z.enum(["summary", "foresight", "analysis"]),
   factors: z.array(FactorSchema).optional(),
   perspective: PerspectiveSchema.optional(),
-  sources: z.array(SourceSchema),
+  sources: z.array(SignalSchema),
 });
 export type Report = z.infer<typeof ReportSchema>;
 

@@ -1,6 +1,6 @@
 import { summaryEditor } from "../agents";
 import { Summary, WorkflowInput, Report } from "../core";
-import { artDirectorQueue, Reports, Sources } from "../services";
+import { artDirectorQueue, Reports, Signals } from "../services";
 
 export const editorWorkflow = async (
   summaries: Summary[],
@@ -9,7 +9,7 @@ export const editorWorkflow = async (
   console.log("Summary editor is generating a summary...");
 
   const { title, lede, body } = await summaryEditor(summaries);
-  const s = await Sources.list();
+  const s = await Signals.list();
 
   const report: Report = {
     title,
@@ -23,6 +23,7 @@ export const editorWorkflow = async (
   };
 
   const writtenReport = await Reports.write(report);
+
   await artDirectorQueue.add("artdirector.image.report", {
     writtenReport,
     context,
