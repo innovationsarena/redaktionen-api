@@ -92,7 +92,7 @@ export const artDirector = async (
     }
 
     if (type === "agent") {
-      // Update report with public URL
+      // Update agent with public URL
       await Agents.update({ ...(content as Agent), avatarUrl: url });
     }
 
