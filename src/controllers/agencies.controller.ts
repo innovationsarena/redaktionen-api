@@ -38,3 +38,42 @@ export const getAgencyController = asyncHandler(
     });
   }
 );
+
+export const listAgenciesController = asyncHandler(
+  async (
+    request: FastifyRequest,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const agencies = await Agencies.list();
+
+    return reply.status(200).send(
+      agencies.map((agency) => ({
+        id: agency.id,
+        name: agency.name,
+        description: agency.description,
+      }))
+    );
+  }
+);
+
+export const updateAgencyController = asyncHandler(
+  async (
+    request: FastifyRequest<{ Params: { agencyId: string }; Body: AgencyInput }>,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const agency = await Agencies.get(request.params.agencyId);
+
+    const updatedAgency = await Agencies.update({
+      ...agency,
+      ...request.body,
+      id: agency.id,
+      private_key: agency.private_key,
+    });
+
+    return reply.status(200).send({
+      id: updatedAgency.id,
+      name: updatedAgency.name,
+      description: updatedAgency.description,
+    });
+  }
+);

@@ -14,6 +14,8 @@ servers:
     description: Production server
 
 tags:
+  - name: Agencies
+    description: Agency management for multi-tenant access
   - name: Workflows
     description: Workflow orchestration for PESTEL analysis
   - name: Agents
@@ -89,7 +91,7 @@ components:
         model:
           type: string
           description: Model identifier
-          example: "gpt-4"
+          example: "gpt-5-mini"
       required:
         - provider
         - model
@@ -117,7 +119,7 @@ components:
           nullable: true
           description: URL to the agent's avatar image
           example: "https://storage.supabase.co/images/avatar-123.jpg"
-        agencyId:
+        agency:
           type: string
           description: Associated agency ID
           example: "agency-123"
@@ -160,7 +162,7 @@ components:
           type: string
           description: Agent description
           example: "Analyzes environmental news and trends"
-        agencyId:
+        agency:
           type: string
           description: Associated agency ID
           example: "agency-123"
@@ -199,7 +201,7 @@ components:
           type: integer
           description: Unique identifier
           example: 1
-        agencyId:
+        agency:
           type: string
           description: Associated agency ID
           example: "agency-123"
@@ -225,7 +227,7 @@ components:
     SourceInput:
       type: object
       properties:
-        agencyId:
+        agency:
           type: string
           description: Optional associated agency ID
           example: "agency-123"
@@ -393,6 +395,63 @@ components:
         - type
         - sources
 
+    Agency:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          example: "abc12345"
+        name:
+          type: string
+          description: Agency name
+          example: "News Agency Inc"
+        description:
+          type: string
+          description: Agency description
+          example: "A leading news aggregation agency"
+      required:
+        - id
+        - name
+
+    AgencyInput:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Optional identifier (will be generated if not provided)
+          example: "abc12345"
+        name:
+          type: string
+          description: Agency name
+          example: "News Agency Inc"
+        description:
+          type: string
+          description: Agency description
+          example: "A leading news aggregation agency"
+        owner:
+          type: string
+          description: Owner identifier
+          example: "user-123"
+      required:
+        - name
+        - owner
+
+    AgencyCreateResponse:
+      type: object
+      properties:
+        apiKey:
+          type: string
+          description: Generated API key (only returned on creation)
+          example: "gr-abc12345"
+      required:
+        - apiKey
+
+    AgenciesResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Agency"
+
     SignalsResponse:
       type: object
       properties:
@@ -558,6 +617,160 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthResponse"
 
+  /agencies:
+    get:
+      tags:
+        - Agencies
+      summary: List agencies
+      description: Retrieves all agencies from the database
+      operationId: listAgencies
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: List of agencies retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgenciesResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+    post:
+      tags:
+        - Agencies
+      summary: Create agency
+      description: |
+        Creates a new agency and returns a generated API key.
+        The API key is only returned once during creation and should be stored securely.
+      operationId: createAgency
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Agency configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgencyInput"
+            example:
+              name: "News Agency Inc"
+              description: "A leading news aggregation agency"
+              owner: "user-123"
+      responses:
+        "200":
+          description: Agency created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgencyCreateResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /agencies/{agencyId}:
+    get:
+      tags:
+        - Agencies
+      summary: Get agency by ID
+      description: Retrieves a single agency by its ID
+      operationId: getAgency
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: agencyId
+          in: path
+          description: Agency ID
+          required: true
+          schema:
+            type: string
+            example: "abc12345"
+      responses:
+        "200":
+          description: Agency retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agency"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "404":
+          description: Agency not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    put:
+      tags:
+        - Agencies
+      summary: Update agency
+      description: Updates an existing agency's configuration
+      operationId: updateAgency
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: agencyId
+          in: path
+          description: Agency ID
+          required: true
+          schema:
+            type: string
+            example: "abc12345"
+      requestBody:
+        description: Agency fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgencyInput"
+            example:
+              name: "Updated Agency Name"
+              description: "Updated description"
+              owner: "user-123"
+      responses:
+        "200":
+          description: Agency updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agency"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "404":
+          description: Agency not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /agents:
     get:
       tags:
@@ -613,10 +826,10 @@ paths:
               type: "correspondent"
               name: "Environmental Correspondent"
               description: "Analyzes environmental news and generates summaries"
-              agencyId: "agency-123"
+              agency: "agency-123"
               llm:
                 provider: "openai"
-                model: "gpt-4"
+                model: "gpt-5-mini"
               angle: "environmental"
               prompt: "You are an environmental news analyst..."
       responses:
@@ -853,7 +1066,7 @@ paths:
               type: "rss"
               url: "https://feeds.bbci.co.uk/news/rss.xml"
               factor: "environmental"
-              agencyId: "agency-123"
+              agency: "agency-123"
       responses:
         "200":
           description: Source created successfully
