@@ -1,5 +1,5 @@
 import { FastifyInstance, RouteHandlerMethod } from "fastify";
-import { validateKey } from "../core";
+import { validateAgencyKey } from "../core";
 import {
   deleteSource,
   getSource,
@@ -11,28 +11,28 @@ export const sourcesRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/sources",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     listSources as unknown as RouteHandlerMethod
   );
   fastify.post(
     "/sources",
     {
-      preValidation: [validateKey],
+      preValidation: [validateAgencyKey],
     },
     createSource as unknown as RouteHandlerMethod
   );
   fastify.get(
     "/sources/:sourceId",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     getSource as unknown as RouteHandlerMethod
   );
   fastify.delete(
     "/sources/:sourceId",
     {
-      preValidation: [validateKey],
+      preValidation: [validateAgencyKey],
     },
     deleteSource as unknown as RouteHandlerMethod
   );

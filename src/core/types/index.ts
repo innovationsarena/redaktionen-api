@@ -35,7 +35,7 @@ export type AgentType = z.infer<typeof AgentTypeSchema>;
 
 export const SourceSchema = z.object({
   id: z.number().optional(),
-  agencyId: z.string().optional(),
+  agency: z.string().optional(),
   source: z.string(),
   type: SourceTypeSchema,
   url: z.string(),
@@ -44,7 +44,7 @@ export const SourceSchema = z.object({
 export type Source = z.infer<typeof SourceSchema>;
 
 export const SourceInputSchema = z.object({
-  agencyId: z.string().optional(),
+  agency: z.string().optional(),
   source: z.string(),
   type: SourceTypeSchema,
   url: z.string(),
@@ -57,6 +57,7 @@ export const AgentSchema = z.object({
   type: AgentTypeSchema,
   name: z.string(),
   description: z.string(),
+  agency: z.string().optional(),
   avatarUrl: z.string().nullable(),
   agencyId: z.string().optional(),
   llm: z
@@ -131,6 +132,7 @@ export const SignalSchema = z.object({
   title: z.string(),
   summary: z.string(),
   source: z.string(),
+  agency: z.string().optional(),
   sourceUrl: z.string(),
   date: z.string(),
   factor: FactorSchema,
@@ -141,6 +143,7 @@ export const SummarySchema = z.object({
   id: z.number().optional(),
   title: z.string(),
   body: z.string(),
+  agency: z.string().optional(),
   posterUrl: z.string().nullable(), // string or null
   signalId: z.number(),
   sourceUrl: z.string(),
@@ -190,6 +193,7 @@ export const ReportSchema = z.object({
   lede: z.string(),
   body: z.string(),
   author: z.string(),
+  agency: z.string().optional(),
   posterUrl: z.string().nullable(),
   type: z.enum(["summary", "foresight", "analysis"]),
   factors: z.array(FactorSchema).optional(),
@@ -202,5 +206,24 @@ export const ReportInputSchema = z.object({
   title: z.string(),
   lede: z.string(),
   body: z.string(),
+  agency: z.string().optional(),
 });
 export type ReportInput = z.infer<typeof ReportInputSchema>;
+
+/**
+ * Agency context for multi-tenant requests
+ * Attached to request by validateAgencyKey middleware
+ */
+export interface AgencyContext {
+  id: string;
+  name: string;
+  description?: string;
+  owner: string;
+}
+
+// Extend Fastify types to include agency context
+declare module "fastify" {
+  interface FastifyRequest {
+    agency?: AgencyContext;
+  }
+}

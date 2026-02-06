@@ -27,14 +27,14 @@ export const Agencies = {
   },
   getByApiKey: async (
     apiKey: string
-  ): Promise<{ data: Agency; error: PostgrestError }> => {
-    const { data, error }: PostgrestSingleResponse<Agency> = await supabase
+  ): Promise<{ data: Agency | null; error: PostgrestError | null }> => {
+    const { data, error } = await supabase
       .from(process.env.AGENCIES_TABLE as string)
       .select("*")
       .eq("private_key", apiKey)
-      .single();
+      .maybeSingle();
 
-    return { data: data as Agency, error: error as PostgrestError };
+    return { data: data as Agency | null, error };
   },
   write: async (agency: AgencyInput): Promise<Agency> => {
     const { data, error }: PostgrestSingleResponse<Agency> = await supabase

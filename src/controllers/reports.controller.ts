@@ -8,8 +8,9 @@ export const listReports = asyncHandler(
     reply: FastifyReply
   ): Promise<FastifyReply> => {
     const { type } = request.query;
+    const agencyId = request.agency?.id;
 
-    const reports = await Reports.list(type);
+    const reports = await Reports.list({ type, agencyId });
 
     return reply.status(200).send(reports);
   }
@@ -21,8 +22,9 @@ export const getReport = asyncHandler(
     reply: FastifyReply
   ): Promise<FastifyReply> => {
     const { reportId } = request.params;
+    const agencyId = request.agency?.id;
 
-    const report = await Reports.get(reportId);
+    const report = await Reports.get(reportId, agencyId);
 
     return reply.status(200).send(report);
   }

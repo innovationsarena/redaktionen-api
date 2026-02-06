@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ZodError } from "zod";
-import { isValid } from "../utils";
+import { isValid, createHash } from "../utils";
+import { Agencies } from "../../services";
+import { AgencyContext } from "../types";
 import {
   AuthorizationHeaderSchema,
   BearerTokenSchema,
@@ -192,6 +194,80 @@ export const validateApiKey = async (
     const message = error instanceof Error ? error.message : "API key validation failed";
     return sendErrorResponse(reply, 500, "Internal Server Error", message);
   }
+};
+
+/**
+ * Validates API key and attaches agency context to request
+ * Used for multi-tenant endpoints that need agency information
+ *
+ * - If master API_KEY is used: request.agency is undefined (admin access to all agencies)
+ * - If agency key is used: request.agency contains the AgencyContext
+ */
+export const validateAgencyKey = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+): Promise<FastifyReply | void> => {
+  // Validate Authorization header exists and has correct format
+  const headerValidation = AuthorizationHeaderSchema.safeParse(
+    request.headers
+  );
+
+  if (!headerValidation.success) {
+    return reply.code(400).send({
+      error: "Bad Request",
+      message: formatZodError(headerValidation.error),
+      statusCode: 400,
+    });
+  }
+
+  // Extract Bearer token
+  const token = extractBearerToken(request.headers.authorization!);
+  if (!token) {
+    return reply.code(400).send({
+      error: "Bad Request",
+      message: "Invalid Authorization header format",
+      statusCode: 400,
+    });
+  }
+
+  // Validate token format
+  const tokenValidation = BearerTokenSchema.safeParse(token);
+  if (!tokenValidation.success) {
+    return reply.code(400).send({
+      error: "Bad Request",
+      message: formatZodError(tokenValidation.error),
+      statusCode: 400,
+    });
+  }
+
+  // Check if master admin key - grants access to all agencies
+  if (token === process.env.API_KEY) {
+    // Admin access: request.agency remains undefined
+    return;
+  }
+
+  // Hash the token and lookup agency
+  const hashedKey = await createHash(token);
+  const { data: agency, error } = await Agencies.getByApiKey(hashedKey);
+
+  // Reject if error occurred or no agency found
+  if (error !== null || agency === null) {
+    return reply.code(401).send({
+      error: "Unauthorized",
+      message: "Invalid API key",
+      statusCode: 401,
+    });
+  }
+
+  // Attach agency context to request for downstream use
+  const agencyContext: AgencyContext = {
+    id: agency.id,
+    name: agency.name,
+    description: agency.description,
+    owner: agency.owner,
+  };
+
+  request.agency = agencyContext;
 };
 
 // Re-export schemas for use in other parts of the application

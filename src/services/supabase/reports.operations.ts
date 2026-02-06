@@ -5,37 +5,40 @@ import {
 import { Report } from "../../core";
 import { supabase } from ".";
 
+interface ReportFilters {
+  type?: string;
+  agencyId?: string;
+}
+
 export const Reports = {
-  list: async (type?: string): Promise<Report[]> => {
-    let reports: Report[] = [];
+  list: async (filters?: ReportFilters): Promise<Report[]> => {
+    let query = supabase
+      .from(process.env.REPORTS_TABLE as string)
+      .select("*");
 
-    if (type) {
-      const { data: filteredData, error }: PostgrestResponse<Report> =
-        await supabase
-          .from(process.env.REPORTS_TABLE as string)
-          .select("*")
-          .eq("type", type);
-
-      if (error) throw new Error(error.message);
-
-      reports = [...filteredData];
-    } else {
-      const { data, error }: PostgrestResponse<Report> = await supabase
-        .from(process.env.REPORTS_TABLE as string)
-        .select("*");
-
-      if (error) throw new Error(error.message);
-      reports = [...data];
+    if (filters?.type) {
+      query = query.eq("type", filters.type);
+    }
+    if (filters?.agencyId) {
+      query = query.eq("agency", filters.agencyId);
     }
 
-    return reports;
+    const { data, error }: PostgrestResponse<Report> = await query;
+
+    if (error) throw new Error(error.message);
+    return data || [];
   },
-  get: async (reportId: number): Promise<Report> => {
-    const { data, error }: PostgrestSingleResponse<Report> = await supabase
+  get: async (reportId: number, agencyId?: string): Promise<Report> => {
+    let query = supabase
       .from(process.env.REPORTS_TABLE as string)
       .select("*")
-      .eq("id", reportId)
-      .single();
+      .eq("id", reportId);
+
+    if (agencyId) {
+      query = query.eq("agency", agencyId);
+    }
+
+    const { data, error }: PostgrestSingleResponse<Report> = await query.single();
 
     if (error) throw new Error(error.message);
     return data;

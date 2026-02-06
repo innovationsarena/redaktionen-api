@@ -8,8 +8,9 @@ export const listSignals = asyncHandler(
     reply: FastifyReply
   ): Promise<FastifyReply> => {
     const { factor } = request.query;
+    const agencyId = request.agency?.id;
 
-    const signals = await Signals.list(factor);
+    const signals = await Signals.list({ factor, agencyId });
 
     return reply.status(200).send(signals);
   }
@@ -21,8 +22,9 @@ export const getSignal = asyncHandler(
     reply: FastifyReply
   ): Promise<FastifyReply> => {
     const { signalId } = request.params;
+    const agencyId = request.agency?.id;
 
-    const signal = await Signals.get(signalId);
+    const signal = await Signals.get(signalId, agencyId);
 
     return reply.status(200).send(signal);
   }

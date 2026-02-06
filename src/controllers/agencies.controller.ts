@@ -9,6 +9,7 @@ export const createAgencyController = asyncHandler(
   ): Promise<FastifyReply> => {
     const apiKey = `gr-${id(8)}`;
     const hashedApiKey = await createHash(apiKey);
+    const hashedAdminKey = await createHash(process.env.API_KEY as string);
 
     const agency: Agency = {
       ...request.body,
@@ -36,5 +37,66 @@ export const getAgencyController = asyncHandler(
       name: agency.name,
       description: agency.description,
     });
+  }
+);
+
+export const listAgenciesController = asyncHandler(
+  async (
+    request: FastifyRequest,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const agencies = await Agencies.list();
+
+    return reply.status(200).send(
+      agencies.map((agency) => ({
+        id: agency.id,
+        name: agency.name,
+        description: agency.description,
+      }))
+    );
+  }
+);
+
+export const updateAgencyController = asyncHandler(
+  async (
+    request: FastifyRequest<{
+      Params: { agencyId: string };
+      Body: AgencyInput;
+    }>,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const agency = await Agencies.get(request.params.agencyId);
+
+    const updatedAgency = await Agencies.update({
+      ...agency,
+      ...request.body,
+      id: agency.id,
+      private_key: agency.private_key,
+    });
+
+    return reply.status(200).send({
+      id: updatedAgency.id,
+      name: updatedAgency.name,
+      description: updatedAgency.description,
+    });
+  }
+);
+
+export const regenerateAgencyKeyController = asyncHandler(
+  async (
+    request: FastifyRequest<{ Params: { agencyId: string } }>,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const agency = await Agencies.get(request.params.agencyId);
+
+    const apiKey = `gr-${id(8)}`;
+    const hashedApiKey = await createHash(apiKey);
+
+    await Agencies.update({
+      ...agency,
+      private_key: hashedApiKey,
+    });
+
+    return reply.status(200).send({ apiKey });
   }
 );
