@@ -771,6 +771,46 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /agencies/{agencyId}/key:
+    patch:
+      tags:
+        - Agencies
+      summary: Regenerate agency API key
+      description: |
+        Generates a new API key for the agency. The old key is invalidated.
+        Only accessible by admins using the master API key.
+        The new API key is only returned once and should be stored securely.
+      operationId: regenerateAgencyKey
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: agencyId
+          in: path
+          description: Agency ID
+          required: true
+          schema:
+            type: string
+            example: "abc12345"
+      responses:
+        "200":
+          description: API key regenerated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgencyCreateResponse"
+        "401":
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "404":
+          description: Agency not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /agents:
     get:
       tags:

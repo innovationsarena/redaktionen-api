@@ -5,6 +5,7 @@ import {
   createAgencyController,
   listAgenciesController,
   updateAgencyController,
+  regenerateAgencyKeyController,
 } from "../controllers";
 
 export const agenciesRouter = (fastify: FastifyInstance) => {
@@ -35,5 +36,12 @@ export const agenciesRouter = (fastify: FastifyInstance) => {
       preValidation: [validateKey],
     },
     updateAgencyController as unknown as RouteHandlerMethod
+  );
+  fastify.patch(
+    "/agencies/:agencyId/key",
+    {
+      preValidation: [validateKey],
+    },
+    regenerateAgencyKeyController as unknown as RouteHandlerMethod
   );
 };

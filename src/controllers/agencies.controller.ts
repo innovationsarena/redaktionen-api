@@ -81,3 +81,22 @@ export const updateAgencyController = asyncHandler(
     });
   }
 );
+
+export const regenerateAgencyKeyController = asyncHandler(
+  async (
+    request: FastifyRequest<{ Params: { agencyId: string } }>,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const agency = await Agencies.get(request.params.agencyId);
+
+    const apiKey = `gr-${id(8)}`;
+    const hashedApiKey = await createHash(apiKey);
+
+    await Agencies.update({
+      ...agency,
+      private_key: hashedApiKey,
+    });
+
+    return reply.status(200).send({ apiKey });
+  }
+);
