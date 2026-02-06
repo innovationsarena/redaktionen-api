@@ -5,33 +5,40 @@ import {
 import { Signal } from "../../core";
 import { supabase } from ".";
 
+interface SignalFilters {
+  factor?: string;
+  agencyId?: string;
+}
+
 export const Signals = {
-  list: async (factor?: string): Promise<Signal[]> => {
-    if (factor) {
-      const { data, error }: PostgrestResponse<Signal> = await supabase
-        .from(process.env.SIGNALS_TABLE as string)
-        .select("*")
-        .eq("factor", factor);
+  list: async (filters?: SignalFilters): Promise<Signal[]> => {
+    let query = supabase
+      .from(process.env.SIGNALS_TABLE as string)
+      .select("*");
 
-      if (error) throw new Error(error.message);
-
-      return data;
-    } else {
-      const { data, error }: PostgrestResponse<Signal> = await supabase
-        .from(process.env.SIGNALS_TABLE as string)
-        .select("*");
-
-      if (error) throw new Error(error.message);
-
-      return data;
+    if (filters?.factor) {
+      query = query.eq("factor", filters.factor);
     }
+    if (filters?.agencyId) {
+      query = query.eq("agency", filters.agencyId);
+    }
+
+    const { data, error }: PostgrestResponse<Signal> = await query;
+
+    if (error) throw new Error(error.message);
+    return data;
   },
-  get: async (signalId: number): Promise<Signal> => {
-    const { data, error }: PostgrestSingleResponse<Signal> = await supabase
+  get: async (signalId: number, agencyId?: string): Promise<Signal> => {
+    let query = supabase
       .from(process.env.SIGNALS_TABLE as string)
       .select("*")
-      .eq("id", signalId)
-      .single();
+      .eq("id", signalId);
+
+    if (agencyId) {
+      query = query.eq("agency", agencyId);
+    }
+
+    const { data, error }: PostgrestSingleResponse<Signal> = await query.single();
 
     if (error) throw new Error(error.message);
     return data;

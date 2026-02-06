@@ -10,37 +10,40 @@ export const supabase = new SupabaseClient(
   process.env.SUPABASE_KEY as string
 );
 
+interface SummaryFilters {
+  factor?: string;
+  agencyId?: string;
+}
+
 export const Summaries = {
-  list: async (factor?: string): Promise<Summary[]> => {
-    let summaries: Summary[] = [];
+  list: async (filters?: SummaryFilters): Promise<Summary[]> => {
+    let query = supabase
+      .from(process.env.SUMMARIES_TABLE as string)
+      .select("*");
 
-    if (factor) {
-      const { data: filteredData, error }: PostgrestResponse<Summary> =
-        await supabase
-          .from(process.env.SUMMARIES_TABLE as string)
-          .select("*")
-          .eq("factor", factor);
-
-      if (error) throw new Error(error.message);
-      summaries = [...filteredData];
-    } else {
-      const { data, error }: PostgrestResponse<Summary> = await supabase
-        .from(process.env.SUMMARIES_TABLE as string)
-        .select("*");
-
-      if (error) throw new Error(error.message);
-
-      summaries = [...data];
+    if (filters?.factor) {
+      query = query.eq("factor", filters.factor);
+    }
+    if (filters?.agencyId) {
+      query = query.eq("agency", filters.agencyId);
     }
 
-    return summaries;
+    const { data, error }: PostgrestResponse<Summary> = await query;
+
+    if (error) throw new Error(error.message);
+    return data || [];
   },
-  get: async (summaryId: number): Promise<Summary> => {
-    const { data, error }: PostgrestSingleResponse<Summary> = await supabase
+  get: async (summaryId: number, agencyId?: string): Promise<Summary> => {
+    let query = supabase
       .from(process.env.SUMMARIES_TABLE as string)
       .select("*")
-      .eq("id", summaryId)
-      .single();
+      .eq("id", summaryId);
+
+    if (agencyId) {
+      query = query.eq("agency", agencyId);
+    }
+
+    const { data, error }: PostgrestSingleResponse<Summary> = await query.single();
 
     if (error) throw new Error(error.message);
     return data;

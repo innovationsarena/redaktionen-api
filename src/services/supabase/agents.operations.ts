@@ -5,39 +5,40 @@ import {
 } from "@supabase/supabase-js";
 import { supabase } from ".";
 
+interface AgentFilters {
+  type?: AgentType;
+  agencyId?: string;
+}
+
 export const Agents = {
-  list: async (type: AgentType): Promise<Agent[]> => {
-    let agents: Agent[] = [];
+  list: async (filters?: AgentFilters): Promise<Agent[]> => {
+    let query = supabase
+      .from(process.env.AGENTS_TABLE as string)
+      .select("*");
 
-    if (type) {
-      const { data, error }: PostgrestResponse<Agent> = await supabase
-        .from(process.env.AGENTS_TABLE as string)
-        .select("*")
-        .eq("type", type);
-
-      if (data) {
-        agents = [...data];
-      }
-
-      if (error) throw new Error(error.message);
-    } else {
-      const { data, error }: PostgrestResponse<Agent> = await supabase
-        .from(process.env.AGENTS_TABLE as string)
-        .select("*");
-
-      agents = data || [];
-
-      if (error) throw new Error(error.message);
+    if (filters?.type) {
+      query = query.eq("type", filters.type);
+    }
+    if (filters?.agencyId) {
+      query = query.eq("agency", filters.agencyId);
     }
 
-    return agents;
+    const { data, error }: PostgrestResponse<Agent> = await query;
+
+    if (error) throw new Error(error.message);
+    return data || [];
   },
-  get: async (agentId: string): Promise<Agent> => {
-    const { data, error }: PostgrestSingleResponse<Agent> = await supabase
+  get: async (agentId: string, agencyId?: string): Promise<Agent> => {
+    let query = supabase
       .from(process.env.AGENTS_TABLE as string)
       .select("*")
-      .eq("id", agentId)
-      .single();
+      .eq("id", agentId);
+
+    if (agencyId) {
+      query = query.eq("agency", agencyId);
+    }
+
+    const { data, error }: PostgrestSingleResponse<Agent> = await query.single();
 
     if (error) throw new Error(error.message);
     return data;
@@ -63,11 +64,17 @@ export const Agents = {
     if (error) throw new Error(error.message);
     return data;
   },
-  delete: async (agentId: string): Promise<Agent> => {
-    const { data, error }: PostgrestSingleResponse<Agent> = await supabase
+  delete: async (agentId: string, agencyId?: string): Promise<Agent> => {
+    let query = supabase
       .from(process.env.AGENTS_TABLE as string)
       .delete()
-      .eq("id", agentId)
+      .eq("id", agentId);
+
+    if (agencyId) {
+      query = query.eq("agency", agencyId);
+    }
+
+    const { data, error }: PostgrestSingleResponse<Agent> = await query
       .select()
       .single();
 

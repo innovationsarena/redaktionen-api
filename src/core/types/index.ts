@@ -209,3 +209,21 @@ export const ReportInputSchema = z.object({
   agency: z.string().optional(),
 });
 export type ReportInput = z.infer<typeof ReportInputSchema>;
+
+/**
+ * Agency context for multi-tenant requests
+ * Attached to request by validateAgencyKey middleware
+ */
+export interface AgencyContext {
+  id: string;
+  name: string;
+  description?: string;
+  owner: string;
+}
+
+// Extend Fastify types to include agency context
+declare module "fastify" {
+  interface FastifyRequest {
+    agency?: AgencyContext;
+  }
+}

@@ -298,7 +298,7 @@ export const tipster = async (factor: Factor, limit: number = 5) => {
   );
   */
 
-  const items: Source[] | undefined = await Sources.list(factor);
+  const items: Source[] | undefined = await Sources.list({ factor });
 
   if (items) {
     const feedItems = await fetchFeeds(items, limit, tipsterProgress);

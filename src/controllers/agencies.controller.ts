@@ -9,6 +9,7 @@ export const createAgencyController = asyncHandler(
   ): Promise<FastifyReply> => {
     const apiKey = `gr-${id(8)}`;
     const hashedApiKey = await createHash(apiKey);
+    const hashedAdminKey = await createHash(process.env.API_KEY as string);
 
     const agency: Agency = {
       ...request.body,
@@ -58,7 +59,10 @@ export const listAgenciesController = asyncHandler(
 
 export const updateAgencyController = asyncHandler(
   async (
-    request: FastifyRequest<{ Params: { agencyId: string }; Body: AgencyInput }>,
+    request: FastifyRequest<{
+      Params: { agencyId: string };
+      Body: AgencyInput;
+    }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
     const agency = await Agencies.get(request.params.agencyId);

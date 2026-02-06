@@ -1,19 +1,19 @@
 import { FastifyInstance, RouteHandlerMethod } from "fastify";
 import { getSignal, listSignals } from "../controllers";
-import { validateKey } from "../core";
+import { validateAgencyKey } from "../core";
 
 export const signalsRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/signals",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     listSignals as unknown as RouteHandlerMethod
   );
   fastify.get(
     "/signals/:signalId",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     getSignal as unknown as RouteHandlerMethod
   );

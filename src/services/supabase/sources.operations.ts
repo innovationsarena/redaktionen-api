@@ -5,39 +5,40 @@ import {
 import { Source } from "../../core";
 import { supabase } from ".";
 
+interface SourceFilters {
+  factor?: string;
+  agencyId?: string;
+}
+
 export const Sources = {
-  list: async (factor?: string): Promise<Source[]> => {
-    let items: Source[] = [];
+  list: async (filters?: SourceFilters): Promise<Source[]> => {
+    let query = supabase
+      .from(process.env.SOURCES_TABLE as string)
+      .select("*");
 
-    if (factor) {
-      const { data, error }: PostgrestResponse<Source> = await supabase
-        .from(process.env.SOURCES_TABLE as string)
-        .select("*")
-        .eq("factor", factor);
-
-      if (data) {
-        items = [...data];
-      }
-
-      if (error) throw new Error(error.message);
-    } else {
-      const { data, error }: PostgrestResponse<Source> = await supabase
-        .from(process.env.SOURCES_TABLE as string)
-        .select("*");
-
-      items = data || [];
-
-      if (error) throw new Error(error.message);
+    if (filters?.factor) {
+      query = query.eq("factor", filters.factor);
+    }
+    if (filters?.agencyId) {
+      query = query.eq("agency", filters.agencyId);
     }
 
-    return items;
+    const { data, error }: PostgrestResponse<Source> = await query;
+
+    if (error) throw new Error(error.message);
+    return data || [];
   },
-  get: async (sourceId: number): Promise<Source> => {
-    const { data, error }: PostgrestSingleResponse<Source> = await supabase
+  get: async (sourceId: number, agencyId?: string): Promise<Source> => {
+    let query = supabase
       .from(process.env.SOURCES_TABLE as string)
       .select("*")
-      .eq("id", sourceId)
-      .single();
+      .eq("id", sourceId);
+
+    if (agencyId) {
+      query = query.eq("agency", agencyId);
+    }
+
+    const { data, error }: PostgrestSingleResponse<Source> = await query.single();
 
     if (error) throw new Error(error.message);
     return data;
@@ -72,11 +73,17 @@ export const Sources = {
     if (error) throw new Error(error.message);
     return data;
   },
-  delete: async (sourceId: number): Promise<Source> => {
-    const { data, error }: PostgrestSingleResponse<Source> = await supabase
+  delete: async (sourceId: number, agencyId?: string): Promise<Source> => {
+    let query = supabase
       .from(process.env.SOURCES_TABLE as string)
       .delete()
-      .eq("id", sourceId)
+      .eq("id", sourceId);
+
+    if (agencyId) {
+      query = query.eq("agency", agencyId);
+    }
+
+    const { data, error }: PostgrestSingleResponse<Source> = await query
       .select()
       .single();
 

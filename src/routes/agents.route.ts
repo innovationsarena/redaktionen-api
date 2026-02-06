@@ -1,5 +1,5 @@
 import { FastifyInstance, RouteHandlerMethod } from "fastify";
-import { validateKey } from "../core";
+import { validateAgencyKey } from "../core";
 import {
   getAgentController,
   createAgentController,
@@ -12,35 +12,35 @@ export const agentsRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/agents",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     listAgentsController as unknown as RouteHandlerMethod
   );
   fastify.post(
     "/agents",
     {
-      preValidation: [validateKey],
+      preValidation: [validateAgencyKey],
     },
     createAgentController as unknown as RouteHandlerMethod
   );
   fastify.get(
     "/agents/:agentId",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     getAgentController as unknown as RouteHandlerMethod
   );
   fastify.patch(
     "/agents/:agentId",
     {
-      preValidation: [validateKey],
+      preValidation: [validateAgencyKey],
     },
     updateAgentController as unknown as RouteHandlerMethod
   );
   fastify.delete(
     "/agents/:agentId",
     {
-      preValidation: [validateKey],
+      preValidation: [validateAgencyKey],
     },
     deleteAgentController as unknown as RouteHandlerMethod
   );
