@@ -37,7 +37,17 @@ export const createSource = asyncHandler(
     request: FastifyRequest<{ Body: SourceInput }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
-    const agencyId = request.agency?.id;
+    // Agency key: use authenticated agency's ID
+    // Admin key: must provide agency in body
+    if (!request.agency && !request.body.agency) {
+      return reply.code(400).send({
+        error: "Bad Request",
+        message: "agency is required when using admin key",
+        statusCode: 400,
+      });
+    }
+
+    const agencyId = request.agency?.id ?? request.body.agency;
 
     const source = await Sources.write({
       ...request.body,
