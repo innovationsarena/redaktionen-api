@@ -22,6 +22,7 @@ export const createAgencyController = asyncHandler(
       id: request.body.id ? request.body.id : id(8),
       name,
       owner,
+      state: "idle",
       description: description ? description : "Awesome Agency",
       private_key: hashedApiKey,
     };
@@ -122,13 +123,46 @@ export const startAgencyController = asyncHandler(
     }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
-    tipsterQueue.add("tipster.start", {
-      agencyId: request.agency?.id,
+    const agency = await Agencies.get(request.params.agencyId);
+
+    await Agencies.update({
+      ...agency,
+      state: "running",
+    });
+
+    await tipsterQueue.add("tipster.start", {
+      agencyId: request.params.agencyId,
       workflow: request.body,
     });
 
+    await tipsterQueue.upsertJobScheduler("agency-interval-schema", {
+      every: 1000 * 60 * 60 * request.body.interval,
+    });
+
     return reply.status(200).send({
-      message: `Agency ${request.agency?.name} started working with interval ${request.body.interval}h.`,
+      message: `Agency '${agency.name}' started working with interval ${request.body.interval}h.`,
+    });
+  }
+);
+
+export const stopAgencyController = asyncHandler(
+  async (
+    request: FastifyRequest<{
+      Params: { agencyId: string };
+    }>,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const agency = await Agencies.get(request.agency?.id as string);
+
+    await Agencies.update({
+      ...agency,
+      state: "idle",
+    });
+
+    await tipsterQueue.removeJobScheduler("agency-interval-schema");
+
+    return reply.status(200).send({
+      message: `Agency ${request.agency?.name} stopped and is now idle.`,
     });
   }
 );

@@ -53,7 +53,7 @@ export const summaryEditor = async (
     model: openai(process.env.EDITOR_DEFAULT_MODEL as string),
     providerOptions: {
       openai: {
-        reasoningEffort: "high",
+        reasoningEffort: "medium",
       },
     },
     system,

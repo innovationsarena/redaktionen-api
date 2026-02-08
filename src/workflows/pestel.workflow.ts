@@ -25,7 +25,7 @@ export const pestelWorkflow = async (
   console.log(`---------------------------------------`);
 
   await emptySummaries();
-  await correspondentWorkflow(context);
+  await correspondentWorkflow(agencyId, context);
 
   return allSignals;
 };

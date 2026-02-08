@@ -25,7 +25,7 @@ NOT stylized drawing.
 The image should be indistinguishable from professional editorial photography.
 
 Camera & optics:
-- Shot on a real full-frame camera
+- Shot on a real analog full-frame camera with Kodachrome film
 - 50mm lens
 - Realistic depth of field (not infinite sharpness)
 - Natural lens imperfections, micro blur, slight chromatic aberration

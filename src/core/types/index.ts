@@ -166,7 +166,9 @@ export const AgencySchema = z.object({
   description: z.string().optional(),
   owner: z.string(),
   private_key: z.string(),
+  state: z.enum(["running", "idle"]),
 });
+
 export type Agency = z.infer<typeof AgencySchema>;
 
 export const AgencyInputSchema = z.object({
@@ -175,6 +177,7 @@ export const AgencyInputSchema = z.object({
   description: z.string().optional(),
   defaultAgents: z.boolean().optional().default(true),
   owner: z.string(),
+  state: z.enum(["running", "idle"]),
 });
 
 export type AgencyInput = z.infer<typeof AgencyInputSchema>;

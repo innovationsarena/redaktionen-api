@@ -305,7 +305,7 @@ export const tipster = async (
     const feedItems = await fetchFeeds(items, limit, tipsterProgress);
 
     console.log(`Formatting signals...`);
-    const parsedFeed = parseFeed(feedItems, factor);
+    const parsedFeed = parseFeed(feedItems, factor, agencyId);
 
     console.log(`Writing signals...`);
     await Signals.batchWrite(parsedFeed);

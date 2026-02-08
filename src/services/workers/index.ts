@@ -43,9 +43,9 @@ new Worker(
   CORRESPONDENT_QUEUE_NAME,
   async (job) => {
     if (job.name === "correspondent.summerize") {
-      const { signal, context } = job.data;
+      const { agencyId, signal, context } = job.data;
 
-      const summary = await correspondent(signal);
+      const summary = await correspondent(agencyId, signal);
 
       if (summary) {
         const s = await Summaries.write(summary);
