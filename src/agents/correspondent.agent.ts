@@ -3,8 +3,7 @@ import { Signal, Summary, SummaryInputSchema } from "../core";
 import { openai } from "@ai-sdk/openai";
 
 export const correspondent = async (
-  signal: Signal,
-  filter?: string
+  signal: Signal
 ): Promise<Summary | void> => {
   console.log(
     `${signal.factor} correspondent on the case summarizing >>> ${signal.sourceUrl} <<<.`
@@ -14,9 +13,7 @@ export const correspondent = async (
   const rawHTML = await resp.text();
 
   const system = `
-  You are given a HTML code. I want to you collect the information on it and write a summaried article with title and body text in swedish. The summary should be short and clear without loosing any vital information. Set a scope key (global, eu, sweden) depending on the scope of the article. Make sure the title or body doesnt include any backticks. ${
-    filter ? filter : ""
-  }`;
+  You are given a HTML code. I want to you collect the information on it and write a summaried article with title and body text in swedish. The summary should be short and clear without loosing any vital information. Set a scope key (global, eu, sweden) depending on the scope of the article. Make sure the title or body doesnt include any backticks.`;
   try {
     const { object } = await generateObject({
       model: openai(process.env.CORRESPONDENT_DEFAULT_MODEL as string),

@@ -12,9 +12,7 @@ interface SourceFilters {
 
 export const Sources = {
   list: async (filters?: SourceFilters): Promise<Source[]> => {
-    let query = supabase
-      .from(process.env.SOURCES_TABLE as string)
-      .select("*");
+    let query = supabase.from(process.env.SOURCES_TABLE as string).select("*");
 
     if (filters?.factor) {
       query = query.eq("factor", filters.factor);
@@ -38,7 +36,8 @@ export const Sources = {
       query = query.eq("agency", agencyId);
     }
 
-    const { data, error }: PostgrestSingleResponse<Source> = await query.single();
+    const { data, error }: PostgrestSingleResponse<Source> =
+      await query.single();
 
     if (error) throw new Error(error.message);
     return data;

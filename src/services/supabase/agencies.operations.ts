@@ -36,7 +36,7 @@ export const Agencies = {
 
     return { data: data as Agency | null, error };
   },
-  write: async (agency: AgencyInput): Promise<Agency> => {
+  write: async (agency: Agency): Promise<Agency> => {
     const { data, error }: PostgrestSingleResponse<Agency> = await supabase
       .from(process.env.AGENCIES_TABLE as string)
       .insert(agency)

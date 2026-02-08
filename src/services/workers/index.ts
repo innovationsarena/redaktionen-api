@@ -3,6 +3,7 @@ import { ConnectionOptions, Job, Queue, Worker } from "bullmq";
 import { correspondent, artDirector } from "../../agents";
 import { Signals, Summaries } from "../supabase";
 import { WorkflowInput } from "../../core";
+import { createDefaultAgents } from "../../workflows/agent.workflow";
 
 const connection: ConnectionOptions = {
   host: process.env.REDIS_HOST,
@@ -22,7 +23,8 @@ new Worker(
   TIPSTER_QUEUE_NAME,
   async (job) => {
     if (job.name === "tipster.start") {
-      await pestelWorkflow(job.data);
+      const { agencyId, workflow } = job.data;
+      await pestelWorkflow(agencyId, workflow);
     }
   },
   {
@@ -103,6 +105,24 @@ new Worker(
     const { summaries, context } = job.data;
     if (job.name === "editor.summary") {
       await editorWorkflow(summaries, context);
+    }
+  },
+  {
+    connection,
+    concurrency,
+  }
+);
+
+// AGENT QUEUE
+export const AGENT_QUEUE_NAME = "agentQueue";
+export const agentQueue = new Queue(AGENT_QUEUE_NAME, { connection });
+
+new Worker(
+  AGENT_QUEUE_NAME,
+  async (job) => {
+    const { agency } = job.data;
+    if (job.name === "agent.createDefault") {
+      await createDefaultAgents(agency);
     }
   },
   {
