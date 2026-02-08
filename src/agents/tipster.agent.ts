@@ -1,4 +1,4 @@
-import { Factor, fetchFeeds, parseFeed, Source, TipsterItem } from "../core";
+import { Agency, Factor, fetchFeeds, parseFeed, Source } from "../core";
 import { SingleBar, Presets } from "cli-progress";
 import { Signals, Sources } from "../services";
 
@@ -281,7 +281,11 @@ const sources: Source[] = [
   */
 ];
 
-export const tipster = async (factor: Factor, limit: number = 5) => {
+export const tipster = async (
+  agencyId: string,
+  factor: Factor,
+  limit: number = 5
+) => {
   console.log("------------------------------------------------------------>>");
   console.log(
     `${
@@ -292,19 +296,16 @@ export const tipster = async (factor: Factor, limit: number = 5) => {
 
   const tipsterProgress = new SingleBar({}, Presets.shades_classic);
 
-  /*
-  const items: Source[] | undefined = sources.filter(
-    (item) => item.factor === factor
-  );
-  */
-
-  const items: Source[] | undefined = await Sources.list({ factor });
+  const items: Source[] | undefined = await Sources.list({
+    factor,
+    agencyId,
+  });
 
   if (items) {
     const feedItems = await fetchFeeds(items, limit, tipsterProgress);
 
     console.log(`Formatting signals...`);
-    const parsedFeed = parseFeed(feedItems, factor);
+    const parsedFeed = parseFeed(feedItems, factor, agencyId);
 
     console.log(`Writing signals...`);
     await Signals.batchWrite(parsedFeed);

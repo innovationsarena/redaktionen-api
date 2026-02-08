@@ -16,7 +16,6 @@ import {
   sourcesRouter,
   summariesRouter,
   webhooksRouter,
-  workflowRouter,
   reportsRouter,
 } from "./routes";
 
@@ -77,7 +76,6 @@ server.setErrorHandler((error, _request, reply) => {
 // Routes
 server.register(summariesRouter);
 server.register(agenciesRouter);
-server.register(workflowRouter);
 server.register(webhooksRouter);
 server.register(signalsRouter);
 server.register(sourcesRouter);

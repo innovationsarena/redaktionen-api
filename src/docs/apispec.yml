@@ -570,53 +570,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthResponse"
 
-  /workflows:
-    post:
-      tags:
-        - Workflows
-      summary: Start PESTEL workflow
-      description: |
-        Triggers the PESTEL workflow which:
-        1. Runs tipster agents to fetch RSS feeds for specified PESTEL factors
-        2. Processes signals based on configuration
-        3. Optionally enables foresight analysis and analyst agents
-      operationId: createWorkflow
-      security:
-        - BearerAuth: []
-      requestBody:
-        description: Workflow configuration
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/WorkflowInput"
-            example:
-              name: "PESTEL Analysis January 2025"
-              description: "Monthly PESTEL analysis focusing on environmental and economic factors"
-              factors: ["environmental", "economic", "technological"]
-              foresight: true
-              analysts: true
-              tipLimit: 5
-      responses:
-        "200":
-          description: Workflow started successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WorkflowResponse"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: Unauthorized - Invalid or missing API key
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthResponse"
-
   /agencies:
     get:
       tags:

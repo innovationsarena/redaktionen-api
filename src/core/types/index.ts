@@ -166,24 +166,28 @@ export const AgencySchema = z.object({
   description: z.string().optional(),
   owner: z.string(),
   private_key: z.string(),
+  state: z.enum(["running", "idle"]),
 });
+
 export type Agency = z.infer<typeof AgencySchema>;
 
 export const AgencyInputSchema = z.object({
   id: z.string().optional(),
   name: z.string(),
   description: z.string().optional(),
+  defaultAgents: z.boolean().optional().default(true),
   owner: z.string(),
+  state: z.enum(["running", "idle"]),
 });
+
 export type AgencyInput = z.infer<typeof AgencyInputSchema>;
 
 export const WorkflowInputSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
   factors: z.array(FactorSchema),
-  foresight: z.boolean(),
-  analysts: z.boolean(),
-  tipLimit: z.number(),
+  foresight: z.boolean().optional().default(false),
+  analysts: z.boolean().optional().default(false),
+  tipLimit: z.number().optional().default(5),
+  interval: z.number().optional().default(24), // How often, defaults to every 24
 });
 export type WorkflowInput = z.infer<typeof WorkflowInputSchema>;
 

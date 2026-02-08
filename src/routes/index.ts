@@ -1,4 +1,3 @@
-export * from "./workflow.route";
 export * from "./agencies.route";
 export * from "./agents.route";
 export * from "./signals.route";

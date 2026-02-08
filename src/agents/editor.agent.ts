@@ -36,7 +36,7 @@ export const summaryEditor = async (
 
 **Process**
 1) Extract/map facts: Names, titles, figures, dates/times (with time zones), locations, quotes, attributions.
-2) Merge/prioritize: De-duplicate; keep the clearest, most specific version; lead with what’s new and consequential; add necessary context.
+2) Merge/prioritize: De-duplicate; keep the clearest, most specific version; lead with whats new and consequential; add necessary context.
 3) Resolve conflicts: Prefer primary/authoritative sources; if unresolved, present both accounts with attribution and note uncertainty.
 4) Ensure completeness without bloat: Include exact numbers, ranges, units/currencies, legal/technical terms that matter; remove repetition; combine related facts.
 5) Verify/standardize and final checks: Cross-check numbers/dates/names; standardize units, currency, and time formats; ensure clarity, balance, and accuracy.
@@ -51,6 +51,11 @@ export const summaryEditor = async (
 
   const { object } = await generateObject({
     model: openai(process.env.EDITOR_DEFAULT_MODEL as string),
+    providerOptions: {
+      openai: {
+        reasoningEffort: "medium",
+      },
+    },
     system,
     prompt,
     schema: ReportInputSchema,

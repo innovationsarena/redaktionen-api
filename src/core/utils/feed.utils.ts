@@ -77,7 +77,11 @@ export const fetchFeeds = async (
  * @param factor PESTEL factor to assign to signals
  * @returns Array of Signal entities
  */
-export const parseFeed = (feedItems: RSSItem[], factor: any): Signal[] => {
+export const parseFeed = (
+  feedItems: RSSItem[],
+  factor: any,
+  agencyId: string
+): Signal[] => {
   const signals: Signal[] = [];
 
   feedItems.forEach((item) => {
@@ -87,6 +91,7 @@ export const parseFeed = (feedItems: RSSItem[], factor: any): Signal[] => {
       source: item.creator,
       sourceUrl: item.link ? item.link : "no-url-provided",
       date: item.isoDate,
+      agency: agencyId,
       factor,
     });
   });

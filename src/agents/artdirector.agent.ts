@@ -12,22 +12,70 @@ export const artDirector = async (
   content: any, // Summary | Report | Agent
   type: "summary" | "report" | "agent"
 ): Promise<void> => {
-  let system = `
-  You are an image-generation assistant. For each user input , extract 2-3 concise symbolic keywords and produce a single short photorealistic poster prompt. Output only the final prompt (one line), do not add explanations.
+  let styleRef = `Create a hyper-realistic photograph.
 
-  ## Prompt requirements
-  - Style: Photorealistic, vibrant pastel palette.
-  - Subject: symbolic objects or situations representing the given summary arranged in a creative way
-  - People: No human faces or identifiable people.
-  - No logos, no on-image text.
-  - Lighting/composition: Soft natural lighting, high detail, shallow depth of field, cinematic composition.
-  - Orientation: Horizontal poster (16:9 aspect ratio).
+This must look like a real photo taken with a physical camera.
+NOT an illustration.
+NOT digital art.
+NOT CGI.
+NOT 3D render.
+NOT concept art.
+NOT stylized drawing.
 
-  ## Output
-  The output should be a complete prompt that will be directly prompted to an image model.
+The image should be indistinguishable from professional editorial photography.
+
+Camera & optics:
+- Shot on a real analog full-frame camera with Kodachrome film
+- 50mm lens
+- Realistic depth of field (not infinite sharpness)
+- Natural lens imperfections, micro blur, slight chromatic aberration
+- Subtle high-resolution film grain
+
+Lighting:
+- Real-world soft lighting only
+- Natural light or practical lights
+- Physically correct shadows and reflections
+- No flat illustration lighting
+- No glowing edges, no haloing
+
+Materials & realism:
+- Physically accurate skin texture, pores, wrinkles
+- Real fabric fibers, seams, folds
+- Real wood grain, metal imperfections, dust
+- Imperfect symmetry (human-made, not mathematically perfect)
+
+Composition & style:
+- Centered, symmetrical framing inspired by auteur cinema
+- Looks like a real film still from a live-action movie
+- Carefully staged production design, but entirely photographic
+- Everything must obey real-world physics and optics
+
+Color:
+- Muted pastel tones with natural color response
+- Filmic color grading, matte finish
+- No painted surfaces, no poster colors
+
+Mood:
+- Calm, slightly melancholic, restrained
+- Subtle and grounded, not whimsical or illustrative
+
+Hard negative constraints:
+- No illustration
+- No digital art
+- No cartoon style
+- No painting
+- No vector graphics
+- No unreal textures
+- No perfectly flat surfaces
+- No artificial symmetry
+- No storybook or fantasy look
+
+Final requirement:
+If this image would not be accepted as a real photograph by a professional photo editor, it is wrong.
 `;
 
-  let prompt = `Create an image.`;
+  let system = `You are an expert visual storyteller. You will receive an article about a real, current event. Identify one short, powerful moment that captures the core meaning and emotional truth of the story. Describe this moment as a vivid, cinematic visual scene in 5-7 sentences, using concrete details, atmosphere, and human presence but aviod faces and indetifiable persons if possible. The scene should clearly summarize what the article is about without explaining it directly.`;
+  let prompt = `Create a poster image.`;
 
   if (type === "summary") {
     prompt = `Create a poster image that represents this article: 
@@ -40,6 +88,7 @@ export const artDirector = async (
       title: ${content.title}
       body: ${content.body}`;
   }
+
   if (type === "agent") {
     system = `
       You are an image-generation assistant. 
@@ -51,6 +100,7 @@ export const artDirector = async (
       - soft studio lighting, shallow depth of field, neutral background
       - natural colors, high detail, 1:1 portrait, no text
     `;
+
     prompt = `Create a portrait image that represents this description: ${content.description}`;
   }
 
@@ -64,7 +114,7 @@ export const artDirector = async (
       ),
       system,
       prompt,
-      schema: z.object({ imagePrompt: z.string() }),
+      schema: z.object({ motivePrompt: z.string() }),
     });
 
     const size: number[] = type === "agent" ? [1024, 1024] : [1536, 1024];
@@ -74,7 +124,7 @@ export const artDirector = async (
       model: openai.image(
         (process.env.DEFAULT_IMAGE_MODEL as string) || "gpt-image-1.5"
       ),
-      prompt: object.imagePrompt,
+      prompt: `Create an image from following instructions: \n\n # Style reference \n${styleRef} \n\n# Motive \n ${object.motivePrompt}`,
       size: `${size[0]}x${size[1]}`,
     });
 

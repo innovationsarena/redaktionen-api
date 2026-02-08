@@ -4,6 +4,7 @@ import { emptySignals, emptySummaries } from "../services";
 import { correspondentWorkflow } from "./correspondent.workflow";
 
 export const pestelWorkflow = async (
+  agencyId: string,
   context: WorkflowInput
 ): Promise<Signal[]> => {
   // Run Tipsters
@@ -16,7 +17,7 @@ export const pestelWorkflow = async (
   let allSignals: Signal[] = [];
 
   for await (const factor of factors) {
-    allSignals = [...allSignals, ...(await tipster(factor, LIMIT))];
+    allSignals = [...allSignals, ...(await tipster(agencyId, factor, LIMIT))];
   }
 
   console.log(`---------------------------------------`);
@@ -24,7 +25,7 @@ export const pestelWorkflow = async (
   console.log(`---------------------------------------`);
 
   await emptySummaries();
-  await correspondentWorkflow(context);
+  await correspondentWorkflow(agencyId, context);
 
   return allSignals;
 };
