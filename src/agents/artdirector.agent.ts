@@ -9,6 +9,7 @@ import {
 } from "ai";
 
 export const artDirector = async (
+  agencyId: string,
   content: any, // Summary | Report | Agent
   type: "summary" | "report" | "agent"
 ): Promise<void> => {

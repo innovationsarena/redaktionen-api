@@ -29,6 +29,7 @@ export const createAgentController = asyncHandler(
     await Agents.write(agent);
 
     await artDirectorQueue.add("artdirector.image.avatar", {
+      agencyId,
       agent,
     });
 
@@ -80,7 +81,9 @@ export const updateAgentController = asyncHandler(
     const updatedAgent = await Agents.update({
       ...agent,
       ...request.body,
-      agency: request.agency ? agent.agency : (request.body.agencyId ?? agent.agency),
+      agency: request.agency
+        ? agent.agency
+        : request.body.agencyId ?? agent.agency,
     });
 
     return reply.status(200).send(updatedAgent);

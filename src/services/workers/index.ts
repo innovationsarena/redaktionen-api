@@ -13,7 +13,23 @@ const connection: ConnectionOptions = {
 
 const concurrency = 10;
 
-// WORKERS
+// MAIN JOB QUEUE
+export const JOB_QUEUE_NAME = "jobQueue";
+export const jobQueue = new Queue(JOB_QUEUE_NAME, { connection });
+
+new Worker(
+  JOB_QUEUE_NAME,
+  async (job) => {
+    if (job.name === "job.start") {
+      const { agencyId, workflow } = job.data;
+      await pestelWorkflow(agencyId, workflow);
+    }
+  },
+  {
+    connection,
+    concurrency,
+  }
+);
 
 // TIPSTER
 export const TIPSTER_QUEUE_NAME = "tipsterQueue";
@@ -50,6 +66,7 @@ new Worker(
       if (summary) {
         const s = await Summaries.write(summary);
         await artDirectorQueue.add("artdirector.image.summary", {
+          agencyId,
           summary: s,
           context,
         });
@@ -76,17 +93,17 @@ new Worker(
   ARTDIRECTOR_QUEUE_NAME,
   async (job: Job) => {
     if (job.name === "artdirector.image.summary") {
-      const { summary, context } = job.data;
-      await artDirector(summary, "summary");
-      await checkAndTriggerEditor(context);
+      const { agencyId, summary, context } = job.data;
+      await artDirector(agencyId, summary, "summary");
+      await checkAndTriggerEditor(agencyId, context);
     }
     if (job.name === "artdirector.image.report") {
-      const { report } = job.data;
-      await artDirector(report, "report");
+      const { report, agencyId } = job.data;
+      await artDirector(agencyId, report, "report");
     }
     if (job.name === "artdirector.image.avatar") {
-      const { agent } = job.data;
-      await artDirector(agent, "agent");
+      const { agencyId, agent } = job.data;
+      await artDirector(agencyId, agent, "agent");
     }
   },
   {
@@ -102,9 +119,9 @@ export const editorQueue = new Queue(EDITOR_QUEUE_NAME, { connection });
 new Worker(
   EDITOR_QUEUE_NAME,
   async (job) => {
-    const { summaries, context } = job.data;
+    const { summaries, context, agencyId } = job.data;
     if (job.name === "editor.summary") {
-      await editorWorkflow(summaries, context);
+      await editorWorkflow(agencyId, summaries, context);
     }
   },
   {
@@ -132,12 +149,15 @@ new Worker(
 );
 
 // Helper function to check if both queues are empty before calling editor
-export async function checkAndTriggerEditor(context: WorkflowInput) {
-  const signals = await Signals.list();
-  const summaries = await Summaries.list();
+export async function checkAndTriggerEditor(
+  agencyId: string,
+  context: WorkflowInput
+) {
+  const signals = await Signals.list({ agencyId });
+  const summaries = await Summaries.list({ agencyId });
   const filteredSummaries = summaries.filter((s) => s.posterUrl !== null);
 
   if (signals.length === filteredSummaries.length) {
-    await editorQueue.add("editor.summary", { summaries, context });
+    await editorQueue.add("editor.summary", { agencyId, summaries, context });
   }
 }
