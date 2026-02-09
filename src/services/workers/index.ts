@@ -13,7 +13,23 @@ const connection: ConnectionOptions = {
 
 const concurrency = 10;
 
-// WORKERS
+// MAIN JOB QUEUE
+export const JOB_QUEUE_NAME = "jobQueue";
+export const jobQueue = new Queue(JOB_QUEUE_NAME, { connection });
+
+new Worker(
+  JOB_QUEUE_NAME,
+  async (job) => {
+    if (job.name === "job.start") {
+      const { agencyId, workflow } = job.data;
+      await pestelWorkflow(agencyId, workflow);
+    }
+  },
+  {
+    connection,
+    concurrency,
+  }
+);
 
 // TIPSTER
 export const TIPSTER_QUEUE_NAME = "tipsterQueue";
