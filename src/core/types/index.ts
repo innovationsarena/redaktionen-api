@@ -182,14 +182,14 @@ export const AgencyInputSchema = z.object({
 
 export type AgencyInput = z.infer<typeof AgencyInputSchema>;
 
-export const WorkflowInputSchema = z.object({
+export const FlowInputSchema = z.object({
   factors: z.array(FactorSchema),
   foresight: z.boolean().optional().default(false),
   analysts: z.boolean().optional().default(false),
   tipLimit: z.number().optional().default(5),
   interval: z.number().optional().default(24), // How often, defaults to every 24
 });
-export type WorkflowInput = z.infer<typeof WorkflowInputSchema>;
+export type FlowInput = z.infer<typeof FlowInputSchema>;
 
 export const ReportSchema = z.object({
   id: z.string().optional(),
@@ -221,8 +221,6 @@ export type ReportInput = z.infer<typeof ReportInputSchema>;
 export interface AgencyContext {
   id: string;
   name: string;
-  description?: string;
-  owner: string;
 }
 
 // Extend Fastify types to include agency context

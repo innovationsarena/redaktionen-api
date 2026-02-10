@@ -1,9 +1,9 @@
 import { generateObject } from "ai";
-import { Signal, Summary, SummaryInputSchema } from "../core";
+import { Signal, Summary, SummaryInputSchema } from "../../core";
 import { openai } from "@ai-sdk/openai";
 
 export const correspondent = async (
-  agecyId: string,
+  agencyId: string,
   signal: Signal
 ): Promise<Summary | void> => {
   console.log(
@@ -30,7 +30,7 @@ export const correspondent = async (
       date: signal.date,
       factor: signal.factor,
       sourceUrl: signal.sourceUrl,
-      agency: agecyId,
+      agency: agencyId,
     };
 
     return summary;

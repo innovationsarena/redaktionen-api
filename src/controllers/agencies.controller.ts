@@ -2,12 +2,13 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import {
   asyncHandler,
   AgencyInput,
-  id,
-  Agency,
   createHash,
-  WorkflowInput,
+  FlowInput,
+  Agencies,
+  Agency,
+  id,
 } from "../core";
-import { Agencies, agentQueue, tipsterQueue } from "../services";
+import { agentQueue, tipsterQueue } from "../services";
 
 export const createAgencyController = asyncHandler(
   async (
@@ -119,7 +120,7 @@ export const startAgencyController = asyncHandler(
   async (
     request: FastifyRequest<{
       Params: { agencyId: string };
-      Body: WorkflowInput;
+      Body: FlowInput;
     }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
@@ -131,8 +132,8 @@ export const startAgencyController = asyncHandler(
     });
 
     await tipsterQueue.add("tipster.start", {
-      agencyId: request.params.agencyId,
-      workflow: request.body,
+      request,
+      context: request.body,
     });
 
     await tipsterQueue.upsertJobScheduler("agency-interval-schema", {

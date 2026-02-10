@@ -1,10 +1,9 @@
-import { Agency, AgencyInput } from "../../core";
+import { Agency } from "../../";
+import { supabase } from ".";
 import {
-  PostgrestError,
   PostgrestResponse,
   PostgrestSingleResponse,
 } from "@supabase/supabase-js";
-import { supabase } from ".";
 
 export const Agencies = {
   list: async (): Promise<Agency[]> => {
@@ -25,16 +24,15 @@ export const Agencies = {
     if (error) throw new Error(error.message);
     return data;
   },
-  getByApiKey: async (
-    apiKey: string
-  ): Promise<{ data: Agency | null; error: PostgrestError | null }> => {
-    const { data, error } = await supabase
+  getByApiKey: async (apiKey: string): Promise<Agency> => {
+    const { data, error }: PostgrestSingleResponse<Agency> = await supabase
       .from(process.env.AGENCIES_TABLE as string)
       .select("*")
       .eq("private_key", apiKey)
-      .maybeSingle();
+      .single();
 
-    return { data: data as Agency | null, error };
+    if (error) throw new Error(error.message);
+    return data;
   },
   write: async (agency: Agency): Promise<Agency> => {
     const { data, error }: PostgrestSingleResponse<Agency> = await supabase

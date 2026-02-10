@@ -87,3 +87,19 @@ flowchart LR
 
     U -- Foresight raport summary --> V
 ```
+
+## Project structure
+
+### Core
+
+Core stuff that multiple (all?) services are using.
+
+### Services
+
+A service is a key component in Redaktionen. The folder concists of the following:
+
+| file       | responsibility                                                                                  |
+| ---------- | ----------------------------------------------------------------------------------------------- |
+| agent      | Responsible for AI operations.                                                                  |
+| operations | Responsible for logic flow of the service, ex. _db operations_, _data transformations_.         |
+| worker     | Responsible for triggering the service on incoming event and communication with other services. |

@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { asyncHandler } from "../core";
-import { Signals } from "../services";
+import { asyncHandler, Signals } from "../core";
 
 export const listSignals = asyncHandler(
   async (
