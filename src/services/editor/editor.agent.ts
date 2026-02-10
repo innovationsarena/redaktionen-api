@@ -1,6 +1,6 @@
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
-import { ReportInput, ReportInputSchema, Summary } from "../core";
+import { ReportInput, ReportInputSchema, Summary } from "../../core";
 
 export const summaryEditor = async (
   summaries: Summary[]
@@ -20,7 +20,7 @@ export const summaryEditor = async (
 **Output format**
 - Title: Specific, active, informative.
 - Lede: (2-3 sentences): The key development and why it matters.
-- Body in markdown: 
+- Body in markdown:
 - - Context/Background: Prior events and relevant history.
 - - Details/Evidence: Data and statements from stakeholders; attribute where needed.
 - - Impact/Implications: Who is affected, scale, next steps.
@@ -31,7 +31,7 @@ export const summaryEditor = async (
 **Style and tone**
 - Neutral, precise, concise; active voice.
 - Present tense for ongoing events; past tense for completed actions.
-- Attribute contentious or exclusive claims (“According to [source]…”).
+- Attribute contentious or exclusive claims ("According to [source]…").
 - Avoid opinion, speculation, and jargon (or define if essential).
 
 **Process**

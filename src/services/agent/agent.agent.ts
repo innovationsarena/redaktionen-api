@@ -1,4 +1,4 @@
-import { Agency, Factor } from "../core";
+import { Agency, Factor } from "../../core";
 
 export const createDefaultAgents = async (agency: Agency): Promise<void> => {
   console.log("Generating default agents...");
@@ -14,7 +14,7 @@ export const createDefaultAgents = async (agency: Agency): Promise<void> => {
 
   for await (const factor of factors) {
     // Correspondents
-    await generateCorespondent(factor, agency);
+    await generateCorrespondent(factor, agency);
   }
 
   // Editor
@@ -26,7 +26,7 @@ export const createDefaultAgents = async (agency: Agency): Promise<void> => {
   return;
 };
 
-async function generateCorespondent(factor: Factor, agency: Agency) {
+async function generateCorrespondent(factor: Factor, agency: Agency) {
   // 1. generate name + bio
   // 2. write to db
 }

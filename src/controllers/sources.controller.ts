@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { asyncHandler, SourceInput } from "../core";
-import { Sources } from "../services";
+import { asyncHandler, SourceInput, Sources } from "../core";
 
 export const listSources = asyncHandler(
   async (

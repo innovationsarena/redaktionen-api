@@ -1,5 +1,5 @@
-import { Agents, Reports, Summaries, supabase } from "../services";
-import { Summary, Report, Agent } from "../core";
+import { Agents, Reports, Summaries, supabase } from "../../core";
+import { Summary, Report, Agent } from "../../core";
 import { openai } from "@ai-sdk/openai";
 import sharp from "sharp";
 import z from "zod";
@@ -79,20 +79,20 @@ If this image would not be accepted as a real photograph by a professional photo
   let prompt = `Create a poster image.`;
 
   if (type === "summary") {
-    prompt = `Create a poster image that represents this article: 
+    prompt = `Create a poster image that represents this article:
       title: ${content.title}
       body: ${content.body}`;
   }
 
   if (type === "report") {
-    prompt = `Create a poster image that represents this article: 
+    prompt = `Create a poster image that represents this article:
       title: ${content.title}
       body: ${content.body}`;
   }
 
   if (type === "agent") {
     system = `
-      You are an image-generation assistant. 
+      You are an image-generation assistant.
 
       ## Instructions
       - photorealistic professional headshot of the given description

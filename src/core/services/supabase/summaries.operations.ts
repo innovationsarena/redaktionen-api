@@ -1,9 +1,9 @@
 import {
-  PostgrestResponse,
   PostgrestSingleResponse,
+  PostgrestResponse,
   SupabaseClient,
 } from "@supabase/supabase-js";
-import { Summary } from "../../core";
+import { Summary } from "../..";
 
 export const supabase = new SupabaseClient(
   process.env.SUPABASE_URL as string,
@@ -43,7 +43,8 @@ export const Summaries = {
       query = query.eq("agency", agencyId);
     }
 
-    const { data, error }: PostgrestSingleResponse<Summary> = await query.single();
+    const { data, error }: PostgrestSingleResponse<Summary> =
+      await query.single();
 
     if (error) throw new Error(error.message);
     return data;
@@ -70,15 +71,14 @@ export const Summaries = {
     if (error) throw new Error(error.message);
     return data;
   },
-};
+  empty: async (agencyId: string) => {
+    const { data, error } = await supabase
+      .from(process.env.SUMMARIES_TABLE as string)
+      .delete()
+      .eq("agency", agencyId);
 
-export const emptySummaries = async () => {
-  const { data, error } = await supabase
-    .from(process.env.SUMMARIES_TABLE as string)
-    .delete()
-    .neq("id", 0);
+    if (error) throw new Error(error.message);
 
-  if (error) throw new Error(error.message);
-
-  return;
+    return;
+  },
 };

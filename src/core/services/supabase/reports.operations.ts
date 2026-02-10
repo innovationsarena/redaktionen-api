@@ -2,7 +2,7 @@ import {
   PostgrestResponse,
   PostgrestSingleResponse,
 } from "@supabase/supabase-js";
-import { Report } from "../../core";
+import { Report } from "../..";
 import { supabase } from ".";
 
 interface ReportFilters {

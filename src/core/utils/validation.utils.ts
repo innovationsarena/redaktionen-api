@@ -1,5 +1,5 @@
 import { FastifyReply } from "fastify";
-import { Agencies } from "../../services";
+import { Agencies } from "../../core";
 import { createHash } from "./crypto.utils";
 
 /**
@@ -14,7 +14,7 @@ export const isValid = async (
   reply: FastifyReply
 ): Promise<boolean> => {
   const hashedKey = await createHash(key);
-  const { data: agency, error } = await Agencies.getByApiKey(hashedKey);
-  if (error) return reply.status(400).send(error.message);
-  return agency ? true : false;
+  const data = await Agencies.getByApiKey(hashedKey);
+  if (!data) return reply.status(400).send("not valid Agency");
+  return data ? true : false;
 };

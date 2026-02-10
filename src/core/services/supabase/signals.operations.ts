@@ -2,7 +2,7 @@ import {
   PostgrestResponse,
   PostgrestSingleResponse,
 } from "@supabase/supabase-js";
-import { Signal } from "../../core";
+import { Signal } from "../..";
 import { supabase } from ".";
 
 interface SignalFilters {
@@ -12,9 +12,7 @@ interface SignalFilters {
 
 export const Signals = {
   list: async (filters?: SignalFilters): Promise<Signal[]> => {
-    let query = supabase
-      .from(process.env.SIGNALS_TABLE as string)
-      .select("*");
+    let query = supabase.from(process.env.SIGNALS_TABLE as string).select("*");
 
     if (filters?.factor) {
       query = query.eq("factor", filters.factor);
@@ -38,7 +36,8 @@ export const Signals = {
       query = query.eq("agency", agencyId);
     }
 
-    const { data, error }: PostgrestSingleResponse<Signal> = await query.single();
+    const { data, error }: PostgrestSingleResponse<Signal> =
+      await query.single();
 
     if (error) throw new Error(error.message);
     return data;
@@ -62,15 +61,14 @@ export const Signals = {
     if (error) throw new Error(error.message);
     return data;
   },
-};
+  empty: async (agencyId: string) => {
+    const { data, error } = await supabase
+      .from(process.env.SIGNALS_TABLE as string)
+      .delete()
+      .eq("agency", agencyId);
 
-export const emptySignals = async () => {
-  const { data, error } = await supabase
-    .from(process.env.SIGNALS_TABLE as string)
-    .delete()
-    .neq("id", 0);
+    if (error) throw new Error(error.message);
 
-  if (error) throw new Error(error.message);
-
-  return;
+    return;
+  },
 };

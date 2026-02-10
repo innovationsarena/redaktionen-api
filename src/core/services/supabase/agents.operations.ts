@@ -1,4 +1,4 @@
-import { Agent, AgentInput, AgentType } from "../../core";
+import { Agent, AgentInput, AgentType } from "../..";
 import {
   PostgrestResponse,
   PostgrestSingleResponse,
