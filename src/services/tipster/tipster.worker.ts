@@ -1,5 +1,6 @@
 import { Queue, QueueEvents, Worker } from "bullmq";
 import { connection, concurrency } from "../../core";
+import { runTipsters } from "./tipster.operations";
 
 // TIPSTER
 export const TIPSTER_QUEUE_NAME = "tipsterQueue";
@@ -9,7 +10,10 @@ new Worker(
   TIPSTER_QUEUE_NAME,
   async (job) => {
     if (job.name === "tipster.start") {
-      const { agencyId, workflow } = job.data;
+      const { agency, context } = job.data;
+
+      await runTipsters(agency, context);
+      await job.isCompleted();
     }
   },
   {
@@ -17,11 +21,3 @@ new Worker(
     concurrency,
   }
 );
-
-// Trigger next based on this queue
-const queueEvents = new QueueEvents(TIPSTER_QUEUE_NAME);
-
-queueEvents.on("completed", async ({ returnvalue: data }) => {
-  // react to completion
-  console.log(data);
-});

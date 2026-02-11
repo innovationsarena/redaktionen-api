@@ -132,7 +132,7 @@ export const startAgencyController = asyncHandler(
     });
 
     await tipsterQueue.add("tipster.start", {
-      request,
+      agency: { id: agency.id, name: agency.name },
       context: request.body,
     });
 

@@ -1,12 +1,10 @@
-import { FastifyRequest } from "fastify";
 import { tipster } from ".";
 import { AgencyContext, FlowInput, Signal, Signals } from "../../core";
 
 export const runTipsters = async (
-  request: FastifyRequest,
+  agency: AgencyContext,
   context: FlowInput
 ): Promise<Signal[]> => {
-  const { agency } = request;
   const { factors, tipLimit } = context;
 
   // Empty tipster jar for agency
