@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { isValid, createHash } from "../utils";
 import { AgencyContext } from "../types";
 import { Agencies } from "../../core";
-import { ZodError } from "zod";
+import { ZodError, ZodSchema } from "zod";
 import {
   AuthorizationHeaderSchema,
   BearerTokenSchema,
@@ -264,4 +264,24 @@ export const validateAgencyKey = async (
   };
 
   request.agency = agencyContext;
+};
+
+/**
+ * Factory that returns a preValidation hook to validate request.body against a Zod schema.
+ * On success, replaces request.body with the parsed (and defaulted) data.
+ */
+export const validateBody = (schema: ZodSchema) => {
+  return async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    const result = schema.safeParse(request.body);
+
+    if (!result.success) {
+      return reply.code(400).send({
+        error: "Bad Request",
+        message: formatZodError(result.error),
+        statusCode: 400,
+      }) as unknown as void;
+    }
+
+    request.body = result.data;
+  };
 };

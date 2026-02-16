@@ -24,11 +24,11 @@ export const tipster = async (
   if (items) {
     const feedItems = await fetchFeeds(items, tipLimit, tipsterProgress);
 
-    console.log(`Formatting signals...`);
     const parsedFeed = parseFeed(feedItems, factor, agency.id);
+    console.log(`Signals formated.`);
 
-    console.log(`Writing signals...`);
     await Signals.batchWrite(parsedFeed);
+    console.log(`Signals written to db.`);
 
     return parsedFeed;
   }

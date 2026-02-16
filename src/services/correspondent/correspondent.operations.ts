@@ -1,13 +1,11 @@
-import { FastifyRequest } from "fastify";
-import { FlowInput, Signals, Summaries } from "../../core";
+import { AgencyContext, FlowInput, Signals, Summaries } from "../../core";
 import { correspondentQueue } from "./correspondent.worker";
 
 export const runCorrespondents = async (
-  request: FastifyRequest,
-  context: FlowInput
+  agency: AgencyContext,
+  flowSettings: FlowInput
 ): Promise<void> => {
-  const { agency } = request;
-  const agencyId = agency?.id as string;
+  const { id: agencyId } = agency;
 
   // Empty summaries for agency
   await Summaries.empty(agencyId);
@@ -16,9 +14,11 @@ export const runCorrespondents = async (
 
   for await (const signal of signalsList) {
     await correspondentQueue.add("correspondent.summary", {
-      agencyId,
+      agency,
+      flowSettings,
       signal,
-      context,
     });
   }
+
+  return;
 };

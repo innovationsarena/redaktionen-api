@@ -1,13 +1,21 @@
-import { generateObject } from "ai";
-import { Signal, Summary, SummaryInputSchema } from "../../core";
 import { openai } from "@ai-sdk/openai";
+import { generateObject } from "ai";
+import {
+  AgencyContext,
+  FlowInput,
+  Signal,
+  Summaries,
+  Summary,
+  SummaryInputSchema,
+} from "../../core";
 
 export const correspondent = async (
-  agencyId: string,
+  agency: AgencyContext,
+  flowSettings: FlowInput,
   signal: Signal
-): Promise<Summary | void> => {
+): Promise<Summary | any> => {
   console.log(
-    `${signal.factor} correspondent on the case summarizing >>> ${signal.sourceUrl} <<<.`
+    `${signal.factor} correspondent on the case summarizing >>> ${signal.sourceUrl} <<< for agency ${agency.name}.`
   );
 
   const resp = await fetch(signal.sourceUrl);
@@ -30,11 +38,15 @@ export const correspondent = async (
       date: signal.date,
       factor: signal.factor,
       sourceUrl: signal.sourceUrl,
-      agency: agencyId,
+      agency: agency.id,
     };
+
+    Summaries.write(summary);
 
     return summary;
   } catch (error) {
     console.log(error);
+    // Handle error
+    return;
   }
 };

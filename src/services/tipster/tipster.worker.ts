@@ -1,6 +1,7 @@
 import { Queue, QueueEvents, Worker } from "bullmq";
 import { connection, concurrency } from "../../core";
 import { runTipsters } from "./tipster.operations";
+import { correspondentQueue } from "../correspondent";
 
 // TIPSTER
 export const TIPSTER_QUEUE_NAME = "tipsterQueue";
@@ -10,10 +11,14 @@ new Worker(
   TIPSTER_QUEUE_NAME,
   async (job) => {
     if (job.name === "tipster.start") {
-      const { agency, context } = job.data;
+      const { agency, flowSettings } = job.data;
 
-      await runTipsters(agency, context);
-      await job.isCompleted();
+      await runTipsters(agency, flowSettings);
+
+      await correspondentQueue.add("correspondent.start", {
+        agency,
+        flowSettings,
+      });
     }
   },
   {

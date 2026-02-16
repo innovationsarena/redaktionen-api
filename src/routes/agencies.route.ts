@@ -1,5 +1,5 @@
 import { FastifyInstance, RouteHandlerMethod } from "fastify";
-import { validateKey } from "../core";
+import { validateKey, validateBody, FlowInputSchema } from "../core";
 import {
   getAgencyController,
   startAgencyController,
@@ -48,7 +48,7 @@ export const agenciesRouter = (fastify: FastifyInstance) => {
   fastify.post(
     "/agencies/:agencyId/start",
     {
-      preValidation: [validateKey],
+      preValidation: [validateKey, validateBody(FlowInputSchema)],
     },
     startAgencyController as unknown as RouteHandlerMethod
   );

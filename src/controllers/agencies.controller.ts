@@ -20,7 +20,7 @@ export const createAgencyController = asyncHandler(
     const { name, owner, description, defaultAgents } = request.body;
 
     const agency: Agency = {
-      id: request.body.id ? request.body.id : id(8),
+      id: request.body.id ? request.body.id.toLocaleLowerCase() : id(8),
       name,
       owner,
       state: "idle",
@@ -93,6 +93,7 @@ export const updateAgencyController = asyncHandler(
       id: updatedAgency.id,
       name: updatedAgency.name,
       description: updatedAgency.description,
+      owner: updatedAgency.owner,
     });
   }
 );
@@ -133,7 +134,7 @@ export const startAgencyController = asyncHandler(
 
     await tipsterQueue.add("tipster.start", {
       agency: { id: agency.id, name: agency.name },
-      context: request.body,
+      flowSettings: request.body,
     });
 
     await tipsterQueue.upsertJobScheduler("agency-interval-schema", {

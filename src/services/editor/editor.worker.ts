@@ -1,4 +1,4 @@
-import { Queue, QueueEvents, Worker } from "bullmq";
+import { Queue, Worker } from "bullmq";
 import { connection, concurrency } from "../../core";
 
 // EDITOR
@@ -17,11 +17,3 @@ new Worker(
     concurrency,
   }
 );
-
-// Trigger next based on this queue
-const queueEvents = new QueueEvents(EDITOR_QUEUE_NAME);
-
-queueEvents.on("completed", async ({ returnvalue: data }) => {
-  // react to completion
-  console.log(data);
-});

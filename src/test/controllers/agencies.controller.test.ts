@@ -361,13 +361,56 @@ describe("PATCH /agencies/:agencyId/key", () => {
 });
 
 describe("POST /agencies/:agencyId/start", () => {
+  const validPayload = {
+    factors: ["political"],
+    products: { report: "integrated" },
+    interval: 24,
+  };
+
   it("returns 401 without auth", async () => {
     const res = await app.inject({
       method: "POST",
       url: "/agencies/agency1/start",
-      payload: { factors: ["political"], interval: 24 },
+      payload: validPayload,
     });
     expect(res.statusCode).toBe(401);
+  });
+
+  it("returns 400 with invalid body (missing factors)", async () => {
+    const res = await app.inject({
+      method: "POST",
+      url: "/agencies/agency1/start",
+      headers: adminHeaders,
+      payload: { products: { report: "integrated" } },
+    });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.json().error).toBe("Bad Request");
+  });
+
+  it("returns 400 with invalid factor value", async () => {
+    const res = await app.inject({
+      method: "POST",
+      url: "/agencies/agency1/start",
+      headers: adminHeaders,
+      payload: {
+        factors: ["invalid-factor"],
+        products: { report: "integrated" },
+      },
+    });
+
+    expect(res.statusCode).toBe(400);
+  });
+
+  it("returns 400 with missing products", async () => {
+    const res = await app.inject({
+      method: "POST",
+      url: "/agencies/agency1/start",
+      headers: adminHeaders,
+      payload: { factors: ["political"] },
+    });
+
+    expect(res.statusCode).toBe(400);
   });
 
   it("updates state to running and adds queue jobs", async () => {
@@ -378,10 +421,7 @@ describe("POST /agencies/:agencyId/start", () => {
       method: "POST",
       url: "/agencies/agency1/start",
       headers: adminHeaders,
-      payload: {
-        factors: ["political"],
-        interval: 24,
-      },
+      payload: validPayload,
     });
 
     expect(res.statusCode).toBe(200);
@@ -395,6 +435,29 @@ describe("POST /agencies/:agencyId/start", () => {
     expect(mockedTipsterQueue.upsertJobScheduler).toHaveBeenCalled();
   });
 
+  it("applies defaults for optional fields", async () => {
+    mockedAgencies.get.mockResolvedValue(makeAgency());
+    mockedAgencies.update.mockResolvedValue(makeAgency({ state: "running" }));
+
+    const res = await app.inject({
+      method: "POST",
+      url: "/agencies/agency1/start",
+      headers: adminHeaders,
+      payload: {
+        factors: ["political"],
+        products: { report: "integrated" },
+      },
+    });
+
+    expect(res.statusCode).toBe(200);
+    // Default interval is 24
+    expect(res.json().message).toContain("24");
+    expect(mockedTipsterQueue.upsertJobScheduler).toHaveBeenCalledWith(
+      "agency-interval-schema",
+      { every: 1000 * 60 * 60 * 24 }
+    );
+  });
+
   it("message includes agency name and interval", async () => {
     mockedAgencies.get.mockResolvedValue(makeAgency({ name: "My Agency" }));
     mockedAgencies.update.mockResolvedValue(makeAgency({ state: "running" }));
@@ -405,6 +468,7 @@ describe("POST /agencies/:agencyId/start", () => {
       headers: adminHeaders,
       payload: {
         factors: ["political"],
+        products: { report: "integrated" },
         interval: 12,
       },
     });
