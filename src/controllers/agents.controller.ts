@@ -37,7 +37,7 @@ export const createAgentController = asyncHandler(
 
     await artDirectorQueue.add("artdirector.image.avatar", {
       agencyId,
-      agent,
+      content: agent,
     });
 
     return reply.status(200).send(agent);

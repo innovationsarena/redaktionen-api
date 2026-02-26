@@ -23,6 +23,7 @@ export const checkAndTriggerEditor = async (
 
   if (signals.length === summaries.length) {
     // When all summaries are done
+    console.log("ALL DONE");
     await productSwitch(agency, flowSettings);
   }
 };
@@ -37,6 +38,7 @@ async function productSwitch(agency: AgencyContext, flowSettings: FlowInput) {
         agency,
         flowSettings,
       });
+
     case "isolated":
       await editorQueue.add("editor.summary.isolated", {
         agency,
@@ -96,7 +98,7 @@ export const runIntegratedEditor = async (
 
   await artDirectorQueue.add("artdirector.image.report", {
     agencyId,
-    report: writtenReport,
+    content: writtenReport,
     flowSettings,
   });
 
@@ -135,7 +137,7 @@ export const runIsolatedEditor = async (
 
     await artDirectorQueue.add("artdirector.image.report", {
       agencyId,
-      report: writtenReport,
+      content: writtenReport,
       flowSettings,
     });
   }

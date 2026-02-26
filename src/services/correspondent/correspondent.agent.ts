@@ -43,11 +43,11 @@ export const correspondent = async (
     };
 
     const s = await Summaries.write(summary);
-    console.log(s);
 
     await artDirectorQueue.add("artdirector.image.summary", {
       agencyId: agency.id,
-      s,
+      content: s,
+      type: "summary",
     });
 
     return summary;
