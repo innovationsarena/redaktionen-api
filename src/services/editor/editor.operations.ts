@@ -38,30 +38,38 @@ async function productSwitch(agency: AgencyContext, flowSettings: FlowInput) {
         agency,
         flowSettings,
       });
+      break;
 
     case "isolated":
       await editorQueue.add("editor.summary.isolated", {
         agency,
         flowSettings,
       });
+      break;
   }
   // Foresight
   switch (products.foresight) {
     case "integrated":
       console.log("foresight.integrated");
+      break;
     case "isolated":
       console.log("foresight.isolated");
+      break;
     case "disabled":
       console.log("foresight.disabled");
+      break;
   }
   // Analysis
   switch (products.analysis) {
     case "integrated":
       console.log("analysis.integrated");
+      break;
     case "isolated":
       console.log("analysis.isolated");
+      break;
     case "disabled":
       console.log("analysis.disabled");
+      break;
   }
 }
 
