@@ -10,9 +10,11 @@ import {
 
 export const artDirector = async (
   agencyId: string,
-  content: any, // Summary | Report | Agent
+  content: Summary | Report | Agent, // Summary | Report | Agent
   type: "summary" | "report" | "agent"
 ): Promise<void> => {
+  console.log(`Art director creating poster image type: ${type}.`);
+
   let styleRef = `Create a hyper-realistic photograph.
 
 This must look like a real photo taken with a physical camera.
@@ -52,7 +54,7 @@ Composition & style:
 - Everything must obey real-world physics and optics
 
 Color:
-- Muted pastel tones with natural color response
+- Muted pastel tones with warm natural color response
 - Filmic color grading, matte finish
 - No painted surfaces, no poster colors
 
@@ -80,14 +82,14 @@ If this image would not be accepted as a real photograph by a professional photo
 
   if (type === "summary") {
     prompt = `Create a poster image that represents this article:
-      title: ${content.title}
-      body: ${content.body}`;
+      title: ${(content as Summary).title}
+      body: ${(content as Summary).body}`;
   }
 
   if (type === "report") {
     prompt = `Create a poster image that represents this article:
-      title: ${content.title}
-      body: ${content.body}`;
+ title: ${(content as Report).title}
+      body: ${(content as Report).body}`;
   }
 
   if (type === "agent") {
@@ -102,10 +104,10 @@ If this image would not be accepted as a real photograph by a professional photo
       - natural colors, high detail, 1:1 portrait, no text
     `;
 
-    prompt = `Create a portrait image that represents this description: ${content.description}`;
+    prompt = `Create a portrait image that represents this description: ${
+      (content as Agent).description
+    }`;
   }
-
-  console.log(`Art director creating poster image type: ${type}.`);
 
   try {
     // Art prompt
@@ -130,7 +132,7 @@ If this image would not be accepted as a real photograph by a professional photo
     });
 
     // Store Image
-    const url = await createImageFromBase64(image.base64, type);
+    const url = await createImageFromBase64(image.base64, type, agencyId);
 
     if (type === "summary") {
       // Update summary with public URL
@@ -155,7 +157,8 @@ If this image would not be accepted as a real photograph by a professional photo
 
 async function createImageFromBase64(
   base64: string,
-  type: string
+  type: string,
+  agencyId: string
 ): Promise<string> {
   const imgBuffer = Buffer.from(base64, "base64");
 
@@ -172,7 +175,7 @@ async function createImageFromBase64(
     .toBuffer();
 
   // Generate unique filename
-  const fileName = `${Date.now()}-${Math.random()
+  const fileName = `${agencyId}-${Date.now()}-${Math.random()
     .toString(36)
     .substring(7)}.jpg`;
 

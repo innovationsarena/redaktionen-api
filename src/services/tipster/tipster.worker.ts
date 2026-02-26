@@ -1,4 +1,4 @@
-import { Queue, QueueEvents, Worker } from "bullmq";
+import { Queue, Worker } from "bullmq";
 import { connection, concurrency } from "../../core";
 import { runTipsters } from "./tipster.operations";
 import { correspondentQueue } from "../correspondent";
@@ -19,6 +19,8 @@ new Worker(
         agency,
         flowSettings,
       });
+
+      return;
     }
   },
   {

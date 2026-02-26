@@ -1,5 +1,6 @@
-import { Queue, QueueEvents, Worker, Job } from "bullmq";
+import { Queue, Worker, Job } from "bullmq";
 import { connection, concurrency } from "../../core";
+import { artDirector } from "./artdirector.agent";
 
 // ART DIRECTOR
 export const ARTDIRECTOR_QUEUE_NAME = "artDirectorQueue";
@@ -11,13 +12,17 @@ new Worker(
   ARTDIRECTOR_QUEUE_NAME,
   async (job: Job) => {
     if (job.name === "artdirector.image.summary") {
-      const { agencyId, summary, context } = job.data;
+      const { agencyId, summary } = job.data;
+      await artDirector(agencyId, summary, "summary");
     }
     if (job.name === "artdirector.image.report") {
-      const { report, agencyId } = job.data;
+      const { agencyId, report } = job.data;
+      await artDirector(agencyId, report, "report");
     }
-    if (job.name === "artdirector.image.avatar") {
+
+    if (job.name === "artdirector.image.agent") {
       const { agencyId, agent } = job.data;
+      await artDirector(agencyId, agent, "agent");
     }
   },
   {

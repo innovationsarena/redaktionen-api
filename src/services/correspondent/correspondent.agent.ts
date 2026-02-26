@@ -8,6 +8,7 @@ import {
   Summary,
   SummaryInputSchema,
 } from "../../core";
+import { artDirectorQueue } from "../artdirector";
 
 export const correspondent = async (
   agency: AgencyContext,
@@ -15,7 +16,7 @@ export const correspondent = async (
   signal: Signal
 ): Promise<Summary | any> => {
   console.log(
-    `${signal.factor} correspondent on the case summarizing >>> ${signal.sourceUrl} <<< for agency ${agency.name}.`
+    `${signal.factor} correspondent on the case summarizing source for agency ${agency.name}.`
   );
 
   const resp = await fetch(signal.sourceUrl);
@@ -41,7 +42,13 @@ export const correspondent = async (
       agency: agency.id,
     };
 
-    Summaries.write(summary);
+    const s = await Summaries.write(summary);
+    console.log(s);
+
+    await artDirectorQueue.add("artdirector.image.summary", {
+      agencyId: agency.id,
+      s,
+    });
 
     return summary;
   } catch (error) {

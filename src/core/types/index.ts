@@ -183,9 +183,9 @@ export const AgencyInputSchema = z.object({
 export type AgencyInput = z.infer<typeof AgencyInputSchema>;
 
 export const ProductsSchema = z.object({
-  report: z.enum(["integrated", "isolated"]).default("integrated"),
-  foresight: z.boolean().optional().default(false),
-  analytics: z.boolean().optional().default(false),
+  report: z.enum(["disabled", "integrated", "isolated"]).default("integrated"),
+  analysis: z.enum(["disabled", "integrated", "isolated"]).default("disabled"),
+  foresight: z.enum(["disabled", "integrated", "isolated"]).default("disabled"),
 });
 export type ProductsSchema = z.infer<typeof ProductsSchema>;
 
@@ -205,7 +205,8 @@ export const ReportSchema = z.object({
   author: z.string(),
   agency: z.string().optional(),
   posterUrl: z.string().nullable(),
-  type: z.enum(["summary", "foresight", "analysis"]),
+  type: z.string(),
+  takeaways: z.array(z.string()).optional(),
   factors: z.array(FactorSchema).optional(),
   perspective: PerspectiveSchema.optional(),
   sources: z.array(SignalSchema),
@@ -216,6 +217,7 @@ export const ReportInputSchema = z.object({
   title: z.string(),
   lede: z.string(),
   body: z.string(),
+  takeaways: z.array(z.string()),
   agency: z.string().optional(),
 });
 export type ReportInput = z.infer<typeof ReportInputSchema>;

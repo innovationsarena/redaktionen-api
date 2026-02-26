@@ -7,6 +7,51 @@
 
 ## Workflow
 
+### Overview
+
+```mermaid
+flowchart LR
+    A[[<h1>Source</h1><p>RSS</p>]]
+
+    B[<h1>Tipster</h1><p>PESTEL</p>]
+    G(<h1>Correspondent</h1><p>PESTEL</p>)
+
+    N{<h1>Report Editor</h1>}
+    M{<h2>Integrated report</h2><p>ALL</p>}
+    Z{<h2>Isolated report</h2><p>PESTEL</p>}
+
+    O{<h1>Researcher Team</h1>}
+    P{<h2>Integrated report</h2><p>ALL</p>}
+    Q{<h2>Isolated report</h2><p>PESTEL</p>}
+
+    U{<h1>Foresight Editor</h1>}
+
+    R{<h1>Art department</h1>}
+
+    V{<h1>Scenario Team</h1>}
+
+    A ----> B
+    B -- signal --> G
+    G -- summaries --> N
+    G <-- summary --> R
+    N ----> M
+    N ----> Z
+    M <-- report --> R
+    Z <-- report --> R
+
+    G -- summaries --> O
+    O -- summaries --> P
+    O <-- summary --> Q
+    P <-- report --> R
+    Q <-- report --> R
+
+    G -- summaries --> U
+    U -- Report --> V
+
+```
+
+### Detailed
+
 ```mermaid
 flowchart LR
     A[<h3>Tipster</h3><p>Politic</p>]

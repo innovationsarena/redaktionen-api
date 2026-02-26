@@ -1,5 +1,5 @@
-import { summaryEditor } from "./editor.agent";
 import { artDirectorQueue } from "../artdirector/artdirector.worker";
+import { integratedEditor, isolatedEditor } from "./editor.agent";
 import {
   FlowInput,
   Report,
@@ -8,6 +8,7 @@ import {
   Summaries,
   AgencyContext,
 } from "../../core";
+import { editorQueue } from "./editor.worker";
 
 export const checkAndTriggerEditor = async (
   agency: AgencyContext,
@@ -17,29 +18,52 @@ export const checkAndTriggerEditor = async (
 
   const signals = await Signals.list({ agencyId });
   const summaries = await Summaries.list({ agencyId });
-  const filteredSummaries = summaries.filter((s) => s.posterUrl !== null);
 
-  // Check if all summaries are done
-  if (signals.length === filteredSummaries.length) {
-    if (flowSettings.products.report == "integrated") {
-      // editor.integrated.summary
-    }
+  console.log(summaries.length + " / " + signals.length + " summaries done");
 
-    if (flowSettings.products.report == "isolated") {
-      // editor.isolated.summary
-    }
-
-    if (flowSettings.products.analytics) {
-      // analytics.create
-    }
-
-    if (flowSettings.products.foresight) {
-      // foresight.create
-    }
+  if (signals.length === summaries.length) {
+    // When all summaries are done
+    await productSwitch(agency, flowSettings);
   }
 };
 
-export const runEditor = async (
+async function productSwitch(agency: AgencyContext, flowSettings: FlowInput) {
+  const { products } = flowSettings;
+  console.log(products.report);
+  // Report
+  switch (products.report) {
+    case "integrated":
+      await editorQueue.add("editor.summary.integrated", {
+        agency,
+        flowSettings,
+      });
+    case "isolated":
+      await editorQueue.add("editor.summary.isolated", {
+        agency,
+        flowSettings,
+      });
+  }
+  // Foresight
+  switch (products.foresight) {
+    case "integrated":
+      console.log("foresight.integrated");
+    case "isolated":
+      console.log("foresight.isolated");
+    case "disabled":
+      console.log("foresight.disabled");
+  }
+  // Analysis
+  switch (products.analysis) {
+    case "integrated":
+      console.log("analysis.integrated");
+    case "isolated":
+      console.log("analysis.isolated");
+    case "disabled":
+      console.log("analysis.disabled");
+  }
+}
+
+export const runIntegratedEditor = async (
   agency: AgencyContext,
   flowSettings: FlowInput
 ): Promise<void> => {
@@ -51,17 +75,17 @@ export const runEditor = async (
 
   const summaries = await Summaries.list({ agencyId });
 
-  const { title, lede, body } = await summaryEditor(summaries);
+  const { title, lede, body } = await integratedEditor(summaries);
+
   const signals = await Signals.list({ agencyId });
-  const type = "summary";
 
   const report: Report = {
-    id: `${agencyId}-${type}-${Date.now()}`,
+    id: `${agencyId}-${flowSettings.products.report}-${Date.now()}`,
     title,
     lede,
     body,
-    type,
-    author: "Summary editor",
+    type: flowSettings.products.report,
+    author: "editor.integrated",
     sources: signals,
     posterUrl: null,
     factors: flowSettings.factors,
@@ -75,4 +99,46 @@ export const runEditor = async (
     report: writtenReport,
     flowSettings,
   });
+
+  return;
+};
+
+export const runIsolatedEditor = async (
+  agency: AgencyContext,
+  flowSettings: FlowInput
+): Promise<void> => {
+  console.log(
+    `Summary editor is generating a summary report of type '${flowSettings.products.report}'...`
+  );
+
+  const { id: agencyId } = agency;
+  const { factors } = flowSettings;
+
+  for await (const factor of factors) {
+    const summaries = await Summaries.list({ factor, agencyId });
+    const { title, lede, body } = await isolatedEditor(summaries);
+    const signals = await Signals.list({ agencyId });
+    const report: Report = {
+      id: `${agencyId}-${flowSettings.products.report}-${Date.now()}`,
+      title,
+      lede,
+      body,
+      type: flowSettings.products.report,
+      author: "editor.isolated",
+      sources: signals,
+      posterUrl: null,
+      factors: flowSettings.factors,
+      agency: agencyId,
+    };
+
+    const writtenReport = await Reports.write(report);
+
+    await artDirectorQueue.add("artdirector.image.report", {
+      agencyId,
+      report: writtenReport,
+      flowSettings,
+    });
+  }
+
+  return;
 };
