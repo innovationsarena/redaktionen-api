@@ -10,6 +10,7 @@ export const FactorSchema = z.enum([
   "technological",
   "environmental",
   "legal",
+  "all",
 ]);
 export type Factor = z.infer<typeof FactorSchema>;
 

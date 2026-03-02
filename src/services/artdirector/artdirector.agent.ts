@@ -13,7 +13,7 @@ export const artDirector = async (
   content: Summary | Report | Agent, // Summary | Report | Agent
   type: "summary" | "report" | "agent"
 ): Promise<void> => {
-  console.log(`Art director creating poster image type: ${type}.`);
+  console.log(`Art director creating image type: ${type}.`);
 
   let styleRef = `Create a hyper-realistic photograph.
 
@@ -133,6 +133,7 @@ If this image would not be accepted as a real photograph by a professional photo
 
     // Store Image
     const url = await createImageFromBase64(image.base64, type, agencyId);
+    console.log(url);
 
     if (type === "summary") {
       // Update summary with public URL

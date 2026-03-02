@@ -1,5 +1,5 @@
-import { Queue, QueueEvents, Worker } from "bullmq";
-import { connection, concurrency, Summaries } from "../../core";
+import { Queue, Worker } from "bullmq";
+import { connection, concurrency } from "../../core";
 import { correspondent } from "./correspondent.agent";
 import { runCorrespondents } from "./correspondent.operations";
 import { checkAndTriggerEditor } from "../editor";

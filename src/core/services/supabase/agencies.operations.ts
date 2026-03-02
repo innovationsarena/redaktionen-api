@@ -55,4 +55,15 @@ export const Agencies = {
     if (error) throw new Error(error.message);
     return data;
   },
+  delete: async (agencyId: string): Promise<Agency> => {
+    const { data, error }: PostgrestSingleResponse<Agency> = await supabase
+      .from(process.env.AGENCIES_TABLE as string)
+      .delete()
+      .eq("id", agencyId)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  },
 };

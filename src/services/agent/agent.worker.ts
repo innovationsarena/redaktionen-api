@@ -1,5 +1,6 @@
 import { Queue, Worker } from "bullmq";
 import { connection, concurrency } from "../../core";
+import { createDefaultAgents } from "./agent.agent";
 
 // AGENT
 export const AGENT_QUEUE_NAME = "agentQueue";
@@ -10,6 +11,8 @@ new Worker(
   async (job) => {
     if (job.name === "agent.createDefault") {
       const { agency } = job.data;
+      await createDefaultAgents(agency);
+      return;
     }
   },
   {

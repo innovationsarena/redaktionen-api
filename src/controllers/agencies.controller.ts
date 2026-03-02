@@ -31,7 +31,7 @@ export const createAgencyController = asyncHandler(
     await Agencies.write(agency);
 
     if (defaultAgents) {
-      await agentQueue.add("agent.createDefault", agency);
+      await agentQueue.add("agent.createDefault", { agency });
     }
 
     return reply.status(200).send({
@@ -95,6 +95,26 @@ export const updateAgencyController = asyncHandler(
       description: updatedAgency.description,
       owner: updatedAgency.owner,
     });
+  }
+);
+
+export const deleteAgencyController = asyncHandler(
+  async (
+    request: FastifyRequest<{ Params: { agencyId: string } }>,
+    reply: FastifyReply
+  ): Promise<FastifyReply> => {
+    const agency = await Agencies.delete(request.params.agencyId);
+
+    return reply
+      .status(200)
+      .send({
+        agency: {
+          id: agency.id,
+          name: agency.name,
+          description: agency.description,
+          owner: agency.owner,
+        },
+      });
   }
 );
 

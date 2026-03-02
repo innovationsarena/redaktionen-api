@@ -1,3 +1,4 @@
+import { artDirectorQueue } from "../artdirector";
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import {
@@ -8,7 +9,6 @@ import {
   Summary,
   SummaryInputSchema,
 } from "../../core";
-import { artDirectorQueue } from "../artdirector";
 
 export const correspondent = async (
   agency: AgencyContext,
