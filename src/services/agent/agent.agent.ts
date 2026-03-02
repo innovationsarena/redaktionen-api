@@ -83,6 +83,7 @@ async function generateCorrespondent(factor: Factor, agency: Agency) {
 
 async function generateIntegratedEditor(agency: Agency) {
   // 1. generate name + bio
+  console.log(`Generating integrated editor.`);
 
   const editorIndex = Math.floor(Math.random() * editorBios.length);
 
@@ -153,6 +154,7 @@ async function generateIntegratedEditor(agency: Agency) {
 
 async function generateIsolatedEditor(agency: Agency) {
   // 1. generate name + bio
+  console.log(`Generating isolated editor.`);
 
   const editorIndex = Math.floor(Math.random() * editorBios.length);
 

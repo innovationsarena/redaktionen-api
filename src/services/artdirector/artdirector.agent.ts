@@ -133,7 +133,6 @@ If this image would not be accepted as a real photograph by a professional photo
 
     // Store Image
     const url = await createImageFromBase64(image.base64, type, agencyId);
-    console.log(url);
 
     if (type === "summary") {
       // Update summary with public URL
