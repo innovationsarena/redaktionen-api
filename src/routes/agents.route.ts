@@ -12,7 +12,7 @@ export const agentsRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/agents",
     {
-      preValidation: [validateAgencyKey],
+      preValidation: [],
     },
     listAgentsController as unknown as RouteHandlerMethod
   );
