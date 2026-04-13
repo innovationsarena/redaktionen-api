@@ -3,7 +3,7 @@ import {
   asyncHandler,
   AgencyInput,
   createHash,
-  FlowInput,
+  Context,
   Agencies,
   Agency,
   id,
@@ -120,7 +120,7 @@ export const startAgencyController = asyncHandler(
   async (
     request: FastifyRequest<{
       Params: { agencyId: string };
-      Body: FlowInput;
+      Body: Context;
     }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
@@ -133,7 +133,7 @@ export const startAgencyController = asyncHandler(
 
     await tipsterQueue.add("tipster.start", {
       agencyId: agency.id,
-      workflow: request.body,
+      context: request.body,
     });
 
     await tipsterQueue.upsertJobScheduler("agency-interval-schema", {

@@ -1,9 +1,9 @@
 import { tipster } from ".";
-import { FlowInput, Signal, Signals } from "../../core";
+import { Context, Signal, Signals } from "../../core";
 
 export const runTipsters = async (
   agencyId: string,
-  context: FlowInput
+  context: Context
 ): Promise<Signal[]> => {
   const { factors, tipLimit } = context;
 

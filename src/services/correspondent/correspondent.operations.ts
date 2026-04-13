@@ -1,9 +1,9 @@
-import { FlowInput, Signals, Summaries } from "../../core";
+import { Context, Signals, Summaries } from "../../core";
 import { correspondentQueue } from "./correspondent.worker";
 
 export const runCorrespondents = async (
   agencyId: string,
-  context: FlowInput
+  context: Context
 ): Promise<void> => {
   console.log("Running correspondents...");
 

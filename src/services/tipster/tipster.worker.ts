@@ -14,8 +14,8 @@ new Worker(
     if (job.name === "tipster.start") {
       const { agencyId } = job.data;
 
-      await runTipsters(agencyId, job.data.workflow);
-      await runCorrespondents(agencyId, job.data.workflow);
+      await runTipsters(agencyId, job.data.context);
+      await runCorrespondents(agencyId, job.data.context);
     }
   },
   {

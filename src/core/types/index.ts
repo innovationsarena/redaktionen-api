@@ -182,14 +182,20 @@ export const AgencyInputSchema = z.object({
 
 export type AgencyInput = z.infer<typeof AgencyInputSchema>;
 
-export const FlowInputSchema = z.object({
+export const ProductsSchema = z.object({
+  report: z.enum(["disabled", "integrated", "isolated"]).default("integrated"),
+  analysis: z.enum(["disabled", "integrated", "isolated"]).default("disabled"),
+  foresight: z.enum(["disabled", "integrated", "isolated"]).default("disabled"),
+});
+export type ProductsSchema = z.infer<typeof ProductsSchema>;
+
+export const ContextSchema = z.object({
   factors: z.array(FactorSchema),
-  foresight: z.boolean().optional().default(false),
-  analysts: z.boolean().optional().default(false),
+  products: ProductsSchema,
   tipLimit: z.number().optional().default(5),
   interval: z.number().optional().default(24), // How often, defaults to every 24
 });
-export type FlowInput = z.infer<typeof FlowInputSchema>;
+export type Context = z.infer<typeof ContextSchema>;
 
 export const ReportSchema = z.object({
   id: z.string().optional(),
@@ -199,7 +205,7 @@ export const ReportSchema = z.object({
   author: z.string(),
   agency: z.string().optional(),
   posterUrl: z.string().nullable(),
-  type: z.enum(["summary", "foresight", "analysis"]),
+  type: z.string(),
   factors: z.array(FactorSchema).optional(),
   perspective: PerspectiveSchema.optional(),
   sources: z.array(SignalSchema),
