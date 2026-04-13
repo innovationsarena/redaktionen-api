@@ -12,12 +12,12 @@ new Worker(
   ARTDIRECTOR_QUEUE_NAME,
   async (job: Job) => {
     if (job.name === "artdirector.image.summary") {
-      const { agencyId, summary, context } = job.data;
+      const { agencyId, summary } = job.data;
       await artDirector(agencyId, summary, "summary");
     }
     if (job.name === "artdirector.image.report") {
-      const { report, agencyId } = job.data;
-      await artDirector(agencyId, report, "report");
+      const { agencyId, content } = job.data;
+      await artDirector(agencyId, content, "report");
     }
     if (job.name === "artdirector.image.avatar") {
       const { agencyId, agent } = job.data;

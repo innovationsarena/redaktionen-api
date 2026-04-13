@@ -10,12 +10,12 @@ new Worker(
   EDITOR_QUEUE_NAME,
   async (job) => {
     if (job.name === "editor.report.integrated") {
-      const { agency, context } = job.data;
-      await runIntegratedEditor(agency, context);
+      const { agencyId, context } = job.data;
+      await runIntegratedEditor(agencyId, context);
     }
     if (job.name === "editor.report.isolated") {
-      const { agency, context } = job.data;
-      await runIsolatedEditor(agency, context);
+      const { agencyId, context } = job.data;
+      await runIsolatedEditor(agencyId, context);
     }
   },
   {

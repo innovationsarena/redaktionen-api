@@ -13,6 +13,7 @@ export const artDirector = async (
   content: any, // Summary | Report | Agent
   type: "summary" | "report" | "agent"
 ): Promise<void> => {
+  console.log(content);
   let styleRef = `Create a hyper-realistic photograph.
 
 This must look like a real photo taken with a physical camera.
@@ -139,6 +140,7 @@ If this image would not be accepted as a real photograph by a professional photo
 
     if (type === "report") {
       // Update report with public URL
+      console.log(url);
       await Reports.update({ ...(content as Report), posterUrl: url });
     }
 

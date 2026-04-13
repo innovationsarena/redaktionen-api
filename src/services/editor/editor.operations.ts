@@ -14,7 +14,6 @@ export const checkAndTriggerEditor = async (
   agencyId: string,
   context: Context
 ) => {
-  console.log("-------->>>>>" + agencyId);
   const signals = await Signals.list({ agencyId });
   const summaries = await Summaries.list({ agencyId });
 
@@ -107,6 +106,8 @@ export const runIntegratedEditor = async (
     context,
   });
 
+  console.log("Report delivered.");
+
   return;
 };
 
@@ -146,6 +147,8 @@ export const runIsolatedEditor = async (
       context,
     });
   }
+
+  console.log("Report delivered.");
 
   return;
 };
