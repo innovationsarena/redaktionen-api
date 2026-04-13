@@ -1,5 +1,6 @@
 import { Queue, QueueEvents, Worker } from "bullmq";
 import { connection, concurrency } from "../../core";
+import { runEditor } from "./editor.operations";
 
 // EDITOR
 export const EDITOR_QUEUE_NAME = "editorQueue";
@@ -10,6 +11,7 @@ new Worker(
   async (job) => {
     if (job.name === "editor.summary") {
       const { summaries, context, agencyId } = job.data;
+      await runEditor(agencyId, summaries, context);
     }
   },
   {
@@ -17,11 +19,3 @@ new Worker(
     concurrency,
   }
 );
-
-// Trigger next based on this queue
-const queueEvents = new QueueEvents(EDITOR_QUEUE_NAME);
-
-queueEvents.on("completed", async ({ returnvalue: data }) => {
-  // react to completion
-  console.log(data);
-});

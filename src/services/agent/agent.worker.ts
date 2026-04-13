@@ -17,11 +17,3 @@ new Worker(
     concurrency,
   }
 );
-
-// Trigger next based on this queue
-const queueEvents = new QueueEvents(AGENT_QUEUE_NAME);
-
-queueEvents.on("completed", async ({ returnvalue: data }) => {
-  // react to completion
-  console.log(data);
-});

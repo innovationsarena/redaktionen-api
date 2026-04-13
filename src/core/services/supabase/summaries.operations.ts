@@ -59,12 +59,12 @@ export const Summaries = {
     if (error) throw new Error(error.message);
     return data;
   },
-
   update: async (summary: Summary): Promise<Summary> => {
+    const { id, ...fields } = summary;
     const { data, error }: PostgrestSingleResponse<Summary> = await supabase
       .from(process.env.SUMMARIES_TABLE as string)
-      .update(summary)
-      .eq("id", summary.id)
+      .update(fields)
+      .eq("id", id)
       .select()
       .single();
 

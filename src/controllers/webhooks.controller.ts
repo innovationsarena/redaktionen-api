@@ -6,7 +6,6 @@ export const handleWebhookController = asyncHandler(
     request: FastifyRequest<{ Body: any }>,
     reply: FastifyReply
   ): Promise<FastifyReply> => {
-    console.log(request);
     return reply.status(200).send({ message: "Webhook triggered." });
   }
 );

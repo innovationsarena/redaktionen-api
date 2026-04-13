@@ -2,6 +2,7 @@ import { Queue, QueueEvents, Worker } from "bullmq";
 import { connection, concurrency, Summaries, Summary } from "../../core";
 import { correspondent } from "./correspondent.agent";
 import { artDirectorQueue } from "../artdirector";
+import { checkAndTriggerEditor } from "../editor";
 
 // CORRESPONDENT
 export const CORRESPONDENT_QUEUE_NAME = "correspondentQueue";
@@ -14,6 +15,7 @@ new Worker(
   async (job) => {
     if (job.name === "correspondent.summary") {
       const { agencyId, signal, context } = job.data;
+
       const summary = await correspondent(agencyId, signal);
       const sum = await Summaries.write(summary as Summary);
       await artDirectorQueue.add("artdirector.image.summary", {
@@ -21,6 +23,8 @@ new Worker(
         summary: sum,
         context,
       });
+
+      await checkAndTriggerEditor(agencyId, context);
     }
   },
   {

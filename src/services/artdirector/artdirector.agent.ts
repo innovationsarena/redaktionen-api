@@ -131,7 +131,6 @@ If this image would not be accepted as a real photograph by a professional photo
 
     // Store Image
     const url = await createImageFromBase64(agencyId, image.base64, type);
-    console.log({ ...content, posterUrl: url });
 
     if (type === "summary") {
       // Update summary with public URL
@@ -174,7 +173,7 @@ async function createImageFromBase64(
     .toBuffer();
 
   // Generate unique filename
-  const fileName = `${agencyId}__${Date.now()}-${Math.random()
+  const fileName = `${agencyId}_${Date.now()}-${Math.random()
     .toString(36)
     .substring(7)}.jpg`;
 

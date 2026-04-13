@@ -49,9 +49,11 @@ export const checkAndTriggerEditor = async (
 ) => {
   const signals = await Signals.list({ agencyId });
   const summaries = await Summaries.list({ agencyId });
-  const filteredSummaries = summaries.filter((s) => s.posterUrl !== null);
+  //  const filteredSummaries = summaries.filter((s) => s.posterUrl !== null);
 
-  if (signals.length === filteredSummaries.length) {
+  console.log("sig: " + signals.length, " " + "sum: " + summaries.length);
+
+  if (signals.length === summaries.length) {
     await editorQueue.add("editor.summary", { agencyId, summaries, context });
   }
 };
