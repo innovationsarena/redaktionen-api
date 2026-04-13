@@ -6,14 +6,14 @@ export const summariesRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/summaries",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     listSummariesController as unknown as RouteHandlerMethod
   );
   fastify.get(
     "/summaries/:summary",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     getSummaryController as unknown as RouteHandlerMethod
   );

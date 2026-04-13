@@ -6,14 +6,14 @@ export const reportsRouter = (fastify: FastifyInstance) => {
   fastify.get(
     "/reports",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     listReports as unknown as RouteHandlerMethod
   );
   fastify.get(
     "/reports/:reportId",
     {
-      preValidation: [],
+      preValidation: [validateAgencyKey],
     },
     getReport as unknown as RouteHandlerMethod
   );
