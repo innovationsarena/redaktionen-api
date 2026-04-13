@@ -102,7 +102,7 @@ export const runIntegratedEditor = async (
 
   await artDirectorQueue.add("artdirector.image.report", {
     agencyId,
-    content: writtenReport,
+    report: writtenReport,
     context,
   });
 
@@ -143,7 +143,7 @@ export const runIsolatedEditor = async (
 
     await artDirectorQueue.add("artdirector.image.report", {
       agencyId,
-      content: writtenReport,
+      report: writtenReport,
       context,
     });
   }

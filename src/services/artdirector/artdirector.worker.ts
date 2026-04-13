@@ -16,8 +16,8 @@ new Worker(
       await artDirector(agencyId, summary, "summary");
     }
     if (job.name === "artdirector.image.report") {
-      const { agencyId, content } = job.data;
-      await artDirector(agencyId, content, "report");
+      const { agencyId, report } = job.data;
+      await artDirector(agencyId, report, "report");
     }
     if (job.name === "artdirector.image.avatar") {
       const { agencyId, agent } = job.data;
