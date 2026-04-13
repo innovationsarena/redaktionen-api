@@ -132,8 +132,8 @@ export const startAgencyController = asyncHandler(
     });
 
     await tipsterQueue.add("tipster.start", {
-      request,
-      context: request.body,
+      agencyId: agency.id,
+      workflow: request.body,
     });
 
     await tipsterQueue.upsertJobScheduler("agency-interval-schema", {

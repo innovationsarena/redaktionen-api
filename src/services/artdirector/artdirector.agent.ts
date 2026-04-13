@@ -130,7 +130,8 @@ If this image would not be accepted as a real photograph by a professional photo
     });
 
     // Store Image
-    const url = await createImageFromBase64(image.base64, type);
+    const url = await createImageFromBase64(agencyId, image.base64, type);
+    console.log({ ...content, posterUrl: url });
 
     if (type === "summary") {
       // Update summary with public URL
@@ -154,6 +155,7 @@ If this image would not be accepted as a real photograph by a professional photo
 };
 
 async function createImageFromBase64(
+  agencyId: string,
   base64: string,
   type: string
 ): Promise<string> {
@@ -172,7 +174,7 @@ async function createImageFromBase64(
     .toBuffer();
 
   // Generate unique filename
-  const fileName = `${Date.now()}-${Math.random()
+  const fileName = `${agencyId}__${Date.now()}-${Math.random()
     .toString(36)
     .substring(7)}.jpg`;
 

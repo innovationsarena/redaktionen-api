@@ -10,22 +10,22 @@ import {
 } from "../../core";
 
 export const tipster = async (
-  agency: AgencyContext,
+  agencyId: string,
   factor: Factor,
   tipLimit: number = 5
 ) => {
   const tipsterProgress = new SingleBar({}, Presets.shades_classic);
 
   const items: Source[] | undefined = await Sources.list({
-    agencyId: agency.id,
+    agencyId,
     factor,
   });
 
-  if (items) {
+  if (items.length) {
     const feedItems = await fetchFeeds(items, tipLimit, tipsterProgress);
 
     console.log(`Formatting signals...`);
-    const parsedFeed = parseFeed(feedItems, factor, agency.id);
+    const parsedFeed = parseFeed(feedItems, factor, agencyId);
 
     console.log(`Writing signals...`);
     await Signals.batchWrite(parsedFeed);

@@ -1,23 +1,23 @@
-import { FastifyRequest } from "fastify";
 import { tipster } from ".";
-import { AgencyContext, FlowInput, Signal, Signals } from "../../core";
+import { FlowInput, Signal, Signals } from "../../core";
 
 export const runTipsters = async (
-  request: FastifyRequest,
+  agencyId: string,
   context: FlowInput
 ): Promise<Signal[]> => {
-  const { agency } = request;
   const { factors, tipLimit } = context;
 
+  console.log("Running tipsters...");
+
   // Empty tipster jar for agency
-  await Signals.empty(agency?.id as string);
+  await Signals.empty(agencyId);
 
   let allSignals: Signal[] = [];
 
   for await (const factor of factors) {
     allSignals = [
       ...allSignals,
-      ...(await tipster(agency as AgencyContext, factor, tipLimit)),
+      ...(await tipster(agencyId, factor, tipLimit)),
     ];
   }
 

@@ -1,13 +1,11 @@
-import { FastifyRequest } from "fastify";
 import { FlowInput, Signals, Summaries } from "../../core";
 import { correspondentQueue } from "./correspondent.worker";
 
 export const runCorrespondents = async (
-  request: FastifyRequest,
+  agencyId: string,
   context: FlowInput
 ): Promise<void> => {
-  const { agency } = request;
-  const agencyId = agency?.id as string;
+  console.log("Running correspondents...");
 
   // Empty summaries for agency
   await Summaries.empty(agencyId);

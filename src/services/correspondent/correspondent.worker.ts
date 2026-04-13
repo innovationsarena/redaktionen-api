@@ -1,5 +1,7 @@
 import { Queue, QueueEvents, Worker } from "bullmq";
-import { connection, concurrency } from "../../core";
+import { connection, concurrency, Summaries, Summary } from "../../core";
+import { correspondent } from "./correspondent.agent";
+import { artDirectorQueue } from "../artdirector";
 
 // CORRESPONDENT
 export const CORRESPONDENT_QUEUE_NAME = "correspondentQueue";
@@ -12,6 +14,13 @@ new Worker(
   async (job) => {
     if (job.name === "correspondent.summary") {
       const { agencyId, signal, context } = job.data;
+      const summary = await correspondent(agencyId, signal);
+      const sum = await Summaries.write(summary as Summary);
+      await artDirectorQueue.add("artdirector.image.summary", {
+        agencyId,
+        summary: sum,
+        context,
+      });
     }
   },
   {
@@ -19,11 +28,3 @@ new Worker(
     concurrency,
   }
 );
-
-// Trigger next based on this queue
-const queueEvents = new QueueEvents(CORRESPONDENT_QUEUE_NAME);
-
-queueEvents.on("completed", async ({ returnvalue: data }) => {
-  // react to completion
-  console.log(data);
-});
